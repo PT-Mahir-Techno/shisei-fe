@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import ProfileCard from '@/components/ui/profile-card'
 import React from 'react'
 
-const page = () => {
+const AboutPage = () => {
   return (
     <>
       <section className='pt-40 py-12 bg-cover'
@@ -94,4 +94,4 @@ const page = () => {
   )
 }
 
-export default page
+export default AboutPage

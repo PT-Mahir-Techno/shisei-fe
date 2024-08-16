@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import React from 'react'
 import { RiCalendar2Fill, RiMapPin2Fill, RiTimeFill, RiUser3Fill } from 'react-icons/ri'
 
-const page = () => {
+const DetailBookingPage = () => {
   return (
     <div>
       <div className='container pt-20 pb-10 mt-20'>
@@ -89,4 +89,4 @@ const page = () => {
   )
 }
 
-export default page
+export default DetailBookingPage

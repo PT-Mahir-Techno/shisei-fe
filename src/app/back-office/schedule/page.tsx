@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Schedule = () => {
+const SchedulePage = () => {
   return (
-    <div>Schedule</div>
+    <div>SchedulePage</div>
   )
 }
 
-export default Schedule
+export default SchedulePage

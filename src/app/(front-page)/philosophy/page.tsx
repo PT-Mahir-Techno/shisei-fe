@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import React from 'react'
 
-const page = () => {
+const PhilosophyPage = () => {
   return (
     <>
       <section className='pt-40 py-12 bg-cover'
@@ -85,4 +85,4 @@ const page = () => {
   )
 }
 
-export default page
+export default PhilosophyPage

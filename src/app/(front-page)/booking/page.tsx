@@ -30,7 +30,7 @@ const data = [
   },
 ]
 
-const page = () => {
+const BookingPage = () => {
   const [date, setDate] = React.useState<Date | undefined>(new Date())
   const [isSelect, setIsSelect] = React.useState<number>(0)
 
@@ -164,4 +164,4 @@ const page = () => {
   )
 }
 
-export default page
+export default BookingPage

@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import Link from "next/link"
 
-const page = () => {
+const LoginPage = () => {
   return (
     <div className="p-8 bg-background rounded-md">
 
@@ -47,4 +47,4 @@ const page = () => {
   )
 }
 
-export default page
+export default LoginPage

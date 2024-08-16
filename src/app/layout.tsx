@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Grey_Qo, Inter, Noto_Serif_JP, Poppins } from "next/font/google";
+import { Noto_Serif_JP, Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { cn } from "@/lib/utils";
@@ -9,18 +9,17 @@ const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800", "900"],
   variable: "--font-poppins",
+  display: 'swap', 
+  adjustFontFallback: false
 });
 
-const script = Grey_Qo({
-  subsets: ["latin"],
-  variable: "--font-grey-qo",
-  weight: ["400"],
-})
 
 const noto_serif = Noto_Serif_JP({
   subsets: ["latin"],
   variable: "--font-noto-serif",
   weight: ["400", "500", "600", "700", "900"],
+  display: 'swap', 
+  adjustFontFallback: false
 })
 
 export const metadata: Metadata = {

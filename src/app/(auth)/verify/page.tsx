@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import React from 'react'
 import { RiMailFill, RiMailOpenFill } from 'react-icons/ri'
 
-const page = () => {
+const VerifyPage = () => {
   return (
     <div className="w-full min-h-[500px] p-8 bg-background rounded-md flex flex-col items-center justify-center">
         <RiMailOpenFill className="w-12 h-12 text-primary mb-2"/>
@@ -13,4 +13,4 @@ const page = () => {
   )
 }
 
-export default page
+export default VerifyPage

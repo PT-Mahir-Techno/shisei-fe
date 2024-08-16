@@ -26,7 +26,7 @@ const faqs = [
   }
 ];
 
-const page = () => {
+const ContactPage = () => {
   return (
     <>
       <section className='pt-40 py-12 bg-cover'
@@ -147,4 +147,4 @@ const page = () => {
   )
 }
 
-export default page
+export default ContactPage
