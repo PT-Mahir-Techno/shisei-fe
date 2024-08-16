@@ -1,8 +1,27 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Grey_Qo, Inter, Noto_Serif_JP, Poppins } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/providers/theme-provider";
+import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-poppins",
+});
+
+const script = Grey_Qo({
+  subsets: ["latin"],
+  variable: "--font-grey-qo",
+  weight: ["400"],
+})
+
+const noto_serif = Noto_Serif_JP({
+  subsets: ["latin"],
+  variable: "--font-noto-serif",
+  weight: ["400", "500", "600", "700", "900"],
+})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +35,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={cn(poppins.variable, noto_serif.variable)}>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            // disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
