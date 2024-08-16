@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 // const inter = Inter({ subsets: ["latin"] });
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-poppins",
   display: 'swap', 
   adjustFontFallback: false
@@ -17,7 +17,7 @@ const poppins = Poppins({
 const noto_serif = Noto_Serif_JP({
   subsets: ["latin"],
   variable: "--font-noto-serif",
-  weight: ["400", "500", "600", "700", "900"],
+  weight: ["600", "700", ],
   display: 'swap', 
   adjustFontFallback: false
 })
@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(poppins.variable, noto_serif.variable)}>
+      <body>
         <ThemeProvider
             attribute="class"
             defaultTheme="system"
