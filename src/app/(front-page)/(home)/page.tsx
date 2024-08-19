@@ -24,11 +24,11 @@ export default function Home() {
 
       {/* about */}
       <section className="container relative z-10 -mt-[70px]">
-        <div className="w-full h-[150px] px-[40px]  bg-background rounded-md shadow-md flex flex-col justify-center dark:bg-gray-800">
+        <div className="w-full  px-[40px] py-[40px]  bg-background rounded-md shadow-md flex flex-col justify-center dark:bg-gray-800">
           <div className={"font-noto_serif text-3xl text-gray-600 font-bold mb-4 dark:text-slate-300"}>
             Booking.
           </div>
-          <div className="flex justify-between items-center gap-8">
+          <div className="flex flex-wrap md:flex-nowrap justify-between items-center gap-8 ">
             <input type="text" className="bg-secondary w-full rounded-md px-4 py-3" />
             <input type="text" className="bg-secondary w-full rounded-md px-4 py-3" />
             <Button>Book Now</Button>

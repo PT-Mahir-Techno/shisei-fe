@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className={cn("font-poppins", poppins.variable, noto_serif.variable)}>
         <ThemeProvider
             attribute="class"
             defaultTheme="system"
