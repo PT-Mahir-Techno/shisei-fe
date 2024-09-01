@@ -11,7 +11,7 @@ import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu'
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
 
-const packageCustomerPage = () => {
+const PackageCustomerPage = () => {
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
   const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
 
@@ -101,4 +101,4 @@ const packageCustomerPage = () => {
   )
 }
 
-export default packageCustomerPage
+export default PackageCustomerPage
