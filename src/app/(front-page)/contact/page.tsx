@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea'
 import React from 'react'
 import { RiFacebookBoxFill, RiFacebookFill, RiInstagramFill, RiLinkedinBoxFill, RiLinkedinFill, RiMailCheckLine, RiMailLine, RiPhoneFill, RiPhoneFindLine, RiPhoneLine } from 'react-icons/ri'
 
+import "../../styles/animations.css";
 
 const faqs = [
   {
@@ -29,7 +30,7 @@ const faqs = [
 const ContactPage = () => {
   return (
     <>
-      <section className='pt-40 py-12 bg-cover'
+      <section className='pt-40 py-12 bg-cover bg-no-repeat bg-center'
         style={{ backgroundImage: 'url("/img/navbar-bg-2.png")' }}
       >
         <div className="container">

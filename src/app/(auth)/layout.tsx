@@ -1,4 +1,5 @@
 import Image from "next/image"
+import MainLayout from "../main-layout"
 
 const layout = ({children}: {children: React.ReactNode}) => {
   return (
@@ -17,7 +18,9 @@ const layout = ({children}: {children: React.ReactNode}) => {
             </p>
           </div>
           <div className="w-[450px]">
-            {children}
+            <MainLayout>
+              {children}
+            </MainLayout>
           </div>
         </div>
       </div>

@@ -2,10 +2,12 @@ import { Button } from '@/components/ui/button'
 import ProfileCard from '@/components/ui/profile-card'
 import React from 'react'
 
+import "../../styles/animations.css";
+
 const AboutPage = () => {
   return (
-    <>
-      <section className='pt-40 py-12 bg-cover'
+    <div className='page-animation'>
+      <section className='pt-40 py-12 bg-cover bg-no-repeat bg-center'
         style={{ backgroundImage: 'url("/img/navbar-bg-2.png")' }}
       >
         <div className="container">
@@ -90,7 +92,7 @@ const AboutPage = () => {
       </section>
 
       
-    </>
+    </div>
   )
 }
 

@@ -25,7 +25,9 @@ const SignUpPage = () => {
         <CustomInput label="Confirm Password" placeholder="******" type="password"/>
 
         <div>
-          <Button className="w-full" size={"lg"}>Sign Up</Button>
+          <Link href={"/verify"}>
+            <Button className="w-full" size={"lg"}>Sign Up</Button>
+          </Link>
         </div>
 
         <div className="mt-24 text-center text-gray-600">

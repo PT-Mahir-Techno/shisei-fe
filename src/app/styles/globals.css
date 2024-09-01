@@ -77,7 +77,8 @@
     --muted-foreground: 199 5% 40%;
     --accent: 161 30% 90%;
     --accent-foreground: 199 5% 15%;
-    --destructive: 0 100% 50%;
+    /* --destructive: 0 100% 50%; */
+    --destructive: 0, 100%, 72%;
     --destructive-foreground: 199 5% 100%;
     --border: 199 30% 82%;
     --input: 199 30% 50%;
@@ -99,7 +100,8 @@
     --muted-foreground: 199 5% 65%;
     --accent: 161 30% 25%;
     --accent-foreground: 199 5% 95%;
-    --destructive: 0 100% 50%;
+    /* --destructive: 0 100% 50%; */
+    --destructive: 0, 100%, 72%;
     --destructive-foreground: 199 5% 100%;
     --border: 199 30% 50%;
     --input: 199 30% 50%;

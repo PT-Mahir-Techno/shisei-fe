@@ -1,16 +1,27 @@
+'use client'
+
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 const LoginPage = () => {
+
+  const router = useRouter()
+  const handleSubmit = () => {
+    router.push('/otp-verification')
+  }
+
   return (
     <div className="p-8 bg-background rounded-md">
 
         <div className="flex flex-col items-center gap-4 mb-8">
-          <Image src="/be-secondary-logo.png" alt="logo" width={160} height={0} className="mb-4"/>
+          <Link href={"/"}>
+            <Image src="/be-secondary-logo.png" alt="logo" width={160} height={0} className="mb-4"/>
+          </Link>
           <p className="text-gray-400">
             Please enter your email and password.
           </p>
@@ -36,7 +47,7 @@ const LoginPage = () => {
           </div>
         </div>
         <div>
-          <Button className="w-full" size={"lg"}>Sign In</Button>
+          <Button onClick={handleSubmit} className="w-full" size={"lg"}>Sign In</Button>
         </div>
 
         <div className="mt-24 text-center text-gray-600">

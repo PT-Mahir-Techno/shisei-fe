@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import BookSection from "./_parts/book_section";
+import "../../styles/animations.css";
+
 
 export default function Home() {
   return (
-    <>
+    <div className="page-animation">
       {/* hero */}
       
       <section
@@ -11,10 +14,10 @@ export default function Home() {
         style={{ backgroundImage: 'url("/hero-bg.png")' }}
       >
         <div className="container">
-          <h1 className="text-6xl text-slate-200 leading-tight font-bold font-noto_serif">
+          <h1 className="text-6xl text-white leading-tight font-bold font-noto_serif">
             Find Calm and <br /> Balance with <br /> Our Therapy
           </h1>
-          <p className="text-slate-200 mt-7 leading-normal">
+          <p className="text-slate-100 mt-7 leading-normal">
             The best place for therapy that helps you discover <br /> a better version of yourself.
           </p>
         </div>
@@ -22,22 +25,11 @@ export default function Home() {
       {/* end hero */}
 
 
-      {/* about */}
-      <section className="container relative z-10 -mt-[70px]">
-        <div className="w-full  px-[40px] py-[40px]  bg-background rounded-md shadow-md flex flex-col justify-center dark:bg-gray-800">
-          <div className={"font-noto_serif text-3xl text-gray-600 font-bold mb-4 dark:text-slate-300"}>
-            Booking.
-          </div>
-          <div className="flex flex-wrap md:flex-nowrap justify-between items-center gap-8 ">
-            <input type="text" className="bg-secondary w-full rounded-md px-4 py-3" />
-            <input type="text" className="bg-secondary w-full rounded-md px-4 py-3" />
-            <Button>Book Now</Button>
-          </div>
-        </div>
-      </section>
-      {/* end about */}
+      {/* book */}
+      <BookSection/>
+      {/* end book */}
 
-      {/* search */}
+      {/* about */}
       <section>
         <div className="container flex flex-wrap gap-20  py-[100px]">
           <div className="w-[500px] bg-primary p-[40px] rounded-md ">
@@ -57,7 +49,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* end search */}
+      {/* end about */}
 
       {/* why us */}
       <section
@@ -198,6 +190,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
