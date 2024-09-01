@@ -33,7 +33,7 @@ const StudioPage = () => {
 
 
       <div className='container'>
-          <div className='flex gap-3 mb-5'>
+          <div className='flex flex-col md:flex-row gap-3 mb-5'>
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
@@ -69,7 +69,7 @@ const StudioPage = () => {
           <div className='mb-[100px]'>
             <h3 className='font-noto_serif font-bold text-2xl text-gray-700 dark:text-gray-200 mb-6'>Amenities</h3>
             
-            <div className='flex items-center justify-between flex-wrap'>
+            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6'>
               <div className='flex items-center gap-2'>
                 <Image src="/img/ic_toilet.png" width={33} height={33} alt="toilet" />
                 <p className='text-gray-600 text-lg'>Toilet</p>
@@ -93,8 +93,8 @@ const StudioPage = () => {
             </div>
           </div>
 
-          <div className='flex gap-6 mb-[100px]'>
-            <div className='w-1/2'>
+          <div className='flex flex-col md:flex-row gap-6 mb-[100px]'>
+            <div className='w-full'>
               <h2 className='font-bold text-2xl text-gray-700 dark:text-gray-200 mb-4'>Opening hours</h2>
               <table className='mb-10'>
                 <tbody>
@@ -145,7 +145,7 @@ const StudioPage = () => {
                 </div>
               </div>
             </div>
-            <div className='w-1/2'>
+            <div className='w-full'>
               <div className='w-full mb-4'>
                 <Image src={`/img/${selectedImage}`} width={500} height={0} className='w-full rounded-lg' alt="studio" />
               </div>
