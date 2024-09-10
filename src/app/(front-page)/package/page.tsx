@@ -7,7 +7,6 @@ import { RiErrorWarningFill, RiVerifiedBadgeFill } from 'react-icons/ri'
 import CustomModal from '@/components/ui/custoom-dialog'
 import Link from 'next/link'
 
-import "../../../styles/animations.css";
 
 const BookingPackagePage = () => {
 
@@ -15,7 +14,7 @@ const BookingPackagePage = () => {
   const [showModalTransaction, setShowModalTransaction] = React.useState(false)
 
   return (
-    <div className='page-animation'>
+    <>
       <div className='container pt-20 pb-10 mt-20 flex flex-col lg:flex-row gap-7'>
         <div className='p-5 border border-gray-200 rounded-lg w-12/12 lg:w-9/12'>
           <div className='mb-3 pb-3 border-b border-gray-200'>
@@ -64,7 +63,7 @@ const BookingPackagePage = () => {
             <Link href='/booking/1' className='bg-primary hover:bg-primary/50 rounded-lg py-3 px-4 text-white transition-all duration-300' >Continue With The Booking</Link>
           </div>
       </CustomModal>
-    </div>
+    </>
   )
 }
 

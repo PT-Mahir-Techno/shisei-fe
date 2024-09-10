@@ -8,14 +8,20 @@ import { RiArrowDropDownLine, RiDashboardFill, RiFullscreenExitLine, RiFullscree
 import CustomModal from '../ui/custoom-dialog'
 import { Button } from '../ui/button'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/hooks/use-auth'
+import { useProfile } from '@/store/use-profile'
 
 const NavbarBo = () => {
 
+  const {data} : any = useProfile()
+
   const [isOpen, setIsOpen] = React.useState(false)
   const [isFUllScreen, setIsFullScreen] = React.useState(false)
+  const { logout } = useAuth()
   const router = useRouter()
 
   const handleLogout = () => {
+    logout("/admin/logout")
     router.push('/login')
   }
 
@@ -50,7 +56,7 @@ const NavbarBo = () => {
                   <img src="/img/avatar.png" alt="" className='w-8 h-8 rounded-full' />
                 </div>
                 <div className='hidden md:flex flex-col justify-start '>
-                  <h2 className='text-gray-800 text-sm dark:text-slate-100 overflow-clip'>John Doe</h2>
+                  <h2 className='text-gray-800 text-sm dark:text-slate-100 overflow-clip'>{data?.name}</h2>
                   <p className='text-primary text-xs'>Customer</p>
                 </div>
                 <div className='hidden md:block'>

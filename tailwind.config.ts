@@ -12,8 +12,8 @@ const config = {
   theme: {
     screens: {
       'sm': '640px',
-      'md': '768px',
-      'lg': '1024px',
+      'md': '868px',
+      'lg': '1124px',
       'xl': '1380px',
       '2xl': '1536px',
     },
@@ -27,10 +27,11 @@ const config = {
         '2xl': '6rem',
       },
       screens: {
-        sm: '640px',
-        md: '768px',
-        lg: '1024px',
-        xl: '1277px',
+        'sm': '640px',
+        'md': '868px',
+        'lg': '1124px',
+        'xl': '1380px',
+        '2xl': '1536px',
       },
     },
     extend: {

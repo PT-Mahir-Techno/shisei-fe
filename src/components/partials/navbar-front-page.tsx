@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation'
 
 const bgPaths: any[] = [
   '/booking',
+  '/package',
 ];
 
 const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
@@ -64,6 +65,11 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
               <Link href="/booking">
                 <li className={`${pathName.startsWith("/booking") ? "bg-background text-foreground" : "text-slate-200"} px-3 py-2 mx-2 rounded-md cursor-pointer hover:bg-background hover:text-foreground transition-all duration-200`}>
                   Booking
+                </li>
+              </Link>
+              <Link href="/package">
+                <li className={`${pathName.startsWith("/package") ? "bg-background text-foreground" : "text-slate-200"} px-3 py-2 mx-2 rounded-md cursor-pointer hover:bg-background hover:text-foreground transition-all duration-200`}>
+                  package
                 </li>
               </Link>
               <Link href="/studio">
