@@ -6,7 +6,8 @@ import { create } from 'zustand'
 type ProfileState = {
   getPorfile: () => void
   resetProfile: () => void
-  data: {}|null
+  setData: () => void
+  data: any
   loading: boolean,
   success: boolean,
   error: boolean
@@ -34,7 +35,6 @@ export const useProfile = create<ProfileState>((set, get) => ({
       set({...initState, error: true, loading: false, success: false})
     }
   },
-  resetProfile: () => {
-    set({...initState})
-  }
+  resetProfile: () => set({data: null, success: false, error: false, loading: false}),
+  setData: () => set({data: null, success: false, error: false, loading: false}),
 }))

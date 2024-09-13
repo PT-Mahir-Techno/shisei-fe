@@ -165,7 +165,7 @@ const SidebarBo = () => {
                 style={ { transitionDelay: isOpenSub ? '0.1s' : '0s' } }
               >
                 <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/> <Link href={'/back-office/user/admin'}>admin</Link> </li>
-                <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/> <Link href={'/back-office/user/instructor'}>instructor</Link> </li>
+                <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/> <Link href={'/back-office/user/instructor'}>staff</Link> </li>
                 <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/> <Link href={'/back-office/user/customer'}>customer</Link> </li>
               </ul>
 
@@ -196,8 +196,12 @@ const SidebarBo = () => {
                 }`}
                 style={ { transitionDelay: isOpenSub ? '0.1s' : '0s' } }
               >
-                <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/> Role</li>
-                <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/> Permision</li>
+                <Link href={'/back-office/setting/role'}>
+                  <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/> role</li>
+                </Link>
+                <Link href={'/back-office/setting/permision'}>
+                  <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/> permision</li>
+                </Link>
               </ul>
 
             </li>
@@ -210,7 +214,7 @@ const SidebarBo = () => {
           <ul className='px-4'>
 
             <li className='mb-3 relative group'>
-              <Link href="/back-office/package" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
+              <Link href="/back-office/studio" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
                   <RiSquareFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
                   <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Studio</span> 
               </Link>
@@ -220,7 +224,7 @@ const SidebarBo = () => {
             </li>
 
             <li className='mb-3 relative group'>
-              <Link href="/back-office/package" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
+              <Link href="/back-office/galery" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
                   <RiImage2Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
                   <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Galery</span> 
               </Link>
@@ -230,7 +234,7 @@ const SidebarBo = () => {
             </li>
 
             <li className='mb-3 relative group'>
-              <Link href="/back-office/package" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
+              <Link href="/back-office/faq" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
                   <RiQuestionnaireFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
                   <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>faq</span> 
               </Link>
@@ -240,7 +244,7 @@ const SidebarBo = () => {
             </li>
 
             <li className='mb-3 relative group'>
-              <Link href="/back-office/package" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
+              <Link href="/back-office/profile" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
                   <RiUser3Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
                   <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Profile</span> 
               </Link>

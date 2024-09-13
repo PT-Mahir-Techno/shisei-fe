@@ -1,69 +1,69 @@
 import api from "@/lib/api";
 import { baseUrl } from "@/lib/variable";
-import { RoleType } from "@/types/role-type";
+import { FaqType } from "@/types/faq-type";
 import { create } from "zustand";
 
-type RoleStoreType = {
-  role: any
-  roles: RoleType[]
-  roleAttributes: any
+type FaqStoreType = {
+  faq: any
+  faqs: FaqType[]
+  faqAttributes: any
   loading: boolean
   success: boolean
   error: boolean
   errorData: any
-  roleUrl: string
-  getAllRole: (url: string) => void
-  getSingleRole: (url: string) => void
-  createRole: (data: any) => void
-  deleteRole: (url: string) => void
-  getAllRoleNoPaginate: (url: string) => void
+  faqUrl: string
+  getAllFaq: (url: string) => void
+  getSingleFaq: (url: string) => void
+  createFaq: (data: any) => void
+  deleteFaq: (url: string) => void
+  getAllFaqNoPaginate: (url: string) => void
 }
 
 const initState = {
-  role : {},
-  roles: [],
-  roleAttributes: {},
+  faq : {},
+  faqs: [],
+  faqAttributes: {},
   success: false,
   error: false,
   errorData: {},
   loading: false,
-  roleUrl: ''
+  faqUrl: ''
 }
 
 
-export const useRole = create<RoleStoreType>((set, get) => ({
+export const useFaq = create<FaqStoreType>((set, get) => ({
   ...initState, 
-  getAllRole: async (url: string) => {
+  getAllFaq: async (url: string) => {
     try {
-      set({loading: true, roleUrl: url})
+      set({loading: true, faqUrl: url})
       const res = await api.get(url)
-      set({roles: res.data.data, loading: false, success: true, roleAttributes: res.data})
+      set({faqs: res.data.data, loading: false, success: true, faqAttributes: res.data})
     } catch (error) {
       set({error: true, loading: false, success: false})
     }
   },
-  getAllRoleNoPaginate: async (url: string) => {
+  getAllFaqNoPaginate: async (url: string) => {
     try {
-      set({loading: true, roleUrl: url})
+      set({loading: true, faqUrl: url})
       const res = await api.get(url)
-      set({roles: res.data, loading: false, success: true, roleAttributes: res.data})
+      set({faqs: res.data, loading: false, success: true, faqAttributes: res.data})
     } catch (error) {
       set({error: true, loading: false, success: false})
     }
   },
-  getSingleRole: async (url: string) => {
+  getSingleFaq: async (url: string) => {
     try {
       set({loading: true })
       const res = await api.get(url)
-      set({role: res.data, loading: false, success: true })
+      set({faq: res.data, loading: false, success: true })
     } catch (error) {
       set({ error: true, loading: false, success: false })
     }
   },
-  createRole:async (data: any) : Promise<any> => {
+  createFaq:async (data: any) : Promise<any> => {
     try {
       set({loading: true })
-      await api.post(`${baseUrl}/admin/role`, data)
+      await api.post(`${baseUrl}/admin/faq`, data)
       set({loading: false, success: true })
       return Promise.resolve()
     } catch (err:any) {
@@ -71,7 +71,7 @@ export const useRole = create<RoleStoreType>((set, get) => ({
       return Promise.reject(err)
     }
   },
-  deleteRole: async (url: string) => {
+  deleteFaq: async (url: string) => {
     return new Promise (async (resolve, reject) => {
       await api.delete(url).then(() => {
         set({loading: false, success: true })

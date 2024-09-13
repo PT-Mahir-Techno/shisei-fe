@@ -17,7 +17,7 @@ export const useAuth = () => {
     try {
       setLoading(true)
       await api.post(`${baseUrl}${url}`)
-      resetProfile()
+      await resetProfile()
       toast.success("Logout success")
       setLoading(false)
     } catch (error) {

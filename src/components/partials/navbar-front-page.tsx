@@ -4,8 +4,15 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ModeToggle } from '../mode-toggle'
-import { RiArchiveFill, RiCloseLargeFill, RiHome2Line, RiHome5Fill, RiMenuFill, RiMicOffFill, RiMicrosoftFill, RiSmartphoneFill, RiTicketFill } from 'react-icons/ri'
-import { usePathname } from 'next/navigation'
+import { RiArchiveFill, RiArrowDropDownLine, RiCloseLargeFill, RiDashboardFill, RiHome2Line, RiHome5Fill, RiLogoutBoxRFill, RiMenuFill, RiMicOffFill, RiMicrosoftFill, RiSmartphoneFill, RiTicketFill, RiUser3Fill } from 'react-icons/ri'
+import { usePathname, useRouter } from 'next/navigation'
+import { useProfile } from '@/store/use-profile'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu'
+import { useModal } from '@/store/use-modal'
+import CustomModal from '../ui/custoom-dialog'
+import { Button } from '../ui/button'
+import { useAuth } from '@/hooks/use-auth'
+import LoadingIcons from 'react-loading-icons'
 
 const bgPaths: any[] = [
   '/booking',
@@ -16,8 +23,12 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
 
   const [isHidden, setIsHidden] = useState(false)
   const pathName = usePathname()
+  const {data, resetProfile, setData} = useProfile()
+  const { logout, loading } = useAuth()
+  const router = useRouter()
 
   const [scrollPosition, setScrollPosition] = useState(0);
+  const {isOpen, setIsOpen} = useModal()
 
   const handleScroll = () => {
     const position = window.scrollY;
@@ -37,6 +48,13 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
 
   const hiddenMenu = () => {
     setIsHidden(!isHidden)
+  }
+
+  const handleLogout = async () => {
+    await logout("/admin/logout")
+    await setData()
+    setIsOpen(false)
+    router.push('/')
   }
 
   return (
@@ -98,7 +116,50 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
           <div className="hidden lg:flex md:flex">
             <div className="flex gap-2 items-center">
               <ModeToggle/>
-              <Link href={"/login"} className='rounded-full text-sm bg-background text-foreground px-3 py-2'>login / Sign Up</Link>
+              {
+                data ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <div className='flex gap-3 items-center bg-white cursor-pointer border border-gray-300 p-1 box-border rounded-full'>
+                        <div>
+                          <img src="/img/avatar.png" alt="" className='w-8 h-8 rounded-full' />
+                        </div>
+                        <div className='hidden md:flex flex-col justify-start '>
+                          <h2 className='text-gray-800 text-sm dark:text-slate-100 overflow-clip'>{data?.name}</h2>
+                          <p className='text-primary text-xs'>Customer</p>
+                        </div>
+                        <div className='hidden md:block'>
+                          <RiArrowDropDownLine className='text-gray-700 group-hover:text-primary transition-all duration-200' size={26}/>
+                        </div>
+                      </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="py-4 px-2">
+                      <DropdownMenuItem>
+                        <div className='flex items-center gap-2'>
+                          <RiDashboardFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
+                          Dashboard
+                        </div>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                        <div className='flex items-center gap-2'>
+                          <RiUser3Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
+                          Profile
+                        </div>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => setIsOpen(true)}>
+                        <div className='flex items-center gap-2'>
+                          <RiLogoutBoxRFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
+                          Log Out
+                        </div>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) :(
+                  <Link href={"/login"} className='rounded-full text-sm bg-background text-foreground px-3 py-2'>login / Sign Up</Link>
+                )
+              }
             </div>
           </div>
           <div className='lg:hidden md:hidden'>
@@ -143,6 +204,26 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
             </li>
           </ul>
         </div>
+
+        <CustomModal 
+          open={isOpen} 
+          onOpenChange={() => setIsOpen(false)} 
+          title='Log Out'
+        >
+            <div>
+              <p className='text-gray-700 my-6 text-center'>are you sure you want to end this session ?</p>
+              <div className='flex justify-end gap-4'>
+                <Button onClick={() => setIsOpen(false)} variant={"outline"}>Cancel</Button>
+                <Button onClick={() => handleLogout()} disabled={loading}>
+                  {
+                  loading &&
+                    <LoadingIcons.Oval stroke='#fff' strokeWidth={5} className="w-4 h-4 mr-3" />
+                  }
+                  logout
+                </Button>
+              </div>
+            </div>
+        </CustomModal>
       </nav>
   )
 }
