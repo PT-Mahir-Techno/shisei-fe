@@ -13,7 +13,7 @@ type PackageStoreType = {
   errorData: any
   packageUrl: string
   getAllPackage: (url: string) => void
-  getSinglePackage: (url: string) => Promise<void>
+  getSinglePackage: (url: string) => Promise<any>
   createPackage: (data: any) => Promise<void>
   deletePackage: (url: string) => void
   updatePackage: (url: string, data: any) => Promise<void>

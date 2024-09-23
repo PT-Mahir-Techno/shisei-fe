@@ -35,7 +35,10 @@ const PackageForm = () => {
   const getSingleData = async () => {
     try {
       const res = await getSinglePackage(`${baseUrl}/admin/membership/${modelId}`)
-      await form.reset(res)
+      if (res){
+        await form.reset(res)
+      }
+        
     } catch (error:any) {
       toast.error(error.data.message)
     }
