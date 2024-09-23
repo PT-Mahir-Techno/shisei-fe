@@ -124,3 +124,12 @@ export type StaffType = {
   updated_at:        Date;
   photo_url:         null;
 }
+
+export type ScheduleSettingType = {
+  id:                       number;
+  set_hour_to_cancel:       string;
+  set_hour_before_schedule: string;
+  created_at:               string;
+  updated_at:               string;
+}
+

@@ -136,6 +136,9 @@ const SidebarBo = () => {
                 <Link href={"/back-office/transaction/package"}>
                   <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>Package</li>
                 </Link>
+                <Link href={"/back-office/transaction/schedule"}>
+                  <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>Schedule</li>
+                </Link>
                 <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>Credit</li>
               </ul>
 
@@ -203,6 +206,9 @@ const SidebarBo = () => {
                 </Link>
                 <Link href={'/back-office/setting/permision'}>
                   <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/> permision</li>
+                </Link>
+                <Link href={'/back-office/setting/schedule'}>
+                  <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/> Schedule</li>
                 </Link>
               </ul>
 

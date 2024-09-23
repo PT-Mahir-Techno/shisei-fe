@@ -19,13 +19,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
+import api from "@/lib/api"
 
 const title = 'Package Transaction'
 
 const TransactionPackagePage = () => {
-  const { isOpen, setIsOpen } = useSheet()
+  const { isOpen, setIsOpen, modelId } = useSheet()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
   const {payments, paymentAttributes, paymentUrl, getAllPayment, loading} = usePayment()
+  const [loadingExport, setLoadingExport] = useState(false) 
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
@@ -39,6 +41,28 @@ const TransactionPackagePage = () => {
     toast.success('Location deleted successfully')
     setIsOpenModal(false)
   }
+
+  const handleExport = async () => {
+    try {
+      await api.get(`${baseUrl}/export-payment`)
+    } catch (error:any) {
+      toast.error(error.data.message)
+    }
+  }
+
+  const handleUpdateTrx = async () => {
+    try {
+      setLoadingExport(true)
+      await api.put(`${baseUrl}/admin/payment/${modalId}`)
+      await getAllPayment(paymentUrl)
+      toast.success('Transaction Updated')
+      setIsOpenModal(false)
+    } catch (error:any) {
+      toast.error(error.data.message)
+    }
+    setLoadingExport(false)
+  }
+  
 
   return (
     <>
@@ -101,7 +125,10 @@ const TransactionPackagePage = () => {
               </Popover>
             </div>
             <div>
-              <Button> <RiFile2Fill className="mr-2"/> Export Excel</Button>
+              <Button onClick={() => handleExport()} > <RiFile2Fill className="mr-2"/> Export Excel</Button>
+            </div>
+            <div>
+              <Button variant={"outline"}>Reset Filter</Button>
             </div>
           </div>
         </CUstomDataTable>
@@ -114,22 +141,25 @@ const TransactionPackagePage = () => {
       >
           <div>
             <p className='text-gray-700 my-6 text-center'>
-              Are you sure you want to delete this data?
+              Are you sure you want to update this transaction?
               <br />
               <b>This action cannot be undone</b>
             </p>
             <div className='flex justify-end gap-4'>
               <Button onClick={() => setIsOpenModal(false)} variant={"outline"}>Cancel</Button>
-              <Button onClick={() => handleDelete()}
-                disabled={loading}
+              <Button onClick={() => handleUpdateTrx()}
+                disabled={loading || loadingExport}
               >
-                {loading &&
+                {loading || loadingExport &&
                   <LoadingIcons.Oval stroke='#fff' strokeWidth={5} className="w-4 h-4 mr-3" />
                 }
-                delete
+                update transaction
               </Button>
             </div>
           </div>
+      </CustomModal>
+
+      <CustomModal open={isOpen} onOpenChange={() => setIsOpen(false)} title='Detail Transaction'>
       </CustomModal>
     </>
   )

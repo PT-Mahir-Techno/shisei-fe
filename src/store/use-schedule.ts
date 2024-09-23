@@ -1,12 +1,11 @@
 import api from "@/lib/api";
 import { transformEevent } from "@/lib/utils";
 import { baseUrl } from "@/lib/variable";
-import { PermissionType } from "@/types/permision-type";
 import { create } from "zustand";
 
 type ScheduleStoreType = {
   schedule: any
-  schedules: PermissionType[]
+  schedules: any[]
   scheduleAttributes: object
   convertedSchedule: any
   loading: boolean
@@ -14,12 +13,15 @@ type ScheduleStoreType = {
   error: boolean
   errorData: any
   scheduleUrl: string
+  settingSchedule: any
   getAllSchedule: (url: string) => void
   getSingleSchedule: (url: string) => void
   createSchedule: (data: any) => void
   deleteSchedule: (url: string) => void
   getAllScheduleNoPaginate: (url: string) => void
   getScheduleConverted: (url: string) => void
+  setSettingSchedule: (data:object) => Promise<void>
+  getSettingSchedule: () => Promise<any>
 }
 
 const initState = {
@@ -31,7 +33,8 @@ const initState = {
   error: false,
   errorData: {},
   loading: false,
-  scheduleUrl: ''
+  scheduleUrl: '',
+  settingSchedule: {}
 }
 
 
@@ -100,6 +103,28 @@ export const useSchedule = create<ScheduleStoreType>((set, get) => ({
       set({loading: false, success: true })
     } catch (error) {
       set({error: true, loading: false, success: false })
+    }
+  },
+  setSettingSchedule: async (data:object) => {
+    try {
+      set({loading: true })
+      await api.post(`${baseUrl}/admin/setting-web`, data)
+      set({loading: false, success: true})
+      return Promise.resolve()
+    } catch (error) {
+      set({error: true, loading: false, success: false })
+      return Promise.reject(error)
+    }
+  },
+  getSettingSchedule: async () => {
+    try {
+      set({loading: true })
+      const res = await api.get(`${baseUrl}/admin/setting-web`)
+      set({settingSchedule: res.data, loading: false, success: true })
+      return Promise.resolve(res)
+    } catch (error) {
+      set({error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   }
 }))
