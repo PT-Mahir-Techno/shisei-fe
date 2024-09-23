@@ -3,26 +3,53 @@
 import { ModeToggle } from '@/components/mode-toggle'
 import {  DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
 import { DropdownMenu, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
-import React from 'react'
+import React, { useContext } from 'react'
 import { RiArrowDropDownLine, RiDashboardFill, RiFullscreenExitLine, RiFullscreenFill, RiLogoutBoxRFill, RiUser3Fill } from 'react-icons/ri'
 import CustomModal from '../ui/custoom-dialog'
 import { Button } from '../ui/button'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/use-auth'
 import { useProfile } from '@/store/use-profile'
+import Cookies from 'js-cookie'
+import { AuthContex } from '@/providers/auth-provider'
 
 const NavbarBo = () => {
 
-  const {data} : any = useProfile()
+  const {data, role} : any = useProfile()
 
   const [isOpen, setIsOpen] = React.useState(false)
   const [isFUllScreen, setIsFullScreen] = React.useState(false)
   const { logout } = useAuth()
   const router = useRouter()
+  const {authState, setAuthState} = useContext(AuthContex)
 
-  const handleLogout = () => {
-    logout("/admin/logout")
-    router.push('/login')
+
+  const handleLogout = async () => {
+    try {
+      const logoutUrl = authState._avaibility === 'customer' ? '/logout' : '/admin/logout'
+      const redirectUrl = authState._avaibility === 'customer' ? '/login' : '/back-office/login'
+      await logout(logoutUrl)
+      setAuthState({
+        _auth: '',
+        _is_auth: '',
+        _avaibility: ''
+      })
+      router.push(redirectUrl)
+    } catch (error) {
+      const redirectUrl = authState._avaibility === 'customer' ? '/login' : '/back-office/login'
+      
+      setAuthState({
+        _auth: '',
+        _is_auth: '',
+        _avaibility: ''
+      })
+
+      Cookies.remove('_auth')
+      Cookies.remove('_is_auth')
+      Cookies.remove('_avaibility')
+
+      router.push(redirectUrl)
+    }
   }
 
   const HandleFullScreen = () => {
@@ -33,6 +60,16 @@ const NavbarBo = () => {
       document.documentElement.requestFullscreen();
       setIsFullScreen(false)
     }
+  }
+
+  const handleClickDashboard = () => {
+    const redirectUrl = authState._avaibility === 'customer' ? '/customer/dashboard' : '/back-office/dashboard'
+    router.push(redirectUrl)
+  }
+  
+  const handleCLickProfile = () => {
+    const redirectUrl = authState._avaibility === 'customer' ? '/customer/my-profile' : '/back-office/profile'
+    router.push(redirectUrl)
   }
 
   return (
@@ -57,7 +94,11 @@ const NavbarBo = () => {
                 </div>
                 <div className='hidden md:flex flex-col justify-start '>
                   <h2 className='text-gray-800 text-sm dark:text-slate-100 overflow-clip'>{data?.name}</h2>
-                  <p className='text-primary text-xs'>Customer</p>
+                  <p className='text-primary text-xs'>
+                    {
+                      role ? role : '-'
+                    }
+                  </p>
                 </div>
                 <div className='hidden md:block'>
                   <RiArrowDropDownLine className='text-gray-700 group-hover:text-primary transition-all duration-200' size={26}/>
@@ -66,14 +107,16 @@ const NavbarBo = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="py-4 px-2">
               <DropdownMenuItem>
-                <div className='flex items-center gap-2'>
+                <div className='flex items-center gap-2'
+                  onClick={() => handleClickDashboard()}
+                >
                   <RiDashboardFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
                   Dashboard
                 </div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <div className='flex items-center gap-2'>
+                <div onClick={() => handleCLickProfile()} className='flex items-center gap-2'>
                   <RiUser3Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
                   Profile
                 </div>

@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -5,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useSheet } from '@/store/use-sheet'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
@@ -13,15 +15,8 @@ import { z } from 'zod'
 import phoneCodes from "@/lib/dial-code"
 import Image from 'next/image'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
-import { CalendarIcon } from 'lucide-react'
-import { format } from "date-fns"
-import { Calendar } from '@/components/ui/calendar'
 import { useCustomer } from '@/store/use-customer'
-
-const MAX_FILE_SIZE = 5000000;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+import { baseUrl } from '@/lib/variable'
 
 export const formSchema = z.object({
   name: z.string().min(3, {message: "Name minimum 3 characters"}).max(100, {message: "Name maximum 100 characters"}),
@@ -29,21 +24,29 @@ export const formSchema = z.object({
   email: z.string().email({message: "Invalid email"}),
   phone: z.string().min(10, {message: "Phone is minimum 10 digits"}).max(20, {message: "Phone is maximum 20 digits"}),
   code_phone: z.string().min(2, {message: "Code phone is required"}),
-  birth: z.date().min(new Date(1900, 0, 1), {message: "Birth is required"}),
-  password: z.string().min(6, {message: "Password is required"}),
-  photo: z
-  .any()
-  .optional()
-  .refine((files) => files?.length === 0 || files?.[0]?.size < 5000000, {
-    message: 'File size must be less than 5MB',
-  })
-  .refine(file => file.length == 1 ? ACCEPTED_IMAGE_TYPES.includes(file?.[0]?.type) ? true : false : true, 'Invalid file. choose either JPEG or PNG image')
 })
 
 const CustomerForm = ({action}:{action: () => void}) => {
 
-  const { setIsOpen } = useSheet()
-  const { loading, getAllCustomer, createCustomer, customerUrl, error, errorData } : any = useCustomer()
+  const { setIsOpen, mode, modelId } = useSheet()
+  const { loading, getAllCustomer, createCustomer, customerUrl, getSingleCustomer, updateCustomer } : any = useCustomer()
+
+  useEffect(() => {
+    if (mode === 'edit') {
+      getSingleData()
+    }
+  }
+  , [])
+
+  const getSingleData = async () => {
+    try {
+      const res = await getSingleCustomer(`${baseUrl}/admin/user/${modelId}`)
+      delete res.password
+      await form.reset(res)
+    } catch (error:any) {
+      toast.error(error?.data?.message)
+    }
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,10 +54,8 @@ const CustomerForm = ({action}:{action: () => void}) => {
       name: '',
       gender: '',
       email: '',
-      password: '',
       phone: '',
       code_phone: '',
-      birth: new Date(),
     },
     resetOptions: {
       keepDirtyValues: true
@@ -64,17 +65,16 @@ const CustomerForm = ({action}:{action: () => void}) => {
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
 
-      await createCustomer(data)
+      if (mode === 'edit') {
+        await updateCustomer(`${baseUrl}/admin/user/${modelId}`, data)
+      } else{
+        await createCustomer(data)
+      }
       await getAllCustomer(customerUrl)
       form.reset()
-      
-      if (error) {
-        toast.error(errorData.message)
-      }else{
-        toast.success("Customer created")
-      }      
+      toast.success("Customer saved")
     } catch (error:any) {
-      toast.error(error)
+      toast.error(error?.data?.message)
     }
     setIsOpen(false)
   }
@@ -100,7 +100,7 @@ const CustomerForm = ({action}:{action: () => void}) => {
               )}
             />
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="birth"
               render={({ field }) => (
@@ -146,7 +146,7 @@ const CustomerForm = ({action}:{action: () => void}) => {
                   </FormItem>
                 </div>
               )}
-            />
+            /> */}
 
             <FormField
               control={form.control}
@@ -158,11 +158,11 @@ const CustomerForm = ({action}:{action: () => void}) => {
                       <FormControl>
                         <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className='flex gap-4'>
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value='male' id="r1" />
+                              <RadioGroupItem value='male' id="r1" checked={field.value === 'male'} />
                               <Label htmlFor="r1">male</Label>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value='female' id="r2" />
+                              <RadioGroupItem value='female' id="r2" checked={field.value === 'female'} />
                               <Label htmlFor="r2">female</Label>
                             </div>
                         </RadioGroup>
@@ -172,6 +172,7 @@ const CustomerForm = ({action}:{action: () => void}) => {
                 </div>
               )}
             />
+            
             <FormField
               control={form.control}
               name="email"
@@ -187,6 +188,7 @@ const CustomerForm = ({action}:{action: () => void}) => {
                 </div>
               )}
             />
+            
             <FormField
               control={form.control}
               name="code_phone"
@@ -228,6 +230,7 @@ const CustomerForm = ({action}:{action: () => void}) => {
                 </div>
               )}
             />
+
             <FormField
               control={form.control}
               name="phone"
@@ -243,7 +246,8 @@ const CustomerForm = ({action}:{action: () => void}) => {
                 </div>
               )}
             />
-            <FormField
+
+            {/* <FormField
               control={form.control}
               name="photo"
               render={({ field }) => (
@@ -272,7 +276,10 @@ const CustomerForm = ({action}:{action: () => void}) => {
                   </FormItem>
                 </div>
               )}
-            />
+            /> */}
+            <div className='text-gray-500 text-sm mb-4 font-semibold'>
+             <i> The credential will send to the email</i>
+            </div>
             <div>
               <Button className="w-full" size={"lg"}
                 disabled={loading}

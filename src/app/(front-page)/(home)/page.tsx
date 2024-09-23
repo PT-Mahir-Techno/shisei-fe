@@ -5,16 +5,20 @@ import "../../styles/animations.css";
 
 
 export default function Home() {
+
+  // const al = "trus"
+  // console.log(al<boolean>);
+
   return (
     <div className="page-animation">
       {/* hero */}
       
       <section
-        className="h-[700px] bg-cover bg-center bg-no-repeat pt-[200px]"
+        className="h-[550px] md:h-[700px] bg-cover bg-center bg-no-repeat pt-[160px] md:pt-[200px]"
         style={{ backgroundImage: 'url("/hero-bg.png")' }}
       >
         <div className="container">
-          <h1 className="text-6xl text-white leading-tight font-bold font-noto_serif">
+          <h1 className="text-4xl md:text-7xl lg:text-7xl text-white leading-normal font-bold font-noto_serif">
             Find Calm and <br /> Balance with <br /> Our Therapy
           </h1>
           <p className="text-slate-100 mt-7 leading-normal">
@@ -130,7 +134,7 @@ export default function Home() {
 
           <div className="flex flex-wrap md:flex-nowrap justify-between gap-8 ">
             <div className="w-full flex flex-col justify-center flex-wrap">
-              <div className={"font-noto_serif mb-4 text-3xl font-bold text-gray-600 dark:text-slate-200"}>
+              <div className={"font-noto_serif mb-4 text-2xl md:text-3xl font-bold text-gray-600 dark:text-slate-200"}>
                 Do you have issues like these?
               </div>
               <div className="text-sm text-slate-500 leading-relaxed dark:text-slate-300">
@@ -150,7 +154,7 @@ export default function Home() {
             <div className="w-full h-[300px] bg-cover bg-center bg-no-repeat rounded-lg shadow-md" style={{ backgroundImage: 'url("/img/why-img.png")' }}>
             </div>
             <div className="w-full flex flex-col justify-center">
-              <div className={"font-noto_serif mb-6 text-3xl font-bold text-gray-600 leading-snug dark:text-slate-200"}>
+              <div className={"font-noto_serif mb-6 text-2xl md:text-3xl font-bold text-gray-600 leading-snug dark:text-slate-200"}>
                 A program that integrates <br /> the latest technology.
               </div>
               <div className="text-sm text-slate-500 leading-relaxed dark:text-slate-300">
@@ -182,7 +186,7 @@ export default function Home() {
 
       <section style={{ backgroundImage: 'url("/img/section-bg.png")' }} className="bg-cover bg-center bg-no-repeat">
         <div className="container text-center py-16">
-          <div className={"font-noto_serif text-3xl font-semibold mb-8 text-background leading-snug dark:text-slate-200"}>
+          <div className={"font-noto_serif text-2xl md:text-3xl font-semibold mb-8 text-background leading-snug dark:text-slate-200"}>
           Don’t wait any longer to become the best version of <br /> yourself. Begin your path to health and happiness <br /> with our professional support.
           </div>
           <div>

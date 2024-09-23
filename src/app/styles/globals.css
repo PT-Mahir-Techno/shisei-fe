@@ -125,3 +125,50 @@
     @apply w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 ;
   }
 }
+
+/* full calendar */
+/* .fc-dayGridMonth-button .fc-button .fc-button-primary .fc-button-active {
+  @apply bg-primary text-white;
+} */
+/* Change the calendar header background */
+.fc-toolbar .fc-toolbar-title {
+  @apply text-gray-500 text-lg font-semibold;
+}
+
+.fc-toolbar {
+  @apply text-gray-500;
+}
+
+.fc-toolbar .title{
+  @apply text-gray-800;
+}
+
+/* Customize day cells */
+.fc-day {
+  @apply border border-gray-200;
+}
+
+/* Customize selected date cells */
+.fc-daygrid-day.fc-day-today {
+  @apply bg-blue-200;
+}
+
+.fc .fc-button-group .fc-button{
+  @apply bg-background text-foreground/60 rounded-md border border-gray-300;
+}
+
+.fc .fc-button-group .fc-button:hover{
+  @apply bg-primary border-none text-white;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active {
+  @apply bg-primary border-none text-white;
+}
+
+.fc table th {
+  @apply font-medium text-gray-700 py-1;
+}
+
+.fc table td {
+  @apply font-medium text-gray-600;
+}

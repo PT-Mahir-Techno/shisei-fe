@@ -29,7 +29,7 @@ api.interceptors.response.use(
     return response.data
   },
   (error) => {
-    return Promise.reject(error.response.data)
+    return Promise.reject(error.response)
   }
 )
 

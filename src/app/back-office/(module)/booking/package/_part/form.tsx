@@ -29,8 +29,17 @@ const PackageForm = () => {
 
   const {locations, getAllLocationNoPaginate} = useLocation()
   const {periods, getAllPeriodNoPaginate} = usePeriod()
-  const {loading, createPackage, getAllPackage, success, errorData, packageUrl} = usePackage()
-  const {setIsOpen} = useSheet()
+  const {loading, createPackage, getAllPackage, success, errorData, packageUrl, getSinglePackage, updatePackage} = usePackage()
+  const {setIsOpen, mode, modelId} = useSheet()
+
+  const getSingleData = async () => {
+    try {
+      const res = await getSinglePackage(`${baseUrl}/admin/membership/${modelId}`)
+      await form.reset(res)
+    } catch (error:any) {
+      toast.error(error.data.message)
+    }
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,7 +49,11 @@ const PackageForm = () => {
     },
   })
 
+
   useEffect(() => {
+    if (mode === 'edit') {
+      getSingleData()
+    }
     getAllLocationNoPaginate(`${baseUrl}/admin/location?type=nopaginate`)
     getAllPeriodNoPaginate(`${baseUrl}/admin/duration?type=nopaginate`)
   }, [])
@@ -51,21 +64,20 @@ const PackageForm = () => {
         delete data.location_id
       }
 
-      await createPackage(data)
+      if (mode == 'edit') {
+        await updatePackage(`${baseUrl}/admin/membership/${modelId}`, data)
+      }else{
+        await createPackage(data)
+      }
+
       await getAllPackage(packageUrl)
 
       form.reset()
-
-      if (!success){
-        toast.error(errorData.message)
-      } else{
-        toast.success("Package created successfully")
-      }      
-
-      setIsOpen(false)
+      toast.success("Package Saved successfully")
     } catch (error:any) {
-      toast.error(error.message)
+      toast.error(error.data.message)
     }
+    setIsOpen(false)
   }
 
   return (

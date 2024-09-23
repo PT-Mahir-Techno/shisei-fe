@@ -4,16 +4,27 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useSheet } from "@/store/use-sheet"
 import { MoreHorizontal } from "lucide-react"
-import { RiClipboardFill, RiDeleteBin5Fill, RiEdit2Fill } from "react-icons/ri"
+import { RiCalendar2Fill, RiCalendarCheckFill, RiClipboardFill, RiDeleteBin5Fill, RiEdit2Fill } from "react-icons/ri"
 import { useModal } from "@/store/use-modal"
 
-function ActionButton({model} : any) {
-  const { setIsOpen } = useSheet()
-  const { setIsOpen: setIsOpenModal, setModalId } = useModal()
+function ActionButton({model, isDay} : any) {
+  const { setIsOpen, setModelId, setMode } = useSheet()
+  const { setIsOpen: setIsOpenModal, setModalId, setIsOpenDay } = useModal()
 
   const handleClickDelete = (id:string) => {
     setIsOpenModal(true)
     setModalId(id)
+  }
+
+  const handleSetDay = (id:string) => {
+    setIsOpenDay(true)
+    setModalId(id)
+  }
+
+  const handleSheetEdit = (id:string) => {
+    setIsOpen(true)
+    setModelId(id)
+    setMode('edit')
   }
 
   return (
@@ -34,7 +45,15 @@ function ActionButton({model} : any) {
             <RiClipboardFill size={16} className="mr-2 text-green-500" /> Copy ID
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setIsOpen(true)}  className="cursor-pointer">
+          {
+            isDay && (
+              <DropdownMenuItem onClick={() => handleSetDay(model.id)} className="cursor-pointer">
+                <RiCalendarCheckFill size={16} className="mr-2 text-purple-600" />
+                Avaibility
+              </DropdownMenuItem>
+            )
+          }
+          <DropdownMenuItem onClick={() => handleSheetEdit(model.id)}  className="cursor-pointer">
             <RiEdit2Fill size={16} className="mr-2 text-primary" />
             Edit Data
           </DropdownMenuItem>

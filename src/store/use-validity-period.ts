@@ -13,10 +13,11 @@ type PeriodStoreType = {
   errorData: any
   periodUrl: string
   getAllPeriod: (url: string) => void
-  getSinglePeriod: (url: string) => void
+  getSinglePeriod: (url: string) => Promise<void>
   createPeriod: (data: any) => void
   deletePeriod: (url: string) => void
   getAllPeriodNoPaginate: (url: string) => void
+  updatePeriod: (url: string, data: any) => void
 }
 
 const initState = {
@@ -56,8 +57,10 @@ export const usePeriod = create<PeriodStoreType>((set, get) => ({
       set({loading: true })
       const res = await api.get(url)
       set({period: res.data, loading: false, success: true })
+      return Promise.resolve(res.data)
     } catch (error) {
       set({ error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   },
   createPeriod:async (data: any) => {
@@ -65,8 +68,10 @@ export const usePeriod = create<PeriodStoreType>((set, get) => ({
       set({loading: true })
       await api.post(`${baseUrl}/admin/duration`, data)
       set({loading: false, success: true })
+      return Promise.resolve()
     } catch (error) {
       set({error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   },
   deletePeriod: async (url: string) => {
@@ -76,6 +81,17 @@ export const usePeriod = create<PeriodStoreType>((set, get) => ({
       set({loading: false, success: true })
     } catch (error) {
       set({error: true, loading: false, success: false })
+    }
+  },
+  updatePeriod: async (url: string, data: any) => {
+    try {
+      set({loading: true })
+      await api.put(url, data)
+      set({loading: false, success: true })
+      return Promise.resolve()
+    } catch (error) {
+      set({error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   }
 }))

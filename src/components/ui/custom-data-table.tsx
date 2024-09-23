@@ -22,6 +22,7 @@ import LoadingIcons from "react-loading-icons"
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination"
 import { boolean } from "zod"
 import { useLocation } from "@/store/use-location"
+import { Children } from "react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -34,6 +35,7 @@ interface DataTableProps<TData, TValue> {
   links?: Array<any>
   nextPage: (url:string) => void
   previousPage?: () => void
+  children?: React.ReactNode
 }
 
 export function CUstomDataTable<TData, TValue>({
@@ -46,7 +48,8 @@ export function CUstomDataTable<TData, TValue>({
   totalPages = 1,
   nextPage,
   previousPage,
-  links = []
+  links = [],
+  children
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -57,8 +60,8 @@ export function CUstomDataTable<TData, TValue>({
   
   return (
     <>
-    <div className="flex items-center py-4">
-        <Input onChange={(e) => onSearch?.(e.target.value)} className="max-w-sm" placeholder="Filter name..." />
+      <div className="py-4">
+        {children}
       </div>
       <div className="rounded-md border">
         <Table>

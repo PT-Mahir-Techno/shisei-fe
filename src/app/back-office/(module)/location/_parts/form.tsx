@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect } from 'react'
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -10,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { useSheet } from '@/store/use-sheet'
 import { useLocation } from '@/store/use-location'
 import toast from 'react-hot-toast'
+import { baseUrl } from '@/lib/variable'
 
 export const formSchema = z.object({
   name: z.string().min(1, {message: "Name is required"}),
@@ -20,9 +23,23 @@ type LocationFormProps = {
 
 const LocationForm = () => {
 
-  const { setIsOpen } = useSheet()
-  const { loading, getAllLocation, createLoation, locationUrl } : any = useLocation()
+  const { setIsOpen, modelId, mode } = useSheet()
+  const { loading, getAllLocation, createLoation, locationUrl, getSingleLocation, location, updateLoacation } : any = useLocation()
 
+  useEffect(() => {
+    if (mode === 'edit') {
+      getSingleData()
+    }
+  }, [])
+
+  const getSingleData = async () => {
+    try {
+      const res = await getSingleLocation(`${baseUrl}/admin/location/${modelId}`)
+      await form.reset(res)
+    } catch (error:any) {
+      toast.error(error.data.message)
+    }
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -36,7 +53,11 @@ const LocationForm = () => {
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await createLoation(data)
+      if (mode === 'edit') {
+        await updateLoacation(`${baseUrl}/admin/location/${modelId}`, data)
+      }else {
+        await createLoation(data)
+      }
       await getAllLocation(locationUrl)
       toast.success("Location created")
       form.reset()
@@ -69,7 +90,7 @@ const LocationForm = () => {
               )}
           />
         </div>
-        <Button className="w-full" size={"lg"}>
+        <Button className="w-full" size={"lg"} disabled={loading}>
           {
             loading && <LoadingIcons.Oval strokeWidth={4} className="w-4 h-4 mr-2 animate-spin" />
           }

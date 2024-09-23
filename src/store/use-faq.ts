@@ -13,10 +13,11 @@ type FaqStoreType = {
   errorData: any
   faqUrl: string
   getAllFaq: (url: string) => void
-  getSingleFaq: (url: string) => void
-  createFaq: (data: any) => void
+  getSingleFaq: (url: string) => Promise<void>
+  createFaq: (data: any) => Promise<void>
   deleteFaq: (url: string) => void
   getAllFaqNoPaginate: (url: string) => void
+  updateFaq: (url: string, data: any) => Promise<void>
 }
 
 const initState = {
@@ -56,8 +57,10 @@ export const useFaq = create<FaqStoreType>((set, get) => ({
       set({loading: true })
       const res = await api.get(url)
       set({faq: res.data, loading: false, success: true })
+      return Promise.resolve(res.data)
     } catch (error) {
       set({ error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   },
   createFaq:async (data: any) : Promise<any> => {
@@ -81,5 +84,16 @@ export const useFaq = create<FaqStoreType>((set, get) => ({
         reject(err)
       } )
     })
+  },
+  updateFaq: async (url: string, data: any) => {
+    try {
+      set({loading: true })
+      await api.put(url, data)
+      set({loading: false, success: true })
+      return Promise.resolve()
+    } catch (error) {
+      set({error: true, loading: false, success: false })
+      return Promise.reject(error)
+    }
   }
 }))

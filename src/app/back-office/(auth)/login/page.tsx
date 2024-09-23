@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from "react-hook-form"
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -15,6 +15,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import LoadingIcons from 'react-loading-icons'
 import toast from 'react-hot-toast'
 import { useAuth } from '@/hooks/use-auth'
+import { AuthContex } from '@/providers/auth-provider'
+import { useProfile } from '@/store/use-profile'
 
 const formSchema = z.object({
   email: z.string().email({message: "Invalid email"}),
@@ -22,7 +24,9 @@ const formSchema = z.object({
 })
 
 const LoginBoPage = () => {
+  const {setAuthState} = useContext(AuthContex)
   const {loading, login} = useAuth()
+  const {getPorfile} = useProfile()
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -35,16 +39,18 @@ const LoginBoPage = () => {
   
 
   const handleSubmit = async (data : z.infer<typeof formSchema>) => {
-    // router.replace('/back-office/dashboard')
     try {
-      // const res = await api.post(`${baseUrl}/admin/login`, data)
-      // console.log(res.data)
-
-      await login("/admin/login", data)
+      const res = await login("/admin/login", data)
+      setAuthState({
+        _auth: res.data.token,
+        _is_auth: 'true',
+        _avaibility: res.data.role
+      })
+      await getPorfile('/admin/profile')
       router.replace('/back-office/dashboard')
+      toast.success("Login success")
     } catch (err:any) {
-      // console.log(err)
-      toast.error(err.message)
+      toast.error(err?.data?.message)
     }
   }
 

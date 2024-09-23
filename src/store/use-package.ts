@@ -13,9 +13,10 @@ type PackageStoreType = {
   errorData: any
   packageUrl: string
   getAllPackage: (url: string) => void
-  getSinglePackage: (url: string) => void
-  createPackage: (data: any) => void
+  getSinglePackage: (url: string) => Promise<void>
+  createPackage: (data: any) => Promise<void>
   deletePackage: (url: string) => void
+  updatePackage: (url: string, data: any) => Promise<void>
 }
 
 const initState = {
@@ -46,8 +47,10 @@ export const usePackage = create<PackageStoreType>((set, get) => ({
       set({loading: true })
       const res = await api.get(url)
       set({package: res.data, loading: false, success: true })
+      return Promise.resolve(res.data)
     } catch (error) {
       set({ error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   },
   createPackage:async (data: any) => {
@@ -55,8 +58,10 @@ export const usePackage = create<PackageStoreType>((set, get) => ({
       set({loading: true })
       await api.post(`${baseUrl}/admin/membership`, data)
       set({loading: false, success: true })
+      return Promise.resolve()
     } catch (error) {
       set({error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   },
   deletePackage: async (url: string) => {
@@ -66,6 +71,17 @@ export const usePackage = create<PackageStoreType>((set, get) => ({
       set({loading: false, success: true })
     } catch (error) {
       set({error: true, loading: false, success: false })
+    }
+  },
+  updatePackage: async (url: string, data: any) => {
+    try {
+      set({loading: true })
+      await api.put(url, data)
+      set({loading: false, success: true })
+      return Promise.resolve()
+    } catch (error) {
+      set({error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   }
 }))

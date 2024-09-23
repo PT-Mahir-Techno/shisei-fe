@@ -13,9 +13,10 @@ type CustomerStoreType = {
   errorData: any
   customerUrl: string
   getAllCustomer: (url: string) => void
-  getSingleCustomer: (url: string) => void
-  createCustomer: (data: any) => void
+  getSingleCustomer: (url: string) => Promise<void>
+  createCustomer: (data: any) => Promise<void>
   deleteCustomer: (url: string) => void
+  updateCustomer: (url: string, data: any) => Promise<void>
 }
 
 const initState = {
@@ -46,8 +47,10 @@ export const useCustomer = create<CustomerStoreType>((set, get) => ({
       set({loading: true })
       const res = await api.get(url)
       set({customer: res.data, loading: false, success: true, error: false})
+      return Promise.resolve(res.data)
     } catch (err) {
       set({ error: true, loading: false, success: false, errorData: err })
+      return Promise.reject(err)
     }
   },
   createCustomer:async (data: any) => {
@@ -56,12 +59,9 @@ export const useCustomer = create<CustomerStoreType>((set, get) => ({
       const payload = new FormData()
       payload.append('name', data.name)
       payload.append('email', data.email)
-      payload.append('password', data.password)
-      payload.append('photo', data.photo[0])
       payload.append('gender', data.gender)
       payload.append('phone', data.phone)
       payload.append('code_phone', data.code_phone)
-      payload.append('birth', data.birth)
       
       const config = {
         headers: {
@@ -71,8 +71,10 @@ export const useCustomer = create<CustomerStoreType>((set, get) => ({
 
       await api.post(`${baseUrl}/admin/user`, payload, config)
       set({loading: false, success: true, error: false})
+      return Promise.resolve()
     } catch (error) {
       set({error: true, loading: false, success: false, errorData: error})
+      return Promise.reject(error)
     }
   },
   deleteCustomer: async (url: string) => {
@@ -82,6 +84,17 @@ export const useCustomer = create<CustomerStoreType>((set, get) => ({
       set({loading: false, success: true, error: false})
     } catch (error) {
       set({error: true, loading: false, success: false, errorData: error})
+    }
+  },
+  updateCustomer: async (url: string, data: any) => {
+    try {
+      set({loading: true })
+      await api.put(url, data)
+      set({loading: false, success: true, error: false})
+      return Promise.resolve()
+    } catch (error) {
+      set({error: true, loading: false, success: false, errorData: error})
+      return Promise.reject(error)
     }
   }
 }))

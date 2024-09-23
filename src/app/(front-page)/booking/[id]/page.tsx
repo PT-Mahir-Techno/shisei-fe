@@ -3,13 +3,27 @@
 import { Button } from '@/components/ui/button'
 import CustomModal from '@/components/ui/custoom-dialog'
 import Link from 'next/link'
-import React from 'react'
+import React, { use, useContext, useEffect } from 'react'
 import { RiCalendar2Fill, RiCalendarScheduleLine, RiMapPin2Fill, RiMapPin2Line, RiQuestionFill, RiRefundLine, RiTimeFill, RiUser3Fill } from 'react-icons/ri'
 
 import "../../../styles/animations.css";
+import { AuthContex } from '@/providers/auth-provider'
+import { useSchedulePage } from '@/store/use-schedule-page'
+import { useParams, useSearchParams } from 'next/navigation'
+import { Skeleton } from '@/components/ui/skeleton'
 const DetailBookingPage = () => {
-
+  
+  const {} = useContext(AuthContex)
+  const {loading, getSingleSchedule, schedule } = useSchedulePage()
   const [showCancelModal, setShowCancelModal] = React.useState<boolean>(false)
+
+  const param = useParams()
+  const {id} = param
+
+  useEffect(() => {
+    getSingleSchedule(`/schedule/${id}`)
+  }, [param])
+  
 
   return (
     <div className='page-animation'>
@@ -20,40 +34,47 @@ const DetailBookingPage = () => {
         
         <div className='flex-1 border border-slate-200 dark:border-slate-700 rounded-lg p-5'>
           <div>
-            <img src="/img/why-img.png" alt="logo" className='w-full max-h-[477px] object-cover rounded-lg'/>
+            <img src={schedule?.image_url ?? '/img/img_placeholder.png'} alt="logo" className='w-full max-h-[477px] object-cover rounded-lg'/>
           </div>
           
-          <h2 className='font-noto_serif font-bold text-2xl text-gray-600 mb-1 mt-4 dark:text-slate-300'>Private Reformer Class B</h2>
-          <p className='text-sm text-primary mb-4'>2 classes remaining</p>
+          {
+            loading 
+            ? 
+            (
+              <Skeleton className="w-full h-10 mt-4 mb-8" />
+            )
+            : (
+              <div>
+                <h2 className='font-noto_serif font-bold text-2xl text-gray-600 mt-4 mb-8 dark:text-slate-300'>{schedule?.name}</h2>
+              </div>
+            )
+          }
+          {/* <p className='text-sm text-primary mb-4'>2 classes remaining</p> */}
           
-          <div className='py-[14px] px-5 my-6 bg-gray-100 dark:bg-gray-800 rounded-lg'>
-            <div className='flex items-center justify-between pb-3 mb-4 border-b-2 border-gray-200'>
-              <h2 className='font-noto_serif font-bold text-xl text-primary'>Your Package</h2>
-              <span className='bg-primary py-1.5 px-3 rounded-sm text-sm text-white hover:bg-primary/50'>3 credit left</span>
-            </div>
-            <p className='font-noto_serif font-bold text-lg mb-4 text-gray-700 dark:text-gray-200'>4 Session Package</p>
-            <div className='flex flex-col md:flex-row gap-4 flex-wrap'>
-              <div className='flex gap-2 items-center'>
-                <RiCalendarScheduleLine className='text-primary' size={24} />
-                <p className='text-foreground text-md'>Valid for 1 year</p>
-              </div>
-              <div className='flex gap-2 items-center'>
-                <RiRefundLine className='text-primary' size={24} />
-                <p className='text-foreground text-md'>4 Credit</p>
-              </div>
-              <div className='flex gap-2 items-center'>
-                <RiMapPin2Line className='text-primary' size={24} />
-                <p className='text-foreground text-md'>For all location</p>
-              </div>
-            </div>
-          </div>
+          {/* <div claz */}
 
           {/* <p className='text-sm text-destructive mb-12'>You do not have an eligible package, Buy a package to continue booking.</p> */}
           
           <h2 className='font-bold text-xl text-gray-600 dark:text-slate-300 border-b border-slate-300 pb-4 mb-4'>Description</h2>
-          <p className='text-md text-gray-700 dark:text-slate-300 leading-relaxed'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean pulvinar sem libero, pharetra bibendum dui aliquet at. Duis nulla enim, sollicitudin non nunc eget, ultricies varius libero. Etiam accumsan mi dictum leo aliquam, quis rutrum dolor facilisis. Morbi vitae ligula nisl. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer at risus sit amet leo vehicula vestibulum et vitae lorem. Fusce vel viverra ipsum, id volutpat est. Ut porttitor porttitor venenatis. Nulla a nunc id risus egestas ultricies. Sed odio diam, maximus vitae justo ac, tempus congue mi. Pellentesque facilisis tortor nulla, sed iaculis ex porta eu. Suspendisse porttitor pharetra enim, nec vulputate orci volutpat vel.
-          </p>
+          {
+            loading 
+            ? 
+            (
+              <div className='flex flex-col gap-4'>
+                {
+                  Array(10).fill(0).map((_, index) => (
+                    <Skeleton key={index} className="w-full h-6 " />
+                  ))
+                }
+              </div>
+            )
+            : (
+              <div>
+                <p className='text-md text-gray-700 dark:text-slate-300 leading-relaxed' dangerouslySetInnerHTML={{ __html: schedule?.description }}>
+                </p>
+              </div>
+            )
+          }
         </div>
         
         {/* side */}
@@ -63,49 +84,70 @@ const DetailBookingPage = () => {
             <div className='font-noto_serif font-bold text-gray-700 text-2xl border-b border-slate-300 pb-5 dark:text-slate-300 mb-5'>
               Your Schedule
             </div>
-            <div className='font-noto_serif font-bold text-gray-700 text-xl border-b border-slate-300 pb-5 dark:text-slate-300 mb-5'>
-              Private Reformer Class B
-            </div>
 
-            <div className='text-gray-700  border-b border-slate-300 pb-5 dark:text-slate-300 mb-5'>
-              <div className='flex items-center gap-2 mb-1'>
-                <RiCalendar2Fill className='text-primary text-xl'/>
-                <span className='text-lg'>Date</span>
+            {
+              loading
+              ? <div className='flex flex-col gap-4'>
+                {
+                  Array(10).fill(0).map((_, index) => (
+                    <div key={index}>
+                      <Skeleton className="w-1/4 h-4 mb-4" />
+                      <Skeleton className="w-full h-10 " />
+                    </div>
+                  ))
+                }
               </div>
-              <div className='text-xl font-bold'>
-                08 August 2024
-              </div>
-            </div>
+              : (
+                <div>
+                  <div className='font-noto_serif font-bold text-gray-700 text-xl border-b border-slate-300 pb-5 dark:text-slate-300 mb-5'>
+                    {schedule?.name}
+                  </div>
+                  
+                  <div className='text-gray-700  border-b border-slate-300 pb-5 dark:text-slate-300 mb-5'>
+                    <div className='flex items-center gap-2 mb-1'>
+                      <RiCalendar2Fill className='text-primary text-xl'/>
+                      <span className='text-lg'>Date</span>
+                    </div>
+                    <div className='text-xl font-bold'>
+                      {schedule?.date}
+                    </div>
+                  </div>
 
-            <div className='text-gray-700  border-b border-slate-300 pb-5 dark:text-slate-300 mb-5'>
-              <div className='flex items-center gap-2 mb-1'>
-                <RiTimeFill className='text-primary text-xl'/>
-                <span className='text-lg'>Time and duration</span>
-              </div>
-              <div className='text-xl font-bold'>
-                8:15 AM, 50 mins
-              </div>
-            </div>
+                  <div className='text-gray-700  border-b border-slate-300 pb-5 dark:text-slate-300 mb-5'>
+                    <div className='flex items-center gap-2 mb-1'>
+                      <RiTimeFill className='text-primary text-xl'/>
+                      <span className='text-lg'>Time and duration</span>
+                    </div>
+                    <div className='text-xl font-bold'>
+                      {schedule?.time}, {schedule?.duration} mins
+                    </div>
+                  </div>
 
-            <div className='text-gray-700  border-b border-slate-300 pb-5 dark:text-slate-300 mb-5'>
-              <div className='flex items-center gap-2 mb-1'>
-                <RiUser3Fill className='text-primary text-xl'/>
-                <span className='text-lg'>Instructor</span>
-              </div>
-              <div className='text-xl font-bold'>
-                Hendra Gunawan
-              </div>
-            </div>
+                  <div className='text-gray-700  border-b border-slate-300 pb-5 dark:text-slate-300 mb-5'>
+                    <div className='flex items-center gap-2 mb-1'>
+                      <RiUser3Fill className='text-primary text-xl'/>
+                      <span className='text-lg'>Instructor</span>
+                    </div>
+                    <div className='text-xl font-bold'>
+                      {schedule?.staff?.name}
+                    </div>
+                  </div>
 
-            <div className='text-gray-700  border-b border-slate-300 pb-5 dark:text-slate-300 mb-5'>
-              <div className='flex items-center gap-2 mb-1'>
-                <RiMapPin2Fill className='text-primary text-xl'/>
-                <span className='text-lg'>Location</span>
-              </div>
-              <div className='text-xl font-bold'>
-                Atrium Mulia Kuningan Studio
-              </div>
-            </div>
+                  <div className='text-gray-700  border-b border-slate-300 pb-5 dark:text-slate-300 mb-5'>
+                    <div className='flex items-center gap-2 mb-1'>
+                      <RiMapPin2Fill className='text-primary text-xl'/>
+                      <span className='text-lg'>Location</span>
+                    </div>
+                    <div className='text-xl font-bold'>
+                      {schedule.location?.name}
+                    </div>
+                  </div>
+
+                </div>
+              )
+            }
+
+
           </div>
 
           <div>
@@ -115,14 +157,15 @@ const DetailBookingPage = () => {
               <Button onClick={() => setShowCancelModal(true)} size={"lg"} className='w-full bg-gray-800 text-white hover:bg-gray-600'>Cancel Booking</Button>
               <Button className='w-full' size={"lg"}>Booking Success!</Button>
             </div>
-            <Link href={"/customer/schedule"}>
+
+            {/* <Link href={"/customer/schedule"}>
               <Button className='w-full mb-4' size={"lg"}>See Detail</Button>
-            </Link>
+            </Link> */}
 
                   
-            <Link href={"/booking/package"}>
+            {/* <Link href={"/booking/package"}>
               <Button className='w-full mb-3' size={"lg"}>BUY PACKAGE</Button>
-            </Link>
+            </Link> */}
 
             <p className='text-center text-primary'>Check-in 3 hours before class begins</p>
           

@@ -1,11 +1,14 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { baseUrl } from '@/lib/variable'
 import { useSheet } from '@/store/use-sheet'
 import { usePeriod } from '@/store/use-validity-period'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
@@ -18,8 +21,23 @@ export const formSchema = z.object({
 
 function PeriodForm() {
 
-  const { setIsOpen } = useSheet()
-  const { loading, getAllPeriod, createPeriod, periodUrl, error, errorData, success } : any = usePeriod()
+  const { setIsOpen, mode, modelId } = useSheet()
+  const { loading, getAllPeriod, createPeriod, periodUrl, getSinglePeriod, updatePeriod } : any = usePeriod()
+
+  useEffect(() => {
+    if (mode === 'edit') {
+      getSingleData()
+    }
+  }, [])
+
+  const getSingleData = async () => {
+    try {
+      const res = await getSinglePeriod(`${baseUrl}/admin/duration/${modelId}`)
+      await form.reset(res)
+    } catch (error:any) {
+      toast.error(error.data.message)
+    }
+  }
 
   const form  = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,17 +52,16 @@ function PeriodForm() {
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await createPeriod(data)
-      await getAllPeriod(periodUrl)
-
-      if (!success) {
-        toast.error(errorData.message)
+      if (mode == 'edit') {
+        await updatePeriod(`${baseUrl}/admin/duration/${modelId}`, data)
       }else{
-        toast.success("Period created")
+        await createPeriod(data)
       }
+      await getAllPeriod(periodUrl)
       form.reset()
+      toast.success("Period created")
     } catch (error:any) {
-      toast.error(error)
+      toast.error(error.data.message)
     }
     setIsOpen(false)
   }
@@ -87,7 +104,7 @@ function PeriodForm() {
             />
 
             <div>
-              <Button className="w-full" size={"lg"}>
+              <Button className="w-full" size={"lg"} disabled={loading}>
                 {
                   loading && <LoadingIcons.Oval strokeWidth={4} className="w-4 h-4 mr-2 animate-spin" />
                 }

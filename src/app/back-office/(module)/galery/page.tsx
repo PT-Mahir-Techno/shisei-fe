@@ -150,7 +150,7 @@ const GaleryPage = () => {
                     <FormItem>
                       <Label htmlFor="image">Photo</Label>
                       <FormControl>
-                        <Input {...form.register('image')} type='file' />
+                        <Input accept="image/*" {...form.register('image')} type='file' />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -2,55 +2,123 @@
 
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
-
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import React from 'react'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Textarea } from '@/components/ui/textarea'
-
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { useProfile } from '@/store/use-profile'
+import toast from 'react-hot-toast'
+import LoadingIcons from 'react-loading-icons'
 
 type PasswordSettingProps = {
   close?: () => void
 }
 
+const formSchema = z.object({
+  password: z.string().min(6, 'Password must be at least 6 characters').max(255, 'Password must be at most 255 characters'),
+  old_password: z.string().min(6, 'Password must be at least 6 characters').max(255, 'Password must be at most 255 characters'),
+  password_confirmation: z.string().min(6, 'Password must be at least 6 characters').max(255, 'Password must be at most 255 characters'),
+}).refine(data => data.password === data.password_confirmation, {
+  message: 'Password confirmation must be same with password',
+  path: ['password_confirmation']
+})
+
 const PasswordSetting = ({close}: PasswordSettingProps) => {
-  const [date, setDate] = React.useState<Date>()
+
+  const {loading, updatePassword} = useProfile()
+  
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      password: '',
+      old_password: '',
+      password_confirmation: ''
+    },
+    resetOptions: {
+      keepDirtyValues: true,
+    }
+  })
+
+  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      const res = await updatePassword(data, '/dashboard/profile/update-password')
+      toast.success("password successfuly updated")
+      form.reset()
+    } catch (error:any) {
+      toast.error(error?.data?.message)
+      console.log(error)
+    }
+  }
+
   return (
     <>
       <div className='pb-2 mb-4 font-noto_serif font-bold text-xl text-gray-800 dark:text-gray-200 border-b border-gray-200'>
         Password Setting
       </div>
 
-      <div className="grid w-full items-center gap-1.5 mb-5">
-        <Label htmlFor="current" className="mb-1 text-gray-600">Enter Current Password</Label>
-        <Input type="password" id="current" placeholder="" />
-      </div>
-      
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
 
-      <div className="grid w-full items-center gap-1.5 mb-5">
-        <Label htmlFor="new" className="mb-1 text-gray-600">Enter New Password</Label>
-        <Input type="password" id="new" placeholder="" />
-      </div>
+          <FormField
+            control={form.control}
+            name='old_password'
+            render={({field, fieldState}) => (
+              <FormItem  className='w-full mb-4'>
+                <Label>Old Password</Label>
+                <FormControl>
+                  <Input type='password' placeholder="enter your old password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <div className="grid w-full items-center gap-1.5 mb-5">
-        <Label htmlFor="confirm" className="mb-1 text-gray-600">Confirm New Password</Label>
-        <Input type="password" id="confirm" placeholder="" />
-      </div>
+          <FormField
+            control={form.control}
+            name='password'
+            render={({field, fieldState}) => (
+              <FormItem  className='w-full mb-4'>
+                <Label>New Password</Label>
+                <FormControl>
+                  <Input type='password' placeholder="enter your new password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <div className='flex justify-end gap-4'>
-        <Button onClick={close} variant={"secondary"}>Cancel</Button>
-        <Button>Save</Button>
-      </div>
+          <FormField
+            control={form.control}
+            name='password_confirmation'
+            render={({field, fieldState}) => (
+              <FormItem  className='w-full mb-4'>
+                <Label>Password Confirmation</Label>
+                <FormControl>
+                  <Input type='password' placeholder="enter your password confirmation" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+        
+
+          <div className='flex justify-end gap-4'>
+            <Button type='button' onClick={close} variant={"secondary"}>Close</Button>
+            <Button
+              disabled={loading}
+            >
+              {
+                loading && <LoadingIcons.Oval strokeWidth={4} className="w-4 h-4 mr-2 animate-spin" />
+              }
+              Save
+            </Button>
+          </div>
+        </form>
+      </Form>
+
     </>
   )
 }

@@ -1,4 +1,12 @@
 export default [
+    {
+        "name": "Indonesia",
+        "code": "ID",
+        "emoji": "🇮🇩",
+        "unicode": "U1F1EE U1F1E9",
+        "dial_code": "62",
+        "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/ID.svg"
+    },
   {
     "name": "Afghanistan",
     "code": "AF",
@@ -24,28 +32,12 @@ export default [
       "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AD.svg"
   },
   {
-      "name": "Angola",
-      "code": "AO",
-      "emoji": "🇦🇴",
-      "unicode": "U1F1E6 U1F1F4",
-      "dial_code": "244",
-      "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AO.svg"
-  },
-  {
       "name": "Anguilla",
       "code": "AI",
       "emoji": "🇦🇮",
       "unicode": "U1F1E6 U1F1EE",
       "dial_code": "1264",
       "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AI.svg"
-  },
-  {
-      "name": "Antarctica",
-      "code": "AQ",
-      "emoji": "🇦🇶",
-      "unicode": "U1F1E6 U1F1F6",
-      "dial_code": "672",
-      "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AQ.svg"
   },
   {
       "name": "Antigua & Barbuda",
@@ -270,14 +262,6 @@ export default [
       "unicode": "U1F1E8 U1F1F2",
       "dial_code": "237",
       "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CM.svg"
-  },
-  {
-      "name": "Canada",
-      "code": "CA",
-      "emoji": "🇨🇦",
-      "unicode": "U1F1E8 U1F1E6",
-      "dial_code": "1",
-      "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CA.svg"
   },
   {
       "name": "Cayman Islands",
@@ -672,14 +656,6 @@ export default [
       "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GT.svg"
   },
   {
-      "name": "Guernsey",
-      "code": "GG",
-      "emoji": "🇬🇬",
-      "unicode": "U1F1EC U1F1EC",
-      "dial_code": "44",
-      "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GG.svg"
-  },
-  {
       "name": "Guinea",
       "code": "GN",
       "emoji": "🇬🇳",
@@ -752,14 +728,6 @@ export default [
       "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/IN.svg"
   },
   {
-      "name": "Indonesia",
-      "code": "ID",
-      "emoji": "🇮🇩",
-      "unicode": "U1F1EE U1F1E9",
-      "dial_code": "62",
-      "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/ID.svg"
-  },
-  {
       "name": "Iran",
       "code": "IR",
       "emoji": "🇮🇷",
@@ -782,22 +750,6 @@ export default [
       "unicode": "U1F1EE U1F1EA",
       "dial_code": "353",
       "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/IE.svg"
-  },
-  {
-      "name": "Isle of Man",
-      "code": "IM",
-      "emoji": "🇮🇲",
-      "unicode": "U1F1EE U1F1F2",
-      "dial_code": "44",
-      "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/IM.svg"
-  },
-  {
-      "name": "Israel",
-      "code": "IL",
-      "emoji": "🇮🇱",
-      "unicode": "U1F1EE U1F1F1",
-      "dial_code": "972",
-      "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/IL.svg"
   },
   {
       "name": "Italy",
@@ -824,28 +776,12 @@ export default [
       "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/JP.svg"
   },
   {
-      "name": "Jersey",
-      "code": "JE",
-      "emoji": "🇯🇪",
-      "unicode": "U1F1EF U1F1EA",
-      "dial_code": "44",
-      "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/JE.svg"
-  },
-  {
       "name": "Jordan",
       "code": "JO",
       "emoji": "🇯🇴",
       "unicode": "U1F1EF U1F1F4",
       "dial_code": "962",
       "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/JO.svg"
-  },
-  {
-      "name": "Kazakhstan",
-      "code": "KZ",
-      "emoji": "🇰🇿",
-      "unicode": "U1F1F0 U1F1FF",
-      "dial_code": "7",
-      "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KZ.svg"
   },
   {
       "name": "Kenya",
@@ -1320,14 +1256,6 @@ export default [
       "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PH.svg"
   },
   {
-      "name": "Pitcairn Islands",
-      "code": "PN",
-      "emoji": "🇵🇳",
-      "unicode": "U1F1F5 U1F1F3",
-      "dial_code": "64",
-      "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PN.svg"
-  },
-  {
       "name": "Poland",
       "code": "PL",
       "emoji": "🇵🇱",
@@ -1358,14 +1286,6 @@ export default [
       "unicode": "U1F1F6 U1F1E6",
       "dial_code": "974",
       "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/QA.svg"
-  },
-  {
-      "name": "Réunion",
-      "code": "RE",
-      "emoji": "🇷🇪",
-      "unicode": "U1F1F7 U1F1EA",
-      "dial_code": "262",
-      "image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/RE.svg"
   },
   {
       "name": "Romania",

@@ -13,8 +13,8 @@ type AdminStoreType = {
   errorData: any
   adminUrl: string
   getAllAdmin: (url: string) => void
-  getSingleAdmin: (url: string) => void
-  createAdmin: (data: any) => void
+  getSingleAdmin: (url: string) => Promise<void>
+  createAdmin: (data: any) => Promise<void>
   deleteAdmin: (url: string) => void
 }
 
@@ -46,8 +46,10 @@ export const useAdmin = create<AdminStoreType>((set, get) => ({
       set({loading: true })
       const res = await api.get(url)
       set({admin: res.data, loading: false, success: true })
+      return Promise.resolve(res.data)
     } catch (err) {
       set({ error: true, loading: false, success: false, errorData: err })
+      return Promise.reject(err)
     }
   },
   createAdmin:async (data: any) => {
@@ -67,8 +69,10 @@ export const useAdmin = create<AdminStoreType>((set, get) => ({
 
       await api.post(`${baseUrl}/admin/admin`, payload, config)
       set({loading: false, success: true })
+      return Promise.resolve()
     } catch (error) {
       set({error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   },
   deleteAdmin: async (url: string) => {
@@ -78,6 +82,30 @@ export const useAdmin = create<AdminStoreType>((set, get) => ({
       set({loading: false, success: true })
     } catch (error) {
       set({error: true, loading: false, success: false })
+    }
+  },
+  updateAdmin: async (url: string, data: any) => {
+    try {
+      set({loading: true })
+
+      const payload = new FormData()
+      payload.append('name', data.name)
+      payload.append('email', data.email)
+      payload.append('password', data.password)
+      payload.append('photo', data.photo[0])
+      
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+
+      await api.post(url, data, config)
+      set({loading: false, success: true })
+      return Promise.resolve()
+    } catch (error) {
+      set({error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   }
 }))

@@ -1,3 +1,6 @@
+import { LocationType } from "./location-type"
+import { PeriodType } from "./period-type"
+
 export type PackageType = {
   id: string
   name: string
@@ -7,4 +10,7 @@ export type PackageType = {
   location_id: string
   created_at: string
   updated_at: string
+  location: LocationType|null
+  duration: PeriodType
 }
+

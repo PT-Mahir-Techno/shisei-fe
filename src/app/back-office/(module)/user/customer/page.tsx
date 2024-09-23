@@ -2,10 +2,8 @@
 
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { RiAddCircleFill } from "react-icons/ri"
 import CustomSheets from "@/components/ui/custom-sheets"
-import { Label } from "@/components/ui/label"
 import CustomerForm from "./_parts/form"
 import { useSheet } from "@/store/use-sheet"
 import { useCustomer } from "@/store/use-customer"
@@ -16,7 +14,6 @@ import { columns } from "./_parts/column"
 import CustomModal from "@/components/ui/custoom-dialog"
 import LoadingIcons from "react-loading-icons"
 import toast from "react-hot-toast"
-import { error } from "console"
 
 const CustomerPage = () => {
   const title = "Customer"

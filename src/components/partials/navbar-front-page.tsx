@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ModeToggle } from '../mode-toggle'
@@ -13,6 +13,9 @@ import CustomModal from '../ui/custoom-dialog'
 import { Button } from '../ui/button'
 import { useAuth } from '@/hooks/use-auth'
 import LoadingIcons from 'react-loading-icons'
+import Cookies from 'js-cookie'
+import { AuthContex } from '@/providers/auth-provider'
+
 
 const bgPaths: any[] = [
   '/booking',
@@ -23,9 +26,10 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
 
   const [isHidden, setIsHidden] = useState(false)
   const pathName = usePathname()
-  const {data, resetProfile, setData} = useProfile()
+  const {data, setData} = useProfile()
   const { logout, loading } = useAuth()
   const router = useRouter()
+  const {authState, setAuthState} = useContext(AuthContex)
 
   const [scrollPosition, setScrollPosition] = useState(0);
   const {isOpen, setIsOpen} = useModal()
@@ -51,10 +55,29 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
   }
 
   const handleLogout = async () => {
-    await logout("/admin/logout")
+    const logoutUrl = authState._avaibility === 'customer' ? '/logout' : '/admin/logout'
+
+    await logout(logoutUrl)
     await setData()
+
+    setAuthState({
+      _auth: '',
+      _is_auth: '',
+      _avaibility: ''
+    })
+
     setIsOpen(false)
     router.push('/')
+  }
+
+  const handleClickDashboard = () => {
+    const redirectUrl = authState._avaibility === 'customer' ? '/customer/dashboard' : '/back-office/dashboard'
+    router.push(redirectUrl)
+  }
+
+  const handleCLickProfile = () => {
+    const redirectUrl = authState._avaibility === 'customer' ? '/customer/my-profile' : '/back-office/profile'
+    router.push(redirectUrl)
   }
 
   return (
@@ -126,7 +149,7 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
                         </div>
                         <div className='hidden md:flex flex-col justify-start '>
                           <h2 className='text-gray-800 text-sm dark:text-slate-100 overflow-clip'>{data?.name}</h2>
-                          <p className='text-primary text-xs'>Customer</p>
+                          <p className='text-primary text-xs'>{ authState?._avaibility }</p>
                         </div>
                         <div className='hidden md:block'>
                           <RiArrowDropDownLine className='text-gray-700 group-hover:text-primary transition-all duration-200' size={26}/>
@@ -135,14 +158,14 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="py-4 px-2">
                       <DropdownMenuItem>
-                        <div className='flex items-center gap-2'>
+                        <div onClick={() => handleClickDashboard()} className='flex items-center gap-2'>
                           <RiDashboardFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
                           Dashboard
                         </div>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>
-                        <div className='flex items-center gap-2'>
+                        <div onClick={() => handleCLickProfile()} className='flex items-center gap-2'>
                           <RiUser3Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
                           Profile
                         </div>

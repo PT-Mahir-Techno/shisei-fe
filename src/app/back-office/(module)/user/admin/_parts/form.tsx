@@ -1,11 +1,14 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { baseUrl } from '@/lib/variable'
 import { useAdmin } from '@/store/use-admin'
 import { useSheet } from '@/store/use-sheet'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
@@ -33,8 +36,24 @@ export const formSchema = z.object({
 
 const AdminForm = ({action}:{action: () => void}) => {
 
-  const { setIsOpen } = useSheet()
-  const { loading, getAllAdmin, createAdmin, adminUrl, error, errorData } : any = useAdmin()
+  const { setIsOpen, mode, modelId } = useSheet()
+  const { loading, getAllAdmin, createAdmin, adminUrl, error, errorData, updateAdmin, getSingleAdmin } : any = useAdmin()
+
+  useEffect(() => {
+    if (mode === 'edit') {
+      getSingleData()
+    }
+  }, [])
+
+  const getSingleData = async () => {
+    try {
+      const res = await getSingleAdmin(`${baseUrl}/admin/admin/${modelId}`)
+      delete res.password
+      await form.reset(res)
+    } catch (error:any) {
+      toast.error(error.data.message)
+    }
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,17 +69,17 @@ const AdminForm = ({action}:{action: () => void}) => {
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await createAdmin(data)
-      await getAllAdmin(adminUrl)
-      toast.success("Admin created")
-      form.reset()
-
-      if (error) {
-        toast.error(errorData.message)
+      if (mode === 'edit') {
+        await updateAdmin(`${baseUrl}/admin/admin/${modelId}?_method=PUT`, data)
+      }else{
+        await createAdmin(data)
       }
-      
+
+      await getAllAdmin(adminUrl)
+      form.reset()
+      toast.success("Admin saved")
     } catch (error:any) {
-      toast.error(error)
+      toast.error(error.data.message)
     }
     setIsOpen(false)
   }
@@ -108,7 +127,7 @@ const AdminForm = ({action}:{action: () => void}) => {
                   <FormItem>
                     <Label htmlFor="photo">Photo</Label>
                     <FormControl>
-                      <Input {...form.register('photo')} type='file'  placeholder="Name" />
+                      <Input accept='image/*' {...form.register('photo')} type='file'  placeholder="Name" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

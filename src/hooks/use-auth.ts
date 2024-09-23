@@ -9,22 +9,27 @@ import { useProfile } from "@/store/use-profile";
 export const useAuth = () => {
 
   const [loading, setLoading] = React.useState(false)
-  const { resetProfile } = useProfile()
+  const { resetProfile, setRole } = useProfile()
   
   // logout
   const logout = async (url:string) => {
-    // fetch logout api
     try {
       setLoading(true)
       await api.post(`${baseUrl}${url}`)
       await resetProfile()
+      await setRole(null)
+
+      Cookies.remove('_auth')
+      Cookies.remove('_is_auth')
+      Cookies.remove('_avaibility')
+
       toast.success("Logout success")
       setLoading(false)
+      return Promise.resolve()
     } catch (error) {
       setLoading(false)
+      return Promise.reject(error)
     }
-
-    Cookies.remove('_auth')
   }
 
   //  login
@@ -33,13 +38,12 @@ export const useAuth = () => {
     try {
       setLoading(true)
       const res = await api.post(`${baseUrl}${url}`, data)
-      
-      // set token to api
       api.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`
-
       Cookies.set('_auth', res.data.token)
+      Cookies.set('_is_auth', 'true')
+      Cookies.set('_avaibility', res.data.role)
       setLoading(false)
-      toast.success("Login success")
+      return Promise.resolve(res)
     } catch (error:any) {
       setLoading(false)
       return Promise.reject(error)
@@ -47,10 +51,10 @@ export const useAuth = () => {
   }
 
   // user
-  const getMe = async () => {
+  const getMe = async (url:string  = '/admin/profile') => {
     try {
       setLoading(true)
-      const user = await api.get(`${baseUrl}/admin/profile`)
+      const user = await api.get(`${baseUrl}${url}`)
       setLoading(false)
       return Promise.resolve(user.data)
     } catch (error) {
@@ -58,7 +62,21 @@ export const useAuth = () => {
       return Promise.reject(error)
     }
   }
-  
+
+
+  const register = async (url:string, data:object) => {
+    try {
+      setLoading(true)
+      const res = await api.post(url, data)
+      api.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`
+      Cookies.set('_auth', res.data.token)
+      setLoading(false)
+      return Promise.resolve()
+    } catch (error:any) {
+      setLoading(false)
+      return Promise.reject(error)
+    }
+  }
 
   // use Effett get me and set user
   // React.useEffect(() => {
@@ -81,6 +99,7 @@ export const useAuth = () => {
     login,
     loading,
     logout,
-    getMe
+    getMe,
+    register
   }
 }

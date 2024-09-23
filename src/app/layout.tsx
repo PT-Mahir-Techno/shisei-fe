@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import ProgressProviders from "@/providers/ProgressBarProvider";
 import { EffectProvider } from "@/providers/effect-provider";
 import { ToasterProvider } from "@/providers/toast-provider";
+import { AuthProvider } from "@/providers/auth-provider";
 
 // const inter = Inter({ subsets: ["latin"] });
 const poppins = Poppins({
@@ -49,7 +50,9 @@ export default function RootLayout({
           <EffectProvider>
           <ProgressProviders>
             <ToasterProvider/>
-            {children}
+            <AuthProvider>
+              {children}
+            </AuthProvider>
           </ProgressProviders>
           </EffectProvider>
         </ThemeProvider>

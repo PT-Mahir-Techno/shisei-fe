@@ -133,7 +133,9 @@ const SidebarBo = () => {
                 }`}
                 style={ { transitionDelay: isOpenSub ? '0.1s' : '0s' } }
               >
-                <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>Package</li>
+                <Link href={"/back-office/transaction/package"}>
+                  <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>Package</li>
+                </Link>
                 <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>Credit</li>
               </ul>
 
@@ -151,11 +153,11 @@ const SidebarBo = () => {
                 w-full p-2 hover:bg-secondary/40 flex gap-2 items-center rounded-sm group
               `}>
                 <RiAccountPinBoxFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={30}/>
-                <span className={`whitespace-pre text-gray-950 duration-500 w-full ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>User</span>
+                <span className={`whitespace-pre text-gray-950 duration-500 w-full ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Account</span>
                 <RiArrowDownSLine className={`text-gray-700 group-hover:text-primary transition-all duration-200 ${(isOpenSub && activeMenu === 'user') && 'rotate-180'} ${minimize &&  'hidden'}`} size={20}/>
               </div>
               <div className={` ${!minimize && 'hidden'} absolute -right-20  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
-                User
+              Account
               </div>
 
               <ul 

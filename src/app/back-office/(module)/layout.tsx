@@ -2,35 +2,36 @@
 
 import NavbarBo from '@/components/partials/navbar-bo'
 import SidebarBo from '@/components/partials/sidebar-bo'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import MainLayout from '../../main-layout'
-import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/navigation'
 import LoadingState from '@/components/ui/loading-state'
-import Cookies from 'js-cookie'
 import { useProfile } from '@/store/use-profile'
+import toast from 'react-hot-toast'
+import { AuthContex } from '@/providers/auth-provider'
 
 const BackOfficeLayout = ({children}: {children: React.ReactNode}) => {
+
+  const {authState} = useContext(AuthContex)
   
   const router = useRouter()
-  
-  const { data:user, getPorfile } = useProfile()
-  const {logout} = useAuth()
+  const { data:user, role } = useProfile()
+
+  const initState = () => {
+    if (authState._auth && authState._is_auth && authState._avaibility) {
+      if(authState._avaibility === 'customer'){
+        router.push('/customer/dashboard')
+        toast.error('You are not authorized to access this page')
+      }
+    }else{
+      router.push('/back-office/login')
+      toast.error('You are not authorized to access this page')
+    }
+  }
 
   useEffect(() => {
-
-    const auth = Cookies.get('_auth')
-
-    if (auth) {
-      getPorfile()
-      console.log(user)
-    }else{
-      console.log(user)
-      logout("/admin/logout")
-      router.replace('/back-office/login')
-    }
+    initState()
   }, [])
-
 
   return (
     <>

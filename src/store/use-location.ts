@@ -17,6 +17,7 @@ type LocationStoreType = {
   createLoation: (data: any) => void
   deleteLocation: (url: string) => void
   getAllLocationNoPaginate: (url: string) => void
+  updateLoacation: (url: string, data: any) => Promise<void>
 }
 
 const initState = {
@@ -56,8 +57,10 @@ export const useLocation = create<LocationStoreType>((set, get) => ({
       set({loading: true })
       const res = await api.get(url)
       set({location: res.data, loading: false, success: true })
+      return Promise.resolve(res.data)
     } catch (error) {
       set({ error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   },
   createLoation:async (data: any) => {
@@ -76,6 +79,17 @@ export const useLocation = create<LocationStoreType>((set, get) => ({
       set({loading: false, success: true })
     } catch (error) {
       set({error: true, loading: false, success: false })
+    }
+  },
+  updateLoacation: async (url: string, data: any) => {
+    try {
+      set({loading: true })
+      await api.put(url, data)
+      set({loading: false, success: true })
+      return Promise.resolve()
+    } catch (error) {
+      set({error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   }
 }))
