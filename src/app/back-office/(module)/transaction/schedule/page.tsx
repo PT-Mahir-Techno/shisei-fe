@@ -8,7 +8,6 @@ import {columns} from './_parts/column'
 import { CUstomDataTable } from "@/components/ui/custom-data-table"
 import { useSheet } from "@/store/use-sheet"
 import { baseUrl } from "@/lib/variable"
-import LocationForm from "./_parts/form"
 import CustomModal from "@/components/ui/custoom-dialog"
 import { useModal } from "@/store/use-modal"
 import LoadingIcons from "react-loading-icons"
@@ -57,7 +56,7 @@ const ScheduleTransactionpage = () => {
       </div>
         
       <CustomSheets isOpen={isOpen} title="Add Location" close={() => setIsOpen(false)}>
-        <LocationForm/>
+        <div></div>
       </CustomSheets>
 
       <CustomModal
