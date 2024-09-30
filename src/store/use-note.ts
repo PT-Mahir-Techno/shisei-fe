@@ -1,11 +1,11 @@
 import api from "@/lib/api";
 import { baseUrl } from "@/lib/variable";
-import { NoteType } from "@/types/location-type";
+// import { NoteType } from "@/types/location-type";
 import { create } from "zustand";
 
 type NoteStoreType = {
   location: any
-  locations: NoteType[]
+  locations: any[]
   locationAttributes: object
   loading: boolean
   success: boolean
