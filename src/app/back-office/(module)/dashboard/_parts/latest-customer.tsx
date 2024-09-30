@@ -8,7 +8,7 @@ const LatestCustomer = () => {
         <Image src={"/img/img_placeholder.png"} alt="photo" width={40} height={40} className='rounded-full'></Image>
         <div>
           <p className='text-xs text-gray-600 font-semibold'>John Doe</p>
-          <p className='text-xs text-gray-400'>joshndoe@gmail.com</p>
+          <p className='text-xs text-gray-400'>joshndoe@gmails.com</p>
         </div>
       </div>
       <div className='flex flex-col items-end'>
