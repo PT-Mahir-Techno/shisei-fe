@@ -15,13 +15,14 @@ type ScheduleStoreType = {
   scheduleUrl: string
   settingSchedule: any
   getAllSchedule: (url: string) => void
-  getSingleSchedule: (url: string) => void
+  getSingleSchedule: (url: string) => Promise<any>
   createSchedule: (data: any) => void
   deleteSchedule: (url: string) => void
   getAllScheduleNoPaginate: (url: string) => void
   getScheduleConverted: (url: string) => void
   setSettingSchedule: (data:object) => Promise<void>
   getSettingSchedule: () => Promise<any>
+  updateSchedule: (id: string, data: any) => void
 }
 
 const initState = {
@@ -74,8 +75,10 @@ export const useSchedule = create<ScheduleStoreType>((set, get) => ({
       set({loading: true })
       const res = await api.get(url)
       set({schedule: res.data, loading: false, success: true })
+      return Promise.resolve(res.data)
     } catch (error) {
       set({ error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   },
   createSchedule:async (data: any) => {
@@ -89,6 +92,24 @@ export const useSchedule = create<ScheduleStoreType>((set, get) => ({
       }
 
       await api.post(`${baseUrl}/admin/schedule`, data, config)
+      set({loading: false, success: true })
+      return Promise.resolve()
+    } catch (error) {
+      set({error: true, loading: false, success: false })
+      return Promise.reject(error)
+    }
+  },
+  updateSchedule:async (id:string, data: any) => {
+    try {
+      set({loading: true })
+      
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+
+      await api.post(`${baseUrl}/admin/schedule/${id}`, data, config)
       set({loading: false, success: true })
       return Promise.resolve()
     } catch (error) {

@@ -14,7 +14,7 @@ type LocationStoreType = {
   locationUrl: string
   getAllLocation: (url: string) => void
   getSingleLocation: (url: string) => void
-  createLoation: (data: any) => void
+  createLoation: (url:string, data: any) => void
   deleteLocation: (url: string) => void
   getAllLocationNoPaginate: (url: string) => void
   updateLoacation: (url: string, data: any) => Promise<void>
@@ -63,10 +63,10 @@ export const useLocation = create<LocationStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  createLoation:async (data: any) => {
+  createLoation:async (url:string, data: any) => {
     try {
       set({loading: true })
-      await api.post(`${baseUrl}/admin/location`, data)
+      await api.post(`${baseUrl}${url}`, data)
       set({loading: false, success: true })
     } catch (error) {
       set({error: true, loading: false, success: false })

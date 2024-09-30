@@ -39,9 +39,17 @@ export const useAuth = () => {
       setLoading(true)
       const res = await api.post(`${baseUrl}${url}`, data)
       api.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`
-      Cookies.set('_auth', res.data.token)
-      Cookies.set('_is_auth', 'true')
-      Cookies.set('_avaibility', res.data.role)
+
+      if (typeof(res.data.role) == 'object'){
+        var _avaibility = res.data.role.name
+      } else{
+        var _avaibility = res.data.role
+      }
+
+      Cookies.set('_auth', res.data.token, {expires: 7})
+      Cookies.set('_is_auth', 'true', {expires: 7})
+      Cookies.set('_avaibility', _avaibility, {expires: 7})
+
       setLoading(false)
       return Promise.resolve(res)
     } catch (error:any) {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { RiAddCircleFill } from "react-icons/ri"
 import CustomSheets from "@/components/ui/custom-sheets"
@@ -14,16 +14,20 @@ import { useModal } from "@/store/use-modal"
 import LoadingIcons from "react-loading-icons"
 import toast from "react-hot-toast"
 import { useFaq } from "@/store/use-faq"
+import { AuthContex } from "@/providers/auth-provider"
 
 const title = 'Faq'
 
 const FaqPage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+
   const { isOpen, setIsOpen } = useSheet()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
   const { faqs, getAllFaq, faqAttributes, loading, deleteFaq, faqUrl } =useFaq()
   useEffect(() => {
-    getAllFaq(`${baseUrl}/admin/faq`)
-  }, [])
+    getAllFaq(`${baseUrl}${prefix}/faq`)
+  }, [prefix])
 
   const handleDelete = async () => {
     await deleteFaq(`${baseUrl}/admin/faq/${modalId}`)

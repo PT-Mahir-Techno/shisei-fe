@@ -55,7 +55,15 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
   }
 
   const handleLogout = async () => {
-    const logoutUrl = authState._avaibility === 'customer' ? '/logout' : '/admin/logout'
+    let logoutUrl:string = ''
+
+    if (authState._avaibility === 'customer') {
+      logoutUrl = '/logout'
+    } else if (authState._avaibility === 'admin') {
+      logoutUrl = '/admin/logout'
+    } else {
+      logoutUrl = '/staff/logout'
+    }
 
     await logout(logoutUrl)
     await setData()

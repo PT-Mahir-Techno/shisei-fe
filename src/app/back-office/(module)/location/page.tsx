@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { RiAddCircleFill } from "react-icons/ri"
 import CustomSheets from "@/components/ui/custom-sheets"
@@ -14,20 +14,25 @@ import CustomModal from "@/components/ui/custoom-dialog"
 import { useModal } from "@/store/use-modal"
 import LoadingIcons from "react-loading-icons"
 import toast from "react-hot-toast"
+import { AuthContex } from "@/providers/auth-provider"
 
 
 const RoomPage = () => {
-
+  
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+  
   const { isOpen, setIsOpen } = useSheet()
   const { locations, loading, getAllLocation, locationAttributes, deleteLocation, locationUrl } : any = useLocation()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
+  
 
   useEffect(() => {
-    getAllLocation(`${baseUrl}/admin/location`)
-  }, [])
+    getAllLocation(`${baseUrl}${prefix}/location`)
+  }, [prefix])
 
   const handleDelete = async () => {
-    await deleteLocation(`${baseUrl}/admin/location/${modalId}`)
+    await deleteLocation(`${baseUrl}${prefix}/location/${modalId}`)
     await getAllLocation(locationUrl)
     toast.success('Location deleted successfully')
     setIsOpenModal(false)

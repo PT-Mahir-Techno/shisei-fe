@@ -1,19 +1,16 @@
 "use client"
  
 import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ArrowUpDown, Divide, MoreHorizontal } from "lucide-react"
-import { useSheet } from "@/store/use-sheet"
-import { LocationType } from "@/types/location-type"
+import { ArrowUpDown} from "lucide-react"
 import { ColumnDef } from "@tanstack/react-table"
-import ActionButton from "@/components/ui/action-button"
-import { handleStringToDate } from "@/lib/utils"
+import { RiVerifiedBadgeFill } from "react-icons/ri"
+import ReportActionButton from "@/components/ui/report-action-button"
+import PackageActionButton from "@/components/ui/package-action-button"
  
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
  
-export const columns: ColumnDef<LocationType>[] = [
+export const columns: ColumnDef<any>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -37,7 +34,7 @@ export const columns: ColumnDef<LocationType>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "user",
     header: ({ column }) => {
       return (
         <div
@@ -50,15 +47,98 @@ export const columns: ColumnDef<LocationType>[] = [
         </div>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
+    cell: ({ row }) => (
+      <div>
+        <div className="lowercase font-semibold">{row.original.user}</div>
+        <div className="lowercase text-sm">{row.original.user_email}</div>
+        <div className="lowercase text-sm">{row.original.user_phone}</div>
+      </div>
+    ),
   },
   {
-    accessorKey: "created_at",
-    header: "Created at",
-    cell: ({ row }) => {
+    accessorKey: "package_name",
+    header: ({ column }) => {
       return (
-        <div className="text-gray-600">{handleStringToDate(row.getValue("created_at"))}</div>
+        <div
+        className="flex items-center cursor-pointer"
+          // variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Package
+          <ArrowUpDown className="ml-3 h-4 w-4" />
+        </div>
       )
+    },
+    cell: ({ row }) => <div className="lowercase font-semibold max-w-xs">{row.getValue('package_name')}</div>,
+  },
+  {
+    accessorKey: "package_date",
+    header: ({ column }) => {
+      return (
+        <div
+        className="flex items-center cursor-pointer"
+          // variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date
+          <ArrowUpDown className="ml-3 h-4 w-4" />
+        </div>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase font-semibold max-w-xs">{row.getValue('package_date')}</div>,
+  },
+  {
+    accessorKey: "staff",
+    header: ({ column }) => {
+      return (
+        <div
+        className="flex items-center cursor-pointer"
+          // variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Staff
+          <ArrowUpDown className="ml-3 h-4 w-4" />
+        </div>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase font-semibold max-w-xs">{row.getValue('staff')}</div>,
+  },
+  {
+    accessorKey: "location",
+    header: ({ column }) => {
+      return (
+        <div
+        className="flex items-center cursor-pointer"
+          // variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Location
+          <ArrowUpDown className="ml-3 h-4 w-4" />
+        </div>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase font-semibold max-w-xs">{row.getValue('location')}</div>,
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => {
+      return (
+        <div
+        className="flex items-center cursor-pointer"
+          // variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-3 h-4 w-4" />
+        </div>
+      )
+    },
+    cell: ({ row }) => {
+      if (row.getValue("status") === "booked") {
+        return <div className="text-green-600 flex items-center gap-1"><RiVerifiedBadgeFill size={18} /> Booked</div>
+      } else {
+        return <div className="text-red-600 flex items-center gap-1"><RiVerifiedBadgeFill size={18} /> Cancel</div>
+      }
     },
   },
   {
@@ -66,7 +146,7 @@ export const columns: ColumnDef<LocationType>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ActionButton model={row.original} />
+        <PackageActionButton row={row} />  
       )
     },
   },

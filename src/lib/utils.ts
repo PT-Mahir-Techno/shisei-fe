@@ -74,3 +74,20 @@ export const uniqueValue = (array: any[], key: string) => {
 export const encryptDecrypt = (input: string, mode: string) => {
 }
 
+// format 24-09-2024 to sunday 12 Jan 2024
+export const formatDate2 = (date: string) => {
+  if (date){
+    const [day, month, year] = date.split("-")
+    return new Date(`${year}-${month}-${day}`).toLocaleDateString("en-US", {
+      weekday: "long",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })
+  }
+}
+
+// pluck id
+export const pluckId = (array: any[]) => {
+  return array.map(item => item.id)
+}

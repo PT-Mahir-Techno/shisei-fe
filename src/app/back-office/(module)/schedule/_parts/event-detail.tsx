@@ -5,7 +5,10 @@ import CustomModal from '@/components/ui/custoom-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { baseUrl } from '@/lib/variable';
 import { useSchedule } from '@/store/use-schedule'
+import { useSheet } from '@/store/use-sheet';
+import { set } from 'date-fns';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react'
 import toast from 'react-hot-toast';
 import { RiDeleteBin2Fill, RiEditBoxFill, RiStickyNoteFill } from 'react-icons/ri';
@@ -16,6 +19,7 @@ const EventDetail = ({id, close}: {id:String|undefined, close: () => void}) => {
   const {loading, schedule, getSingleSchedule} = useSchedule()
   const [showDeleteModal, setShowDeleteModal] = React.useState(false)
   const {deleteSchedule, loading:loadingSchedule, getScheduleConverted} = useSchedule()
+  const {setIsOpen, setModelId} = useSheet()
 
   React.useEffect(() => {
     if (id) {
@@ -33,6 +37,14 @@ const EventDetail = ({id, close}: {id:String|undefined, close: () => void}) => {
     } catch (error:any) {
       setShowDeleteModal(false)
       toast.error(error.message)
+    }
+  }
+
+  const handleEditSheet = () => {
+    close()
+    setIsOpen(true)
+    if (id){
+      setModelId(id.toString())
     }
   }
 
@@ -100,14 +112,16 @@ const EventDetail = ({id, close}: {id:String|undefined, close: () => void}) => {
           <Image src={schedule.image_url} alt={schedule.name} width={300} height={0} className='rounded-lg'/>
 
           <div className='flex flex-col gap-4 mt-4'>
-            <Button size={"sm"} className='w-full' variant={'outline'}>
+            <Button onClick={() => handleEditSheet()} size={"sm"} className='w-full' variant={'outline'}>
               <RiEditBoxFill className='text-lg mr-3'/>
               Edit Data
             </Button>
-            <Button size={"sm"} className='w-full' variant={'secondary'}>
-              <RiStickyNoteFill className='text-lg mr-3'/>
-              Add Note
-            </Button>
+            <Link href={`/back-office/schedule/note/${id}`}>
+              <Button size={"sm"} className='w-full' variant={'secondary'}>
+                <RiStickyNoteFill className='text-lg mr-3'/>
+                Add Note
+              </Button>
+            </Link>
             <Button onClick={() => setShowDeleteModal(true)} size={"sm"}  className='w-full bg-destructive text-white hover:bg-destructive'>
               <RiDeleteBin2Fill className='text-lg mr-3'/>
               Delete Event

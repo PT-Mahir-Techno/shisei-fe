@@ -6,11 +6,11 @@ export const scheduleFormScheme = z.object({
   name: z.string()
     .min(1, {message: "Minimum 1 character"})
     .max(255, {message: "Maximum 255 characters"}),
-  date: z.date(),
+  date: z.any(),
   time: z.string()
     .min(1, {message: "Minimum 1 character"})
     .max(255, {message: "Maximum 255 characters"}),
-  duratation: z.string()
+    duration: z.string()
     .min(1, {message: "Minimum 1 character"})
     .max(255, {message: "Maximum 255 characters"}),
   location_id: z.string()
@@ -22,9 +22,14 @@ export const scheduleFormScheme = z.object({
   staff_id: z.string()
     .min(1, {message: "Minimum 1 character"})
     .max(255, {message: "Maximum 255 characters"}),
-  max_order: z.string()
+  max_order: z.union([
+    z.number()
     .min(1, {message: "Minimum 1 character"})
-    .max(255, {message: "Maximum 255 characters"}),
+    .max(255, {message: "Maximum 255 characters"}), 
+    z.string()
+    .min(1, {message: "Minimum 1 character"})
+    .max(255, {message: "Maximum 255 characters"})
+  ]),
   color: z.string()
     .min(1, {message: "Minimum 1 character"})
     .max(255, {message: "Maximum 255 characters"}),

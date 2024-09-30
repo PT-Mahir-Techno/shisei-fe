@@ -12,6 +12,7 @@ import { numberToIdr } from '@/lib/utils'
 import { AuthContex } from '@/providers/auth-provider'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
+import { useRouter } from 'next/navigation'
 
 
 const BookingPackagePage = () => {
@@ -21,6 +22,7 @@ const BookingPackagePage = () => {
   const [selectedPackage, setSelectedPackage] = React.useState<any>(null)
   const [showModalTransaction, setShowModalTransaction] = React.useState(false)
   const [showModalUnAuthenticated, setShowModalUnAuthenticated] = React.useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     getPackage("/package")
@@ -41,10 +43,19 @@ const BookingPackagePage = () => {
   const procesedTransaction = async () => {
     try {
       if (selectedPackage !== null){
-        await procesedPackage(`/payment/${selectedPackage.id}`)
+        const payload = {
+          payment_method : 'va'
+        }
+        const res = await procesedPackage(`/payment/${selectedPackage.id}`, payload)
+
+        // redirect to res.url 
+        console.log(res)
+        window.location.href = res?.url
+        
       }
       setSelectedPackage(null)
       setShowModalTransaction(false)
+      // router.push('/bill/success')
     } catch (error:any) {
       toast.error(error.data.message)
     }

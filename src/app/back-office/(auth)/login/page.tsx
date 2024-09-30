@@ -31,22 +31,42 @@ const LoginBoPage = () => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "admin@mail.com",
-      password: "asdfasdf",
-    },
+      defaultValues: {
+        email: "admin@mail.com",
+        password: "asdfasdf",
+      },
+    // defaultValues: {
+    //   email: "ola@mail.com",
+    //   password: "secret123",
+    // },
   })
   
 
   const handleSubmit = async (data : z.infer<typeof formSchema>) => {
     try {
       const res = await login("/admin/login", data)
+
+      if (typeof(res.data.role) == 'object'){
+        var _avaibility = res.data.role.name
+        var url = '/staff/profile'
+        var path =  "/staff"
+      } else{
+        var _avaibility = res.data.role
+        var url = '/admin/profile'
+        var path =  "/admin"
+      }
+      console.log(_avaibility);
+      
+      
       setAuthState({
         _auth: res.data.token,
         _is_auth: 'true',
-        _avaibility: res.data.role
+        _avaibility: _avaibility,
+        _prefix: path
       })
-      await getPorfile('/admin/profile')
+
+      await getPorfile(url)
+
       router.replace('/back-office/dashboard')
       toast.success("Login success")
     } catch (err:any) {

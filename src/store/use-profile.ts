@@ -17,6 +17,7 @@ type ProfileState = {
   error: boolean
   errorData: any
   role: any
+  permission: any
 }
 
 const initState = {
@@ -27,7 +28,8 @@ const initState = {
   success: false,
   error: false,
   errorData: {},
-  role: null
+  role: null,
+  permission: null
 }
 
 export const useProfile = create<ProfileState>((set, get) => ({
@@ -36,14 +38,26 @@ export const useProfile = create<ProfileState>((set, get) => ({
     set({loading: true})
     try {
       const res = await api.get(`${baseUrl}${url}`)
-      set({data: res.data.user, loading: false, success: true, role: res.data.role})
+
+      let role: any;
+      let permission: any;
+
+      if (typeof(res.data.role) == 'object'){
+        role = res.data.role.name
+        permission = res.data.role.permissions
+      }else{
+        role = res.data.role
+        permission = {}
+      }
+
+      set({data: res.data.user, loading: false, success: true, role: role, permission: permission})
       return Promise.resolve(res.data)
     } catch (error) {
       set({error: true, loading: false, success: false})
       return Promise.reject(error)
     }
   },
-  resetProfile: () => set({data: null, success: false, error: false, loading: false, role: null}),
+  resetProfile: () => set({data: null, success: false, error: false, loading: false, role: null, permission: null}),
   setData: () => set({data: null, success: false, error: false, loading: false}),
   setRole: (param) => {
     set({role: param})

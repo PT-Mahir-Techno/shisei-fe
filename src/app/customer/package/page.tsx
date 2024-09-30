@@ -1,19 +1,52 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { RiArrowDropDownLine, RiHourglassFill, RiStackFill } from 'react-icons/ri'
 import ActivePackageCard from './_parts/active-package'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import ExpiredPackageCard from './_parts/expired_package'
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu'
+import { Skeleton } from '@/components/ui/skeleton'
+import api from '@/lib/api'
+import { baseUrl } from '@/lib/variable'
+import toast from 'react-hot-toast'
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
+
+const LoadingSkeleton = () => (
+  <div className='flex flex-col gap-4'>
+    <Skeleton className="w-1/2 h-6" />
+    <Skeleton className="w-full h-8" />
+    <Skeleton className="w-full h-8" />
+  </div>
+)
 
 const PackageCustomerPage = () => {
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
   const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
+  const [activePackages, setActivePackages] = React.useState([])
+  const [expiredPackages, setExpiredPackages] = React.useState([])
+  const [loading, setLoading] = React.useState(false)
+
+  useEffect(() => {
+    initState()
+  }, [])
+
+  const initState = async () => {
+    setLoading(true)
+    try {
+      const activePackage = await api.get(`${baseUrl}/dashboard/package`)
+      const expiredPackage = await api.get(`${baseUrl}/dashboard/package?expired=true`)
+      setActivePackages(activePackage.data)
+      setExpiredPackages(expiredPackage.data)
+      setLoading(false)
+    } catch (error:any) {
+      setLoading(false)
+      toast.error(error.data.message)
+    }
+  } 
 
   return (
     <>
@@ -26,7 +59,21 @@ const PackageCustomerPage = () => {
         </div>
 
         {
-          Array.from({ length: 2 }).map((_, index) => <ActivePackageCard key={index}/>)
+         loading ? <LoadingSkeleton /> : (
+          activePackages.length > 0 ? (
+            <div>
+              {
+                activePackages.map((item:any, index:number) => (
+                  <ActivePackageCard key={index} data={item} />
+                ))
+              }
+            </div>
+          ): (
+            <div className='flex flex-col gap-4 text-center'>
+              <p className='text-gray-400'>No active package</p>
+            </div>
+          )
+         )
         }
 
       </section>
@@ -62,11 +109,29 @@ const PackageCustomerPage = () => {
         </div>
 
         {
-          Array.from({ length: 2 }).map((_, index) => <ExpiredPackageCard key={index}/>)
+          loading ? <LoadingSkeleton /> : (
+            <div>
+              {
+                expiredPackages.length > 0 ? (
+                  <div>
+                    {
+                      expiredPackages.map((item:any, index:number) => (
+                        <ExpiredPackageCard key={index} data={item} />
+                      ))
+                    }
+                  </div>
+                ): (
+                  <div className='flex flex-col gap-4 text-center'>
+                    <p className='text-gray-400'>No expired package</p>
+                  </div>
+                )
+              }
+            </div>
+          )
         }
 
         <div className='flex justify-between items-end'>
-        <Pagination className='flex justify-start mt-6'>
+        {/* <Pagination className='flex justify-start mt-6'>
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious href="#" />
@@ -89,11 +154,11 @@ const PackageCustomerPage = () => {
               <PaginationNext href="#" />
             </PaginationItem>
           </PaginationContent>
-        </Pagination>
+        </Pagination> */}
 
-          <div className='w-56'>
+          {/* <div className='w-56'>
             <p className='text-foreground text-sm'>Showing 1 to 4 of 16 data</p>
-          </div>
+          </div> */}
         </div>
 
       </section>

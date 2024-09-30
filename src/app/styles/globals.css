@@ -172,3 +172,10 @@
 .fc table td {
   @apply font-medium text-gray-600;
 }
+
+
+.Customtruncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

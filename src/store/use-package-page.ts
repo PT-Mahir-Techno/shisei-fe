@@ -11,7 +11,7 @@ interface PackagePageStore {
   package: PackageType|null
   getPackage: (url: string) => Promise<void>
   getSinglePackage: (url: string) => Promise<void> 
-  procesedPackage: (url:string) => Promise<void>
+  procesedPackage: (url:string, data:any) => Promise<any>
 }
 
 const initState = {
@@ -47,12 +47,12 @@ export const usePackagePage = create<PackagePageStore>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  procesedPackage: async (url:string) => {
+  procesedPackage: async (url:string, data:any) => {
     try {
       set({loading: true})
-      await api.post(`${baseUrl}${url}`)
+      const res = await api.post(`${baseUrl}${url}`, data)
       set({loading: false, success: true})
-      return Promise.resolve()
+      return Promise.resolve(res)
     } catch (error) {
       set({error: true, loading: false, success: false})
       return Promise.reject(error)

@@ -14,12 +14,24 @@ export function AuthProvider({ children }: any) {
   const [authState, setAuthState] = useState({
     _auth: Cookies.get('_auth'),
     _is_auth: Cookies.get('_is_auth'),
-    _avaibility: Cookies.get('_avaibility')
+    _avaibility: Cookies.get('_avaibility'),
+    _prefix: ''
   })
 
   const initState = async () => {
     if (authState._auth && authState._is_auth && authState._avaibility) {
-      const url = authState._avaibility === 'admin' ? '/admin/profile' : '/dashboard/profile'
+      
+      let url:string = ''
+      if (authState._avaibility === 'admin'){
+        url = '/admin/profile'
+        setAuthState((prev:any) => ({...prev, _prefix: '/admin'}))
+      }else if(authState._avaibility === 'customer'){
+        url = '/dashboard/profile'
+      }else{
+        url = '/staff/profile'
+        setAuthState((prev:any) => ({...prev, _prefix: '/staff'}))
+      }
+      
       try {
         await getPorfile(url)
       } catch (error:any) {

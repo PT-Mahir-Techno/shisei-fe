@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { RiAddCircleFill, RiFile2Fill } from "react-icons/ri"
-import CustomSheets from "@/components/ui/custom-sheets"
+import { RiFile2Fill } from "react-icons/ri"
 import {columns} from './_parts/column'
 import { CUstomDataTable } from "@/components/ui/custom-data-table"
 import { useSheet } from "@/store/use-sheet"
@@ -28,14 +27,23 @@ const TransactionPackagePage = () => {
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
   const {payments, paymentAttributes, paymentUrl, getAllPayment, loading} = usePayment()
   const [loadingExport, setLoadingExport] = useState(false) 
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
-  })
+  const [date, setDate] = useState<DateRange | undefined>()
+
+  // date now
+
+  const init = () => {
+    getAllPayment(`${baseUrl}/admin/payment`)
+  }
   
   useEffect(() => {
-    getAllPayment(`${baseUrl}/admin/payment`)
+    init()
   }, [])
+
+  useEffect(() => {
+     if (date?.from != undefined && date?.to != undefined) {
+        getAllPayment(`${baseUrl}/admin/payment?start_date=${format(date.from, 'yyyy-MM-dd')}&end_date=${format(date.to, 'yyyy-MM-dd')}`)
+      }
+  }, [date])
 
   const handleDelete = async () => {
     toast.success('Location deleted successfully')
@@ -44,7 +52,13 @@ const TransactionPackagePage = () => {
 
   const handleExport = async () => {
     try {
-      await api.get(`${baseUrl}/export-payment`)
+      if (date?.from != undefined && date?.to != undefined) {
+        var link = `${baseUrl}/export-payment?start_date=${format(date.from, 'yyyy-MM-dd')}&end_date=${format(date.to, 'yyyy-MM-dd')}`
+      }else{
+        var link = `${baseUrl}/export-payment`
+      }
+      // click link with credential token
+      window.open(link, '_blank')
     } catch (error:any) {
       toast.error(error.data.message)
     }
@@ -85,7 +99,7 @@ const TransactionPackagePage = () => {
           links= {paymentAttributes.links}
           nextPage={getAllPayment}
         >
-          <div className="flex justify-end gap-6 mb-6">
+          <div className="flex justify-end gap-2 mb-6">
             <div>
               <Popover>
                 <PopoverTrigger asChild>
@@ -128,7 +142,7 @@ const TransactionPackagePage = () => {
               <Button onClick={() => handleExport()} > <RiFile2Fill className="mr-2"/> Export Excel</Button>
             </div>
             <div>
-              <Button variant={"outline"}>Reset Filter</Button>
+              <Button onClick={() => init()} variant={"outline"}>Reset Filter</Button>
             </div>
           </div>
         </CUstomDataTable>
@@ -137,7 +151,7 @@ const TransactionPackagePage = () => {
       <CustomModal
         open={isOpenModal} 
         onOpenChange={() => setIsOpenModal(false)} 
-        title='Delete Data'
+        title='Update Transaction'
       >
           <div>
             <p className='text-gray-700 my-6 text-center'>

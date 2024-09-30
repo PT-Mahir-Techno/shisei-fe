@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -14,6 +14,7 @@ import toast from 'react-hot-toast'
 import { useFaq } from '@/store/use-faq'
 import { Textarea } from '@/components/ui/textarea'
 import { baseUrl } from '@/lib/variable'
+import { AuthContex } from '@/providers/auth-provider'
 
 export const formSchema = z.object({
   question: z.string().min(5, {message: "Minimum 5 character"}).max(999999999999, {message: "Maximum 100 characters"}),
@@ -22,6 +23,8 @@ export const formSchema = z.object({
 
 
 const LocationForm = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const { setIsOpen, mode, modelId } = useSheet()
   const { loading, getAllFaq, createFaq, faqUrl, getSingleFaq, updateFaq } : any = useFaq()
@@ -31,11 +34,11 @@ const LocationForm = () => {
     if (mode === 'edit') {
       getSingleData()
     }
-  }, [])
+  }, [prefix])
 
   const getSingleData = async () => {
     try {
-      const res = await getSingleFaq(`${baseUrl}/admin/faq/${modelId}`)
+      const res = await getSingleFaq(`${baseUrl}${prefix}/faq/${modelId}`)
       await form.reset(res)
     } catch (error:any) {
       toast.error(error.data.message)
@@ -57,9 +60,9 @@ const LocationForm = () => {
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       if (mode == 'edit') {
-        await updateFaq(`${baseUrl}/admin/faq/${modelId}`, data)
+        await updateFaq(`${baseUrl}${prefix}/faq/${modelId}`, data)
       }else{
-        await createFaq(data)
+        await createFaq(`${baseUrl}${prefix}/faq`,data)
       }
 
       await getAllFaq(faqUrl)

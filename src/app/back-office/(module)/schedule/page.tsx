@@ -14,6 +14,7 @@ import CustomModal from '@/components/ui/custoom-dialog';
 import { useSchedule } from '@/store/use-schedule';
 import { baseUrl } from '@/lib/variable';
 import EventDetail from './_parts/event-detail';
+import { useSheet } from '@/store/use-sheet';
 
 
 const renderEventContent = (eventInfo:any) => {
@@ -35,7 +36,7 @@ const SchedulePage = () => {
   const [isShowDetail, setIsShowDetail] = useState(false)
   const [eventId, setEventId] = useState<string | undefined>()
   const [date, setDate] = useState<Date | undefined>(new Date())
-  const [isOpenSheet, setIsOpenSheet] = React.useState(false)
+  const {isOpen, setIsOpen} = useSheet()
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [selectedMonth, setSelectedMonth] = useState<number | undefined>(new Date().getMonth() + 1)
   const [selectedYear, setSelectedYear] = useState<number | undefined>(new Date().getFullYear())
@@ -91,7 +92,7 @@ const SchedulePage = () => {
   }
 
   const handleOpenSheet = (param: Date) => {
-    setIsOpenSheet(true)
+    setIsOpen(true)
     setSelectedDate(param)
   }
 
@@ -105,7 +106,7 @@ const SchedulePage = () => {
     <div className='flex gap-6'>
       <div className='bg-background p-4 box-content rounded-md'>
         <div className='mb-6'>
-          <Button onClick={() => setIsOpenSheet(true)} className='w-full'>Add Schedule</Button>
+          <Button onClick={() => setIsOpen(true)} className='w-full'>Add Schedule</Button>
         </div>
 
         <Calendar
@@ -169,16 +170,16 @@ const SchedulePage = () => {
               }
             }}
             loading={(isLoading)=>{
-              console.log('isLoading')
+              // console.log('isLoading')
             }}
           />
       </div>
     </div>
 
-      <CustomModal open={isOpenSheet} title={`Add ${title}`} onOpenChange={() => setIsOpenSheet(false)} 
+      <CustomModal open={isOpen} title={`Add ${title}`} onOpenChange={() => setIsOpen(false)} 
         size='md:max-w-5xl'  
       >
-        <ScheduleForm date={selectedDate} close={() => setIsOpenSheet(false)} />
+        <ScheduleForm date={selectedDate} close={() => setIsOpen(false)} />
       </CustomModal>
 
       <CustomModal open={isShowDetail} title={`Detail ${title}`} onOpenChange={() => setIsShowDetail(false)}

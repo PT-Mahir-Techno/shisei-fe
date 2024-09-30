@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ExpiredPackageCard = () => {
+const ExpiredPackageCard = ({data}:{data:any}) => {
   return (
     <>
       <div className='w-full p-5 bg-gray-50 border border-gray-200 rounded-lg mb-6'>

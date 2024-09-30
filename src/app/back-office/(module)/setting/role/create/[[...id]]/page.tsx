@@ -11,7 +11,7 @@ import { useRole } from "@/store/use-role"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Label } from "@radix-ui/react-label"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
@@ -27,12 +27,27 @@ const CreateRolePage = () => {
   const title = "Role"
 
   const {permisions, getAllPermisionNoPaginate, loading:loadingPermission} = usePermision()
-  const { createRole, getAllRole, loading} = useRole()
+  const { createRole, getAllRole, loading, getSingleRole, updateRole} = useRole()
   const router = useRouter()
+  const {id} = useParams()
 
   useEffect(() => {
     getAllPermisionNoPaginate(`${baseUrl}/admin/role-permission?type=nopaginate`)
   }, [])
+
+  useEffect(() => {
+    if(id){
+      findRole()
+    }
+  }, [id])
+
+  const findRole = async () => {
+    const res = await getSingleRole(`${baseUrl}/admin/role/${id}`)
+    form.reset({
+      name: res.role.name,
+      permission_id: res.permissions.map((permission:any) => permission.id)
+    })
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,7 +59,13 @@ const CreateRolePage = () => {
 
   const handleSUbmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await createRole(data)
+      
+      if (id){
+        await updateRole(`/admin/role/${id}`, data)
+      }else{
+        await createRole(data)
+      }
+
       await getAllRole(`${baseUrl}/admin/role`)
       form.reset()
 

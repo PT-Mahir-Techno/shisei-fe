@@ -14,7 +14,7 @@ type FaqStoreType = {
   faqUrl: string
   getAllFaq: (url: string) => void
   getSingleFaq: (url: string) => Promise<void>
-  createFaq: (data: any) => Promise<void>
+  createFaq: (url:string, data: any) => Promise<void>
   deleteFaq: (url: string) => void
   getAllFaqNoPaginate: (url: string) => void
   updateFaq: (url: string, data: any) => Promise<void>
@@ -63,10 +63,10 @@ export const useFaq = create<FaqStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  createFaq:async (data: any) : Promise<any> => {
+  createFaq:async (url:string, data: any) : Promise<any> => {
     try {
       set({loading: true })
-      await api.post(`${baseUrl}/admin/faq`, data)
+      await api.post(`${baseUrl}${url}/faq`, data)
       set({loading: false, success: true })
       return Promise.resolve()
     } catch (err:any) {

@@ -4,26 +4,86 @@ import { Button } from '@/components/ui/button'
 import CustomModal from '@/components/ui/custoom-dialog'
 import Link from 'next/link'
 import React, { use, useContext, useEffect } from 'react'
-import { RiCalendar2Fill, RiCalendarScheduleLine, RiMapPin2Fill, RiMapPin2Line, RiQuestionFill, RiRefundLine, RiTimeFill, RiUser3Fill } from 'react-icons/ri'
+import { RiCalendar2Fill, RiCalendarScheduleLine, RiMapPin2Fill, RiMapPin2Line, RiQuestionFill, RiRefundLine, RiTimeFill, RiUser3Fill, RiVerifiedBadgeFill } from 'react-icons/ri'
 
 import "../../../styles/animations.css";
 import { AuthContex } from '@/providers/auth-provider'
 import { useSchedulePage } from '@/store/use-schedule-page'
-import { useParams, useSearchParams } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { Skeleton } from '@/components/ui/skeleton'
+import { baseUrl } from '@/lib/variable'
+import api from '@/lib/api'
+import toast from 'react-hot-toast'
+import ActivePackageCard from './_parts/active_package'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { date } from 'zod'
+import LoadingIcons from 'react-loading-icons'
+import { useProfile } from '@/store/use-profile'
 const DetailBookingPage = () => {
   
-  const {} = useContext(AuthContex)
+  const {authState} = useContext(AuthContex)
   const {loading, getSingleSchedule, schedule } = useSchedulePage()
+  const {data:user} = useProfile()
   const [showCancelModal, setShowCancelModal] = React.useState<boolean>(false)
+  const [packages, setPackages] = React.useState<any>([])
+  const [packageSelected, setPackageSelected] = React.useState<any>(null)
+  const [isModalSuccess, setIsModalSuccess] = React.useState(false)
+  const [loadingBooking, setLoadingBooking] = React.useState(false)
+  const [isBooked, setIsBooked] = React.useState(false)
 
   const param = useParams()
+  const router = useRouter()
   const {id} = param
 
   useEffect(() => {
     getSingleSchedule(`/schedule/${id}`)
+    if (authState._auth && authState._is_auth && authState._avaibility) {
+      initState()
+    }
   }, [param])
+
+  const initState = async () => {
+    try {
+      const res = await api.get(`${baseUrl}/dashboard/package`)
+      // if (schedule.calendar){
+      //   schedule.calendar.map((item:any, key:any) => {
+      //     if (item.user_id == user.id){
+      //       setIsBooked(true)
+      //     }
+      //   })
+      // }
+
+      setPackages(res.data)
+    } catch (error:any) {
+    }
+  }
+
+  const handlePackageSelect = (data:any) =>  {
+    const find = packages.find((item:any) => item.membership_id === data)
+    setPackageSelected(find)
+  }
   
+  const handleBookingSchedule =  async () =>{
+    setLoadingBooking(true)
+    try {
+      const payload = {
+        payment_id: packageSelected.payment_id,
+        package_id: id,
+      }
+      const res = await api.post(`${baseUrl}/dashboard/set-schedule`, payload)
+      setLoadingBooking(false)
+      if (res){
+        setIsModalSuccess(true)
+      }
+    } catch (error:any) {
+      setLoadingBooking(false)
+      toast.error(error.data.message)
+    }
+  }
+
+  const handleBuyPackage = () => {
+    router.push('/package')
+  }
 
   return (
     <div className='page-animation'>
@@ -51,9 +111,27 @@ const DetailBookingPage = () => {
           }
           {/* <p className='text-sm text-primary mb-4'>2 classes remaining</p> */}
           
-          {/* <div claz */}
 
-          {/* <p className='text-sm text-destructive mb-12'>You do not have an eligible package, Buy a package to continue booking.</p> */}
+          {/* {
+            authState._is_auth && authState._auth && authState._avaibility && packages.length <= 0 
+            && (
+              <div className='text-sm text-destructive mb-12'>You do not have an eligible package, Buy a package to continue booking.</div>
+            )
+          } */}
+        
+          {
+            authState._is_auth && authState._auth && authState._avaibility && packages.length > 0 ?
+            ( 
+              <div>
+                {
+                  packageSelected ? (
+                    <ActivePackageCard data={packageSelected} />
+                  ) : null
+                }
+              </div>
+            )
+            : null
+          }
           
           <h2 className='font-bold text-xl text-gray-600 dark:text-slate-300 border-b border-slate-300 pb-4 mb-4'>Description</h2>
           {
@@ -152,23 +230,65 @@ const DetailBookingPage = () => {
 
           <div>
 
-            <p className='text-primary mb-3'>Cancel before one day prior</p>
-            <div className='flex gap-4 mb-3'>
+            <p className='text-primary mb-6'>Cancel before one day prior</p>
+            {/* <div className='flex gap-4 mb-3'>
               <Button onClick={() => setShowCancelModal(true)} size={"lg"} className='w-full bg-gray-800 text-white hover:bg-gray-600'>Cancel Booking</Button>
               <Button className='w-full' size={"lg"}>Booking Success!</Button>
-            </div>
+            </div> */}
 
             {/* <Link href={"/customer/schedule"}>
               <Button className='w-full mb-4' size={"lg"}>See Detail</Button>
             </Link> */}
 
-                  
-            {/* <Link href={"/booking/package"}>
-              <Button className='w-full mb-3' size={"lg"}>BUY PACKAGE</Button>
-            </Link> */}
+            {
+              authState._is_auth && authState._auth && authState._avaibility && packages.length > 0
+              ? (
+                <div>
+                  {
+                    isBooked ?
+                    (
+                      <Button className='w-full mb-3' size={"lg"}>BOOKED</Button>
+                    ):(
+                      <div>
+                        <div className='mb-3'>
+                          <div className='text-gray-600 mb-2 text-sm font-semibold'>Select package</div>
+                            <Select onValueChange={(e) => handlePackageSelect(e)}>
+                                <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select Package" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {packages.map((item:any, index:number) => (
+                                  <SelectItem key={index} value={item.membership_id}>{item.name} | {item.credit_left} credit left </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                        </div>
 
-            <p className='text-center text-primary'>Check-in 3 hours before class begins</p>
-          
+                        <Button onClick={() => handleBookingSchedule()} disabled={packageSelected == null || loadingBooking} className='w-full mb-4' size={"lg"} >
+                          {
+                            loadingBooking && <LoadingIcons.Oval strokeWidth={4} className="w-4 h-4 mr-2 animate-spin" />
+                          }
+                          Book Now
+                        </Button>
+                      </div>
+                    )
+                  }
+                  <p className='text-center text-primary'>Check-in 3 hours before class begins</p>
+                </div>
+              )
+              : null
+            }
+
+            
+
+            {
+              packages.length === 0
+              ? (
+                <div className='mb-2'>
+                  <Button onClick={() => handleBuyPackage()} className='w-full mb-3' size={"lg"}>BUY PACKAGE</Button>
+                </div>
+              ): null
+            }
 
           </div>
         </div>
@@ -187,6 +307,15 @@ const DetailBookingPage = () => {
         </div>
       </CustomModal>
 
+      <CustomModal open={isModalSuccess} onOpenChange={() => setIsModalSuccess(false)}>
+          <div className='flex flex-col items-center'>
+            <RiVerifiedBadgeFill size={60} className='text-primary mb-1'/>
+            <p className='text-2xl text-primary mb-2'>Thank You</p>
+            <h2 className='font-noto_serif font-bold text-xl'>Your reservation is finished.</h2>
+            <p className='text-gray-700 mb-5'>Thank you for choosing our service</p>
+            <Link href='/customer/dashboard' className='bg-primary hover:bg-primary/50 rounded-lg py-3 px-4 text-white transition-all duration-300' >Continue to dashboard</Link>
+          </div>
+      </CustomModal>
     </div>
   )
 }

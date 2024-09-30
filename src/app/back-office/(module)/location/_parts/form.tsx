@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,15 +13,15 @@ import { useSheet } from '@/store/use-sheet'
 import { useLocation } from '@/store/use-location'
 import toast from 'react-hot-toast'
 import { baseUrl } from '@/lib/variable'
+import { AuthContex } from '@/providers/auth-provider'
 
 export const formSchema = z.object({
   name: z.string().min(1, {message: "Name is required"}),
 })
 
-type LocationFormProps = {
-}
-
 const LocationForm = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const { setIsOpen, modelId, mode } = useSheet()
   const { loading, getAllLocation, createLoation, locationUrl, getSingleLocation, location, updateLoacation } : any = useLocation()
@@ -34,7 +34,7 @@ const LocationForm = () => {
 
   const getSingleData = async () => {
     try {
-      const res = await getSingleLocation(`${baseUrl}/admin/location/${modelId}`)
+      const res = await getSingleLocation(`${baseUrl}${prefix}/location/${modelId}`)
       await form.reset(res)
     } catch (error:any) {
       toast.error(error.data.message)
@@ -54,9 +54,9 @@ const LocationForm = () => {
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       if (mode === 'edit') {
-        await updateLoacation(`${baseUrl}/admin/location/${modelId}`, data)
+        await updateLoacation(`${baseUrl}${prefix}/location/${modelId}`, data)
       }else {
-        await createLoation(data)
+        await createLoation(`${prefix}/location`, data)
       }
       await getAllLocation(locationUrl)
       toast.success("Location created")

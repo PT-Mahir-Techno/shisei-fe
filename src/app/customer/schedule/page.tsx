@@ -16,6 +16,8 @@ const SchedduleCustomerPage = () => {
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
   const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
 
+  
+
   return (
     <>
       <section className='bg-background p-5 rounded-lg mb-8'>
