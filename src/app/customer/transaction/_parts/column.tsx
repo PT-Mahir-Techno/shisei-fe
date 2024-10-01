@@ -79,7 +79,6 @@ export const columns: ColumnDef<PaymentType>[] = [
       return (
         <div
         className="flex items-center cursor-pointer"
-          // variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Amount
