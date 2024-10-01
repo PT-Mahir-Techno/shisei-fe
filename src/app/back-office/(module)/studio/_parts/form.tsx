@@ -17,7 +17,7 @@ const formSchema = z.object({
   name: z.string().min(1, "Minimum 1 character").max(225, "Maximum 225 characters"),
   title: z.string().min(1, "Minimum 1 character").max(225, "Maximum 225 characters"),
   subtitle: z.string().min(1, "Minimum 1 character").max(1000, "Maximum 1000 characters"),
-  address: z.string().min(1, "Minimum 1 character").max(225, "Maximum 225 characters"),
+  address: z.string().min(1, "Minimum 1 character").max(1000, "Maximum 1000 characters"),
   maps: z.string().min(1, "Minimum 1 character").max(1000, "Maximum 1000 characters"),
   photo:z.any().optional().refine((files) => files?.length === 0 || files?.[0]?.size < 5000000, {
     message: 'File size must be less than 5MB',

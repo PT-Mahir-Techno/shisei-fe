@@ -7,7 +7,7 @@ const ActivePackageCard = ({data}:{data:any}) => {
     <>
       <div className='w-full p-5 bg-gray-50 border border-gray-200 rounded-lg mb-6'>
         <div className='mb-12 flex gap-3 md:items-center flex-col md:flex-row'>
-          <h2 className='font-noto_serif font-bold text-2xl text-gray-700'>{data?.name}</h2>
+          <h2 className='font-noto_serif font-bold text-2xl text-gray-700 '>{data?.name}</h2>
           <div>
             <span className='bg-foreground px-3 py-2 text-white rounded-md text-xs'>{data?.credit_left} credit left</span>
           </div>

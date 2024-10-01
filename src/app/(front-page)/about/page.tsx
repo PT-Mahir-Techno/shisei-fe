@@ -52,7 +52,7 @@ const AboutPage = () => {
             </div>
 
             <div className="w-full h-auto">
-              <div className="w-full h-[320px] bg-cover bg-center bg-no-repeat rounded-lg shadow-md mb-5" style={{ backgroundImage: 'url("/img/why-img.png")' }}>
+              <div className="w-full h-[320px] bg-cover bg-center bg-no-repeat rounded-lg shadow-md mb-5" style={{ backgroundImage: 'url("/img/about_1.png")' }}>
               </div>
               <div className='flex gap-5 justify-between'>
                 <div className='flex-1 bg-primary p-6 rounded-lg'>

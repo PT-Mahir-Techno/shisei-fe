@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { RiArrowDropDownLine, RiCalendarScheduleFill, RiHistoryFill} from 'react-icons/ri'
@@ -9,6 +9,12 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu'
 import ScheduleHistoryCard from './_part/schedule-history'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
+import api from '@/lib/api'
+import toast from 'react-hot-toast'
+import { baseUrl } from '@/lib/variable'
+import { format } from 'date-fns'
+import Image from 'next/image'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
 const SchedduleCustomerPage = () => {
@@ -16,7 +22,58 @@ const SchedduleCustomerPage = () => {
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
   const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
 
-  
+  const [schedules, setSchedules] = React.useState([])
+  const [historySchedules, setHistorySchedules] = React.useState<any>([])
+  const [historyAttributes, setHistoryAttributes] = React.useState<any>({})
+  const [loadingSchedule, setLoadingSchedule] = React.useState(false)
+  const [loadingHistory, setLoadingHistory] = React.useState(false)
+
+
+  useEffect(() => {
+    getSchedule()
+    // getHistory()
+  }, [date])
+
+  useEffect(() => {
+    getHistory()
+  }, [])
+
+  const getSchedule = async () => {
+    setLoadingSchedule(true)
+    try {
+      if (date){
+        var newDate = format(date!, 'yyyy-MM-dd')
+      }else{
+        var newDate = format(new Date(), 'yyyy-MM-dd')
+      }
+      const res = await api.get(`${baseUrl}/dashboard/schedule?type=nopaginate&date=${newDate}`)
+      setSchedules(res.data)
+      setLoadingSchedule(false)
+    } catch (error:any) {
+      setLoadingSchedule(false)
+      toast.error(error.data.message)
+    }
+  }
+
+  const getHistory = async (uri?:string) => {
+    setLoadingHistory(true)
+    try {
+
+      if (uri){
+        var url = `${uri}`
+      }else{
+        var url = `${baseUrl}/dashboard/schedule?menu=history`
+      }
+
+      const res = await api.get(`${url}`)
+      setHistorySchedules(res.data.data)
+      setHistoryAttributes(res.data)
+      setLoadingHistory(false)
+    } catch (error) {
+      setLoadingHistory(false)
+      console.error(error)
+    }
+  }
 
   return (
     <>
@@ -47,19 +104,37 @@ const SchedduleCustomerPage = () => {
           <div className='flex-1'>
 
             {
-              Array.from({ length: 2 }).map((_, index) => <ScheduleCard key={index}/>)
+              loadingSchedule ? (
+                <div>
+                  <div className='flex flex-col gap-3'>
+                    <Skeleton className="w-1/2 h-6" />
+                    <Skeleton className="w-1/2 h-4" />
+                    <Skeleton className="w-full h-10" />
+                    <Skeleton className="w-full h-10" />
+                  </div>
+                </div>
+              ) : (
+                schedules.length <= 0 ? (
+                  <div className='text-center flex justify-center items-center flex-col'>
+                    <p className='text-gray-400 font-semibold'>No Schedule Yet</p>
+                    <p className='text-gray-400 mb-4'> select your schedule date </p>
+                    <Image src="/img/icon/cancel.png" width={100} height={100} alt="empty"/>
+                  </div>
+                )
+                : schedules.map((item:any) => <ScheduleCard key={item.id} data={item} fetch={() =>getSchedule()} />)
+              )
             }
           </div>
         </div>
       </section>
-
+      
       <section className='bg-background p-4 rounded-lg mb-8'>
         <div className='flex justify-between items-center pb-3 border-b border-gray-200 mb-5'>
           <div className='flex gap-2 items-center'>
             <RiHistoryFill className='text-primary' size={26} />
             <h2 className='font-noto_serif font-bold text-xl text-gray-800'>History</h2>
           </div>
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="link">Sort By <RiArrowDropDownLine size={26}/></Button>
             </DropdownMenuTrigger>
@@ -80,37 +155,49 @@ const SchedduleCustomerPage = () => {
               </DropdownMenuCheckboxItem>
 
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
           
         {
-          Array.from({ length: 2 }).map((_, index) => <ScheduleHistoryCard key={index}/>)
+          loadingHistory ? (
+            <div>
+              <div className='flex flex-col gap-3'>
+                <Skeleton className="w-1/2 h-6" />
+                <Skeleton className="w-1/2 h-4" />
+                <Skeleton className="w-full h-10" />
+                <Skeleton className="w-full h-10" />
+              </div>
+            </div>
+          ) : (
+            historySchedules.length <= 0 ? (
+              <div className='text-center flex justify-center items-center flex-col'>
+                <p className='text-gray-400 font-semibold'>No Schedule Yet</p>
+                <p className='text-gray-400 mb-4'> select your schedule date </p>
+                <Image src="/img/icon/cancel.png" width={100} height={100} alt="empty"/>
+              </div>
+            )
+            : historySchedules.map((item:any, i:number) => <ScheduleHistoryCard key={i} data={item} />)
+          )
         }
-
-        <Pagination className='flex justify-start mt-12'>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        {
+          historyAttributes && (
+            <Pagination className='flex justify-start mt-12'>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious onClick={() => historyAttributes.prev_page_url && getHistory(historyAttributes.prev_page_url) }/>
+                </PaginationItem>
+      
+                  <PaginationLink href="#" className='mx-6'>
+                    Total {historyAttributes.total} data
+                  </PaginationLink>
+      
+                <PaginationItem>
+                  <PaginationNext onClick={() => historyAttributes.next_page_url && getHistory(historyAttributes.next_page_url) } />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          )
+        }
       </section>
     </>
   )

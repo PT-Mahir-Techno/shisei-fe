@@ -18,7 +18,7 @@ const formSchema = z.object({
   fax: z.string().min(1, "Minimum 1 character").max(255, "Maximum 255 characters"),
   phone: z.string().min(1, "Minimum 1 character").max(255, "Maximum 255 characters"),
   email: z.string().min(1, "Minimum 1 character").max(255, "Maximum 255 characters"),
-  map_url: z.string().min(1, "Minimum 1 character").max(255, "Maximum 255 characters"),
+  map_url: z.string().min(1, "Minimum 1 character").max(1000, "Maximum 1000 characters"),
   instagram_url: z.string().min(1, "Minimum 1 character").max(255, "Maximum 255 characters"),
   facebook_url: z.string().min(1, "Minimum 1 character").max(255, "Maximum 255 characters"),
   linkedin_url: z.string().min(1, "Minimum 1 character").max(255, "Maximum 255 characters"),

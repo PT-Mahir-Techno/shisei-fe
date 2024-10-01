@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import React from 'react'
-import { RiArrowDownSLine, RiArrowRightSLine, RiCalendarScheduleFill, RiCircleFill, RiDashboardFill, RiHotelFill, RiPriceTagFill, RiSettings3Fill, RiShoppingBagFill, RiStackFill, RiUserFill } from 'react-icons/ri'
+import { RiArrowDownSLine, RiArrowRightSLine, RiCalendarScheduleFill, RiCircleFill, RiDashboardFill, RiHotelFill, RiMoneyCnyBoxFill, RiPriceTagFill, RiSettings3Fill, RiShoppingBagFill, RiShoppingBasket2Fill, RiStackFill, RiUserFill } from 'react-icons/ri'
 
 const SidebarCustomer = () => {
 
@@ -64,6 +64,16 @@ const SidebarCustomer = () => {
               </Link>
               <div className={` ${!minimize && 'hidden'} absolute -right-24  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
                 Package
+              </div>
+            </li>
+
+            <li className='mb-3 relative group'>
+              <Link href="/customer/transaction" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
+                  <RiShoppingBasket2Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={26}/>
+                  <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Transaction</span> 
+              </Link>
+              <div className={` ${!minimize && 'hidden'} absolute -right-24  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
+                Transaction
               </div>
             </li>
 

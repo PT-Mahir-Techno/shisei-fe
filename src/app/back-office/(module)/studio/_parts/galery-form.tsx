@@ -67,7 +67,7 @@ const GaleryStudioForm = ({close, id}: {close : () => void, id:any}) => {
               render={({ field }) => (
                 <FormItem className='w-full mb-4'>
                   <div>
-                    <Label>Phone Number</Label>
+                    <Label>Image</Label>
                   </div>
                   <div>
                     <FormControl>

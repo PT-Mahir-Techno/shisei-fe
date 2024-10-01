@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import BookSection from "./_parts/book_section";
 import "../../styles/animations.css";
+import GalerySection from "./_parts/galery_section";
 
 
 export default function Home() {
@@ -132,32 +133,38 @@ export default function Home() {
             <span className="text-primary">Be-Style®</span><span>Concept.</span>
           </div>
 
-          <div className="flex flex-wrap md:flex-nowrap justify-between gap-8 ">
+          <div className="flex flex-wrap md:flex-nowrap justify-between gap-12 ">
             <div className="w-full flex flex-col justify-center flex-wrap">
-              <div className={"font-noto_serif mb-4 text-2xl md:text-3xl font-bold text-gray-600 dark:text-slate-200"}>
+              <div className={"font-noto_serif mb-8 text-2xl md:text-3xl font-bold text-gray-600 dark:text-slate-200 lg:pr-24"}>
                 Do you have issues like these?
               </div>
-              <div className="text-sm text-slate-500 leading-relaxed dark:text-slate-300">
+              <div className="text-sm text-slate-500 leading-relaxed dark:text-slate-300 text-justify lg:pr-24">
                 Rest the overused muscles and consciously move the underused ones. By combining this "relaxation" and "training," you can achieve a balanced body and make changes without strain... this is the concept of Be-Style. <br /> <br />
 
                 Would you like to learn the power of "self-conditioning" to address and improve your body's discomfort or pain at the root, so you can balance your body on your own?
               </div>
             </div>
 
-            <div className="w-full h-[300px] bg-cover bg-center bg-no-repeat rounded-lg shadow-md" style={{ backgroundImage: 'url("/img/why-img.png")' }}>
+            {/* <div className="w-full h-[300px] bg-contain bg-center bg-no-repeat" style={{ backgroundImage: 'url("/img/img_issue.png")' }}>
+            </div> */}
+            <div className="w-full">
+              <Image src="/img/img_issue.png" alt="logo" width={600} height={400}/>
             </div>
           </div>
 
         </div>
         <div className="container pb-24">
           <div className="flex flex-wrap md:flex-nowrap justify-between gap-8">
-            <div className="w-full h-[300px] bg-cover bg-center bg-no-repeat rounded-lg shadow-md" style={{ backgroundImage: 'url("/img/why-img.png")' }}>
+            {/* <div className="w-full h-[300px] bg-cover bg-center bg-no-repeat rounded-lg shadow-md" style={{ backgroundImage: 'url("/img/why-img.png")' }}>
+            </div> */}
+            <div className="w-full">
+              <Image src="/img/img_program.png" alt="logo" width={540} height={400}/>
             </div>
             <div className="w-full flex flex-col justify-center">
-              <div className={"font-noto_serif mb-6 text-2xl md:text-3xl font-bold text-gray-600 leading-snug dark:text-slate-200"}>
-                A program that integrates <br /> the latest technology.
+              <div className={"font-noto_serif mb-6 text-2xl md:text-3xl font-bold text-gray-600 line-clamp-4 dark:text-slate-200"}>
+                A program that integrates the latest technology.
               </div>
-              <div className="text-sm text-slate-500 leading-relaxed dark:text-slate-300">
+              <div className="text-sm text-justify text-slate-500 leading-relaxed dark:text-slate-300">
                 We incorporate various programs into our private sessions to tailor them to each client.
                 <br/><br/>
                 We also integrate the latest training techniques, such as the "Power Plate," which enables effective muscle training in a short time, and the "Pilates Reformer," which allows you to train effectively from the inside out without putting much strain on your body.
@@ -165,21 +172,9 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="container mb-[120px]">
-          <div className={"font-noto_serif text-3xl font-semibold text-center mb-16"}>
-            <span className="text-primary">Be-Style®</span><span>Galerry.</span>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4  gap-4">
-            <Image src="/img/why-img.png" alt="logo" width={400} height={400}/>
-            <Image src="/img/why-img.png" alt="logo" width={400} height={400}/>
-            <Image src="/img/why-img.png" alt="logo" width={400} height={400}/>
-            <Image src="/img/why-img.png" alt="logo" width={400} height={400}/>
-            <Image src="/img/why-img.png" alt="logo" width={400} height={400}/>
-            <Image src="/img/why-img.png" alt="logo" width={400} height={400}/>
-            <Image src="/img/why-img.png" alt="logo" width={400} height={400}/>
-            <Image src="/img/why-img.png" alt="logo" width={400} height={400}/>
-          </div>
-        </div>
+
+        <GalerySection />
+
       </section>
       {/* end be concept */}
 

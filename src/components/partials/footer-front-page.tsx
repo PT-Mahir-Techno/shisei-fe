@@ -1,9 +1,23 @@
+'use client'
+
+import { useContactPage } from '@/store/use-contact-page'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { RiFacebookBoxFill, RiInstagramFill, RiLinkedinBoxFill } from 'react-icons/ri'
 
 const FooterFrontPage = () => {
+
+  const {contact, getContacts, loading} = useContactPage()
+
+  useEffect(() => {
+    init()
+  },[])
+
+  const init = async () => {
+    await getContacts()
+  }
+
   return (
     <>
       <footer className="bg-primary py-16">
@@ -34,15 +48,21 @@ const FooterFrontPage = () => {
               <div className={"font-noto_serif mb-4 text-lg text-slate-200 font-bold"}>Social Media</div>
               <div>
                 <ul>
-                  <li className="mb-2 text-sm text-gray-200 font-semibold flex items-center"> 
-                    <RiFacebookBoxFill className="mr-1 text-3xl" />  Facebook
-                  </li>
-                  <li className="mb-2 text-sm text-gray-200 font-semibold flex items-center"> 
-                    <RiInstagramFill className="mr-1 text-3xl" />  Instagram
-                  </li>
-                  <li className="mb-2 text-sm text-gray-200 font-semibold flex items-center"> 
-                    <RiLinkedinBoxFill className="mr-1 text-3xl" />  Linkedin
-                  </li>
+                  <a href={contact.facebook_url}>
+                    <li className="mb-2 text-sm text-gray-200 font-semibold flex items-center"> 
+                      <RiFacebookBoxFill className="mr-1 text-3xl" />  Facebook
+                    </li>
+                  </a>
+                  <a href={contact.instagram_url}>
+                    <li className="mb-2 text-sm text-gray-200 font-semibold flex items-center"> 
+                      <RiInstagramFill className="mr-1 text-3xl" />  Instagram
+                    </li>
+                  </a>
+                  <a href={contact.linkedin_url}>
+                    <li className="mb-2 text-sm text-gray-200 font-semibold flex items-center"> 
+                      <RiLinkedinBoxFill className="mr-1 text-3xl" />  Linkedin
+                    </li>
+                  </a>
                 </ul>
               </div>
             </div>
@@ -51,9 +71,9 @@ const FooterFrontPage = () => {
               <div className={"font-noto_serif mb-4 text-lg text-slate-200 font-bold"}>Contact Us</div>
               <div>
                 <ul>
-                  <li className="mb-2 text-sm text-gray-200">Email : support@therapyweb.com</li>
-                  <li className="mb-2 text-sm text-gray-200">Telepon : (021) 123-4567</li>
-                  <li className="mb-2 text-sm text-gray-200">Alamat : Jl. Raya Krapyak, RT.05, Karanganyar Ds, sambirejo, Wedomartani, Kec. Ngemplak, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55584</li>
+                  <li className="mb-2 text-sm text-gray-200">Email : {contact?.email}</li>
+                  <li className="mb-2 text-sm text-gray-200">Telepon : {contact?.phone}</li>
+                  <li className="mb-2 text-sm text-gray-200">Alamat : {contact?.address}</li>
                 </ul>
               </div>
             </div>

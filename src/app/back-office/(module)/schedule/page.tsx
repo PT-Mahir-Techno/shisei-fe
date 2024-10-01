@@ -15,6 +15,8 @@ import { useSchedule } from '@/store/use-schedule';
 import { baseUrl } from '@/lib/variable';
 import EventDetail from './_parts/event-detail';
 import { useSheet } from '@/store/use-sheet';
+import { useStaff } from '@/store/use-staff';
+import { RiFilter2Line } from 'react-icons/ri';
 
 
 const renderEventContent = (eventInfo:any) => {
@@ -39,12 +41,18 @@ const SchedulePage = () => {
   const {isOpen, setIsOpen} = useSheet()
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [selectedMonth, setSelectedMonth] = useState<number | undefined>(new Date().getMonth() + 1)
-  const [selectedYear, setSelectedYear] = useState<number | undefined>(new Date().getFullYear())
   const {getScheduleConverted, loading, convertedSchedule} = useSchedule()
+  const {staffs ,getAllStaffNoPaginate} = useStaff()
+  const [staffId, setStaffId] = useState<string | undefined>('')
 
   useEffect(() => {
-    getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${selectedMonth}`)
-  },[])
+    init()
+  },[staffId])
+  
+  const init = () => {
+    getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${selectedMonth}&staff=${staffId}`)
+    getAllStaffNoPaginate(`${baseUrl}/admin/staff?type=nopaginate`)
+  }
 
   const handleNextClick = () => {
     if ( calendarRef.current != null){
@@ -54,7 +62,7 @@ const SchedulePage = () => {
 
       //  compare selectedMonth with calendar api month if different set it 
       if (selectedMonth !== calendarApi.getDate().getMonth() + 1){
-        getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1}&year=${calendarApi.getDate().getFullYear()}`)
+        getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1}&year=${calendarApi.getDate().getFullYear()}&staff=${staffId}`)
         setSelectedMonth(calendarApi.getDate().getMonth() + 1)
       }
     }
@@ -71,7 +79,7 @@ const SchedulePage = () => {
       
       //  compare selectedMonth with calendar api month if different set it
       if (selectedMonth !== calendarApi.getDate().getMonth() + 1){
-        getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1}&year=${calendarApi.getDate().getFullYear()}`)
+        getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1}&year=${calendarApi.getDate().getFullYear()}&staff=${staffId}`)
         setSelectedMonth(calendarApi.getDate().getMonth() + 1)
       }
     }
@@ -86,7 +94,7 @@ const SchedulePage = () => {
       //  compare selectedMonth with calendar api month if different set it
       if (selectedMonth !== calendarApi.getDate().getMonth() + 1){
         setSelectedMonth(calendarApi.getDate().getMonth() + 1)
-        getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1} &year=${calendarApi.getDate().getFullYear()}`)
+        getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1} &year=${calendarApi.getDate().getFullYear()}&staff=${staffId}`)
       }
     }
   }
@@ -99,6 +107,11 @@ const SchedulePage = () => {
   const handleShowDetail = (id:string) => {
     setIsShowDetail(true)
     setEventId(id)
+  }
+
+  const handleResetFilter = () => {
+    setStaffId('')
+    init()
   }
 
   return (
@@ -118,15 +131,22 @@ const SchedulePage = () => {
         />
         <div className='mt-5 mb-2 text-gray-600'>Filter By Staff</div>
         <div className='h-80 overflow-auto'>
-          <Select>
+          <Select onValueChange={(value) => setStaffId(value)} defaultValue={staffId}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="--select one --" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">all staff</SelectItem>
-              <SelectItem value={'1'}>{"Joko"}</SelectItem>
+              {
+                staffs.map((staff) => (
+                  <SelectItem key={staff.id} value={staff.id}>{staff.name}</SelectItem>
+                ))
+              }
+              {/* <SelectItem value={'1'}>{"Joko"}</SelectItem> */}
             </SelectContent>
           </Select>
+          <div className='mt-4'>
+            <Button variant={'outline'} onClick={() => handleResetFilter()} className='w-full'><RiFilter2Line className='mr-3'/> Reset Filter</Button>
+          </div>
         </div>
       </div>
       <div className='flex-1 h-[80vh] bg-background p-4 box-content rounded-md'>

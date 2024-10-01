@@ -18,7 +18,7 @@ const PhilosophyPage = () => {
         <div className="container">
 
           <div className="flex flex-wrap md:flex-nowrap justify-between gap-12 mb-24">
-            <div className="w-full h-[300px] bg-cover bg-center bg-no-repeat rounded-lg shadow-md" style={{ backgroundImage: 'url("/img/why-img.png")' }}>
+            <div className="w-full h-[300px] bg-cover bg-center bg-no-repeat rounded-lg shadow-md" style={{ backgroundImage: 'url("/img/philosopy_1.png")' }}>
             </div>
             <div className="w-full flex flex-col justify-center flex-wrap">
               <div className={"font-noto_serif mb-4 text-3xl font-bold text-gray-600 dark:text-slate-200"}>
@@ -40,12 +40,12 @@ const PhilosophyPage = () => {
               </div>
             </div>
 
-            <div className="w-full h-[300px] bg-cover bg-center bg-no-repeat rounded-lg shadow-md" style={{ backgroundImage: 'url("/img/why-img.png")' }}>
+            <div className="w-full h-[300px] bg-cover bg-center bg-no-repeat rounded-lg shadow-md" style={{ backgroundImage: 'url("/img/philosopy_2.png")' }}>
             </div>
           </div>
 
           <div className="flex flex-wrap md:flex-nowrap justify-between gap-12 mb-24">
-            <div className="w-full bg-cover bg-center bg-no-repeat rounded-lg shadow-md" style={{ backgroundImage: 'url("/img/why-img.png")' }}>
+            <div className="w-full bg-cover bg-center bg-no-repeat rounded-lg shadow-md" style={{ backgroundImage: 'url("/img/philosopy_3.png")' }}>
             </div>
             <div className="w-full">
               <div className='mb-12'>

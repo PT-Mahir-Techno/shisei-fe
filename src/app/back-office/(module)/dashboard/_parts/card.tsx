@@ -16,10 +16,10 @@ type CardProps = {
 const DashboardCard = ({title, subtitle = "", icon, link, count, is_curency=false}: CardProps) => {
 
   return (
-    <div className='bg-background p-4 rounded-lg border-t-4 border-primary/30 shadow'>
+    <div className='bg-background p-4 rounded-lg border-t-2 border-primary/30 shadow'>
         <div className='flex items-center justify-between'>  
           <div>
-            <p className='mb-3 text-gray-500 font-semibold'>{title}</p>
+            <p className='mb-3 text-gray-500 text-sm'>{title}</p>
             <div className='flex items-end gap-3'>
               {
                 is_curency 

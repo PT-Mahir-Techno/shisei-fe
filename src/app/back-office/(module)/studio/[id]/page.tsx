@@ -23,7 +23,6 @@ import { baseUrl } from '@/lib/variable'
 const title = "Detail Studio"
 
 const RenderIcon = (data:any) => {
-  console.log(data)
   if (data.data == "AC"){
     return (
         <Image src='/img/ic_ac.png' width={40} height={40} alt='photo' className='rounded-md'/>
@@ -252,8 +251,8 @@ const StudioDetailPage = () => {
           <GaleryStudioForm close={() => setIsGaleryModalOpen(false)} id={id}/>
       </CustomModal>
 
-      <CustomModal open={isGaleryModalOpen} onOpenChange={() => setIsGaleryModalOpen(false)} title='Set galery'>
-      </CustomModal>
+      {/* <CustomModal open={isGaleryModalOpen} onOpenChange={() => setIsGaleryModalOpen(false)} title='Set galery'>
+      </CustomModal> */}
 
     </>
   )
