@@ -1,11 +1,18 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
+import api from '@/lib/api';
+import { baseUrl } from '@/lib/variable';
+import toast from 'react-hot-toast';
+import { Console, log } from 'console';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const ChartSection = () => {
+
+  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState<any>()
 
   const chartOptions = {
     chart: {
@@ -47,19 +54,35 @@ const ChartSection = () => {
     }
   };
 
-  const chartSeries = [
-    {
-      name: 'total income Rp.',
-      data: [2000000, 1000000, 2500000, 10000000, 15000000, 30000000, 14000000, 9000000, 17500000]
+  const init  = async () => {
+    try {
+      setLoading(true)
+      const res = await api.get(`${baseUrl}/admin/dashboard-chart`)
+      setData(Object.values(res.data))
+      setLoading(false)
+    } catch (error:any) {
+      setLoading(false)
+      console.log(toast.error(error.data.message))
     }
-  ];
+  }
+
+  useEffect(() => {
+    init()
+  },[])
+
 
   return (
     <div>
       <p className='text-gray-500 mb-4 font-semibold'>Transaction Chart</p>
       <Chart
         options={chartOptions}
-        series={chartSeries}
+        series={[
+          {
+            name: 'total income Rp.',
+            // data: [2000000, 1000000, 2500000, 10000000, 15000000, 30000000, 14000000, 9000000, 17500000]
+            data: [...data ?? []]
+          }
+        ]}
         type="bar"
         height={400}
       />

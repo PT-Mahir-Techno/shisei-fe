@@ -91,13 +91,13 @@ const BookingPage = () => {
   const param  = useSearchParams()
 
   useEffect(() => {
-    if (param.size > 0){
+    if (param.size > 0 || date){
       const month = param.get('month')
       const year = param.get('year')
       const day = param.get('date')
       getSchedules(`/schedule?month=${month}&year=${year}&date=${day}`)
     }
-  }, [param])
+  }, [param, date])
 
   const handleSelect = (data:any) => {
     setIsSelect((current) => current === data.id ? '' : data.id)

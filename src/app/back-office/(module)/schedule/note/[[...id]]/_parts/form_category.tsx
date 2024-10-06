@@ -3,10 +3,11 @@
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { AuthContex } from '@/providers/auth-provider'
 import { useCategoryNote } from '@/store/use-category-note'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Label } from '@radix-ui/react-label'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
@@ -19,6 +20,9 @@ const formSchema = z.object({
 const FormCategory = ({close}:any) => {
 
   const {loading, createCategoryNote, getAllCategoryNoteNoPaginate} = useCategoryNote()
+  
+  const {authState} = useContext(AuthContex)
+  const {_prefix}   = authState
 
   const form  = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -30,8 +34,8 @@ const FormCategory = ({close}:any) => {
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await createCategoryNote('/staff',data)
-      await getAllCategoryNoteNoPaginate('/staff/category-notes')
+      await createCategoryNote(_prefix,data)
+      await getAllCategoryNoteNoPaginate(`${_prefix}/category-notes`)
 
       form.reset()
       toast.success("Category saved")
