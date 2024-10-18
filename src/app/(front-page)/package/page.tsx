@@ -49,7 +49,7 @@ const BookingPackagePage = () => {
         const res = await procesedPackage(`/payment/${selectedPackage.id}`, payload)
 
         // redirect to res.url 
-        console.log(res)
+        // console.log(res)
         window.location.href = res?.url
         
       }

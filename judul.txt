@@ -1,0 +1,11 @@
+Nama: Muttafakur
+nim : 20220100010
+
+judul penelitian : "Implementasi Algoritma Enkripsi AES untuk meningkatkan keamanan apilikasi berbasis web"
+
+abstrak : 
+Keamanan data pada aplikasi berbasis web merupakan salah satu tantangan utama di era digital, terutama dengan meningkatnya jumlah ancaman siber seperti pencurian data dan serangan brute force. Masalah ini mendasari pentingnya penggunaan algoritma enkripsi yang handal untuk melindungi informasi sensitif pengguna. Penelitian ini bertujuan untuk mengimplementasikan algoritma enkripsi Advanced Encryption Standard (AES) dalam rangka meningkatkan keamanan aplikasi web. Algoritma AES dipilih karena sifatnya yang efisien dan kemampuannya dalam mengenkripsi data dengan tingkat keamanan tinggi.
+
+Pengujian dilakukan dengan mengukur kinerja aplikasi, waktu enkripsi, serta ketahanannya terhadap berbagai serangan siber. Penjelasan lebih lanjut mengenai metode mencakup pengujian melalui simulasi serangan brute force dan man-in-the-middle, serta analisis perbandingan performa sebelum dan sesudah penerapan AES. Hasil penelitian menunjukkan bahwa algoritma AES mampu menjaga kerahasiaan data secara signifikan, dengan peningkatan keamanan yang terlihat dari penurunan tingkat keberhasilan serangan dan waktu eksekusi yang tetap dalam batas wajar.
+
+algoritma AES terbukti efektif dalam meningkatkan keamanan aplikasi web tanpa mengorbankan kinerja aplikasi secara signifikan. Penelitian ini merekomendasikan implementasi algoritma AES sebagai bagian integral dari pengembangan aplikasi berbasis web yang membutuhkan tingkat keamanan tinggi, terutama untuk aplikasi yang menangani data sensitif.

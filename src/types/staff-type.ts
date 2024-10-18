@@ -1,3 +1,5 @@
+import { RoleType } from "./role-type";
+
 export type StaffType = {
   id:                string;
   name:              string;
@@ -14,6 +16,7 @@ export type StaffType = {
   updated_at:        string;
   photo_url:         null;
   avaibility:        Avaibility;
+  role:              RoleType;
 }
 
 export type Avaibility = {

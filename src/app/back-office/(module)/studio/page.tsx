@@ -14,10 +14,13 @@ import { columns } from './_parts/column'
 import LoadingIcons from 'react-loading-icons'
 import { useModal } from '@/store/use-modal'
 import toast from 'react-hot-toast'
+import { AuthContex } from '@/providers/auth-provider'
 
 const title = "Studio"
 function StudioPage() {
-  
+  const {authState} = React.useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+
   const {isOpen, setIsOpen} = useSheet()
   const {loading, studios, studioUrl, studioAttributes, getAllStudio, deleteStudio} = useStudio()
   const {isOpen:isOpenModal, setIsOpen:setIsOpenModal, modalId} = useModal()
@@ -28,12 +31,12 @@ function StudioPage() {
   , [])
 
   const initState = async () => {
-    await getAllStudio(`${baseUrl}/admin/studio`)
+    await getAllStudio(`${baseUrl}${prefix}/studio`)
   }
 
   const handleDelete = async () => {
     try {
-      await deleteStudio(`${baseUrl}/admin/studio/${modalId}`)
+      await deleteStudio(`${baseUrl}${prefix}/studio/${modalId}`)
       await initState()
       toast.success("Success delete studio")
     } catch (error) {

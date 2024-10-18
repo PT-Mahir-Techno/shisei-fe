@@ -5,6 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { AuthContex } from '@/providers/auth-provider'
 import { useStudio } from '@/store/use-studio'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
@@ -26,6 +27,9 @@ const formSchema = z.object({
 
 const StudioForm = ({close}: {close: () => void}) => {
 
+  const {authState} = React.useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+
   const {loading, createStudio, getAllStudio, studioUrl} = useStudio()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,7 +48,7 @@ const StudioForm = ({close}: {close: () => void}) => {
 
   const handleSUbmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await createStudio(data)
+      await createStudio(prefix, data)
       await getAllStudio(studioUrl)
       form.reset()
       close()

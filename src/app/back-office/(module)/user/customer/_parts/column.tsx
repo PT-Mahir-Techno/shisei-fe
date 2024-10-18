@@ -7,6 +7,7 @@ import ActionButton from "@/components/ui/action-button"
 import { handleStringToDate } from "@/lib/utils"
 import { AdminType } from "@/types/admin-type"
 import Image from "next/image"
+import { RiCloseCircleFill, RiVerifiedBadgeFill } from "react-icons/ri"
  
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -78,6 +79,28 @@ export const columns: ColumnDef<AdminType>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
+    accessorKey: "otp",
+    header: ({ column }) => {
+      return (
+        <div
+        className="flex items-center cursor-pointer"
+          // variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-3 h-4 w-4" />
+        </div>
+      )
+    },
+    cell: ({ row }) => {
+      if (row.getValue("otp")){
+        return <div className="text-green-600 flex items-center gap-2"> <RiVerifiedBadgeFill/> verified</div>
+      }else{
+        return <div className="text-red-600 flex items-center gap-2"><RiCloseCircleFill/> unverified</div>
+      }
+    }
+  },
+  {
     accessorKey: "created_at",
     header: "Created at",
     cell: ({ row }) => {
@@ -91,7 +114,7 @@ export const columns: ColumnDef<AdminType>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ActionButton model={row.original} />
+        <ActionButton model={row.original} isCanVerify={true} />
       )
     },
   },

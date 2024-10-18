@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { RiFile2Fill } from "react-icons/ri"
 import {columns} from './_parts/column'
@@ -19,10 +19,14 @@ import { cn } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import api from "@/lib/api"
+import { AuthContex } from "@/providers/auth-provider"
 
 const title = 'Package Transaction'
 
 const TransactionPackagePage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+
   const { isOpen, setIsOpen, modelId } = useSheet()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
   const {payments, paymentAttributes, paymentUrl, getAllPayment, loading} = usePayment()
@@ -32,7 +36,7 @@ const TransactionPackagePage = () => {
   // date now
 
   const init = () => {
-    getAllPayment(`${baseUrl}/admin/payment`)
+    getAllPayment(`${baseUrl}${prefix}/payment`)
   }
   
   useEffect(() => {
@@ -41,7 +45,7 @@ const TransactionPackagePage = () => {
 
   useEffect(() => {
      if (date?.from != undefined && date?.to != undefined) {
-        getAllPayment(`${baseUrl}/admin/payment?start_date=${format(date.from, 'yyyy-MM-dd')}&end_date=${format(date.to, 'yyyy-MM-dd')}`)
+        getAllPayment(`${baseUrl}${prefix}/payment?start_date=${format(date.from, 'yyyy-MM-dd')}&end_date=${format(date.to, 'yyyy-MM-dd')}`)
       }
   }, [date])
 
@@ -67,7 +71,7 @@ const TransactionPackagePage = () => {
   const handleUpdateTrx = async () => {
     try {
       setLoadingExport(true)
-      await api.put(`${baseUrl}/admin/payment/${modalId}`)
+      await api.put(`${baseUrl}${prefix}/payment/${modalId}`)
       await getAllPayment(paymentUrl)
       toast.success('Transaction Updated')
       setIsOpenModal(false)

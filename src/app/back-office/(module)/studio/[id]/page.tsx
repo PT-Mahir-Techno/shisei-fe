@@ -19,6 +19,7 @@ import { fail } from 'assert'
 import { useModal } from '@/store/use-modal'
 import LoadingIcons from 'react-loading-icons'
 import { baseUrl } from '@/lib/variable'
+import { AuthContex } from '@/providers/auth-provider'
 
 const title = "Detail Studio"
 
@@ -36,6 +37,8 @@ const RenderIcon = (data:any) => {
 }
 
 const StudioDetailPage = () => {
+  const {authState} = React.useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const [isScheduleModalOpen, setIsScheduleModalOpen] = React.useState(false)
   const [isContactModalOpen, setIsContactModalOpen] = React.useState(false)
@@ -53,7 +56,7 @@ const StudioDetailPage = () => {
   }, [])
   
   const initState = async () => {
-   const res = await getSingleStudio(`/admin/studio/${id}`)
+   const res = await getSingleStudio(`${prefix}/studio/${id}`)
     setStudio(res)
   }
 
@@ -61,7 +64,7 @@ const StudioDetailPage = () => {
     setFacilityDeleteLoading(true)
     try {
       setFacilityId(vacilityId)
-      await api.delete(`/admin/studio/${id}/facility/${vacilityId}`)
+      await api.delete(`${prefix}/studio/${id}/facility/${vacilityId}`)
       await initState()
       toast.success("Success delete facility")
       setFacilityDeleteLoading(false)

@@ -19,9 +19,9 @@ export const useAuth = () => {
       await resetProfile()
       await setRole(null)
 
-      Cookies.remove('_auth')
-      Cookies.remove('_is_auth')
-      Cookies.remove('_avaibility')
+      await Cookies.remove('_auth')
+      await Cookies.remove('_is_auth')
+      await Cookies.remove('_avaibility')
 
       toast.success("Logout success")
       setLoading(false)

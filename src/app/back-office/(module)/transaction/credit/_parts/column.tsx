@@ -7,6 +7,7 @@ import { RiVerifiedBadgeFill } from "react-icons/ri"
 import ReportActionButton from "@/components/ui/report-action-button"
 import PackageActionButton from "@/components/ui/package-action-button"
 import { formatDate2, formatedDate } from "@/lib/utils"
+import CreditActionButton from "@/components/ui/credit-action-button"
  
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -126,7 +127,7 @@ export const columns: ColumnDef<any>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ReportActionButton row={row} />  
+        <CreditActionButton row={row} />  
       )
     },
   }

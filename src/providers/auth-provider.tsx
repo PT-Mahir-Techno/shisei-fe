@@ -4,6 +4,7 @@ import Cookies from 'js-cookie'
 import { useProfile } from "@/store/use-profile"
 import { createContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { PermisionParser } from '@/lib/utils'
 
 export const AuthContex = createContext<any>({})
 
@@ -15,7 +16,8 @@ export function AuthProvider({ children }: any) {
     _auth: Cookies.get('_auth'),
     _is_auth: Cookies.get('_is_auth'),
     _avaibility: Cookies.get('_avaibility'),
-    _prefix: ''
+    _prefix: '',
+    _permision: {}
   })
 
   const initState = async () => {
@@ -33,7 +35,12 @@ export function AuthProvider({ children }: any) {
       }
       
       try {
-        await getPorfile(url)
+        const res = await getPorfile(url)
+        
+        if (res.role.permissions){
+          setAuthState((prev:any) => ({...prev, _permision: PermisionParser(res.role.permissions)}))
+        }
+
       } catch (error:any) {
           router.push('/')
           if ( error.data.message == "you must verify otp first"){

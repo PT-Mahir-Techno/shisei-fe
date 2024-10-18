@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import CustomSheets from "@/components/ui/custom-sheets"
 import {columns} from './_parts/column'
@@ -20,9 +20,12 @@ import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { DateRange } from "react-day-picker"
 import { addDays, format } from "date-fns"
+import { AuthContex } from "@/providers/auth-provider"
 
 
 const ScheduleTransactionpage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const { isOpen, setIsOpen } = useSheet()
   const { schedules, scheduleAttributes, loading, scheduleUrl, getAllSchedule } : any = useSchedule()
@@ -34,12 +37,12 @@ const ScheduleTransactionpage = () => {
   }, [])
   
   const init = async() => {
-    await getAllSchedule(`${baseUrl}/admin/calendar`)
+    await getAllSchedule(`${baseUrl}${prefix}/calendar`)
   }
 
   useEffect(() => {
     if (date?.from != undefined && date?.to != undefined) {
-      getAllSchedule(`${baseUrl}/admin/calendar?start_date=${format(date.from, 'yyyy-MM-dd')}&end_date=${format(date.to, 'yyyy-MM-dd')}`)
+      getAllSchedule(`${baseUrl}${prefix}/calendar?start_date=${format(date.from, 'yyyy-MM-dd')}&end_date=${format(date.to, 'yyyy-MM-dd')}`)
      }
  }, [date])
 
@@ -52,7 +55,7 @@ const ScheduleTransactionpage = () => {
 
   const handleUpdateTrx  = async() => {
     try {
-      await api.put(`${baseUrl}/admin/calendar/cancel-booking/${modalId}`)
+      await api.put(`${baseUrl}${prefix}/calendar/cancel-booking/${modalId}`)
       await getAllSchedule(scheduleUrl)
       toast.success('Transaction Updated')
       setIsOpenModal(false)

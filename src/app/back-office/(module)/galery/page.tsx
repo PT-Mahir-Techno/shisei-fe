@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { baseUrl } from '@/lib/variable'
+import { AuthContex } from '@/providers/auth-provider'
 import { useGallery } from '@/store/use-galery'
 import { useModal } from '@/store/use-modal'
 import { useSheet } from '@/store/use-sheet'
@@ -16,7 +17,7 @@ import Image from 'next/image'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { RiAddCircleFill, RiDeleteBin2Fill, RiDeleteBin2Line, RiEye2Fill } from 'react-icons/ri'
+import { RiAddCircleFill, RiDeleteBin2Fill, RiDeleteBin2Line, RiEye2Fill, RiEyeFill } from 'react-icons/ri'
 import LoadingIcons from 'react-loading-icons'
 import { z } from 'zod'
 
@@ -36,6 +37,9 @@ const formSchema = z.object({
 
 const GaleryPage = () => {
 
+  const {authState} = React.useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+
   const { isOpen, setIsOpen } = useSheet()
   const { gallerys, getAllGalleryNoPaginate, loading, createGallery, deleteGallery } = useGallery()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId, setModalId } = useModal()
@@ -50,7 +54,7 @@ const GaleryPage = () => {
   })
 
   useEffect(() => {
-    getAllGalleryNoPaginate(`${baseUrl}/admin/gallery`)
+    getAllGalleryNoPaginate(`${baseUrl}${prefix}/gallery`)
   }, [])
 
 
@@ -59,7 +63,7 @@ const GaleryPage = () => {
       const formData = new FormData()
       formData.append('image', data.image[0])
       await createGallery(formData)
-      await getAllGalleryNoPaginate(`${baseUrl}/admin/gallery`)
+      await getAllGalleryNoPaginate(`${baseUrl}${prefix}/gallery`)
 
       form.reset()
       setIsOpen(false)
@@ -72,8 +76,8 @@ const GaleryPage = () => {
 
   const handleDelete = async () => {
     try {
-      await deleteGallery(`${baseUrl}/admin/gallery/${modalId}`)
-      await getAllGalleryNoPaginate(`${baseUrl}/admin/gallery`)
+      await deleteGallery(`${baseUrl}${prefix}/gallery/${modalId}`)
+      await getAllGalleryNoPaginate(`${baseUrl}${prefix}/gallery`)
 
       setIsOpenModal(false)
       toast.success("Gallery deleted successfully")
@@ -125,7 +129,7 @@ const GaleryPage = () => {
                     <div className='flex items-center justify-between mt-2'>
                       <div className='text-gray-700 text-sm'>actions</div>
                       <div className='flex'>
-                        <RiEye2Fill onClick={() => handleDetailImage(item.image_url)} size={20} className="mr-2 text-primary cursor-pointer"/>
+                        <RiEyeFill onClick={() => handleDetailImage(item.image_url)} size={20} className="mr-2 text-primary cursor-pointer"/>
                         <RiDeleteBin2Fill onClick={() => handleOpenModal(item.id)} size={20} className="mr-2 text-destructive cursor-pointer"/>
                       </div>
                     </div>

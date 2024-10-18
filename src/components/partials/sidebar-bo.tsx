@@ -1,11 +1,20 @@
 'use client'
 
+import { CheckAvaibility } from '@/lib/utils'
+import { AuthContex } from '@/providers/auth-provider'
 import Link from 'next/link'
-import React from 'react'
-import { RiAccountPinBoxFill, RiArrowDownSLine, RiArrowRightSLine, RiCalendarScheduleFill, RiCircleFill, RiDashboardFill, RiFileList2Fill, RiHotelFill, RiImage2Fill, RiPriceTagFill, RiQuestionnaireFill, RiSettings3Fill, RiShoppingBagFill, RiSquareFill, RiUser3Fill, RiUserFill } from 'react-icons/ri'
+import { usePathname } from 'next/navigation'
+import React, { useContext } from 'react'
+import { RiAccountPinBoxFill, RiArrowDownSLine, RiArrowRightSLine, RiCalendar2Fill, RiCalendarScheduleFill, RiCircleFill, RiDashboardFill, RiFileList2Fill, RiHotelFill, RiImage2Fill, RiPriceTagFill, RiQuestionnaireFill, RiSettings3Fill, RiShoppingBagFill, RiSquareFill, RiUser3Fill, RiUserFill } from 'react-icons/ri'
 
 const SidebarBo = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix, _permision:permision, _avaibility:role }   = authState
 
+  console.log('sidebar role', role)
+  console.log('sidebar', permision)
+  
+  const pathName = usePathname()
   const [isOpenSub, setIsOpenSub] = React.useState(false)
   const [activeMenu, setActiveMenu] = React.useState('')
   const [minimize, setMinimize] = React.useState(true)
@@ -43,26 +52,29 @@ const SidebarBo = () => {
           <ul className='p-4'>
 
             <li className='mb-3 relative group'>
-              <Link href="/back-office/dashboard" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
-                <RiDashboardFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={26}/>
+              <Link href="/back-office/dashboard" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} ${pathName.startsWith('/back-office/dashboard')  && 'bg-secondary/40' } w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
+                <RiDashboardFill className={`${pathName.startsWith('/back-office/dashboard')  && 'text-primary' } text-gray-700 group-hover:text-primary transition-all duration-200`} size={26}/>
                 <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Dashboard</span> 
               </Link>
               <div className={` ${!minimize && 'hidden'} absolute -right-28  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
                 Dashboard
               </div>
             </li>
+            
+            {
+              CheckAvaibility(permision, 'location', role) &&
+              <li className='mb-3 relative group'>
+                <Link href="/back-office/location" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} ${pathName.startsWith('/back-office/location')  && 'bg-secondary/40' } w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
+                    <RiHotelFill className={`${pathName.startsWith('/back-office/location')  && 'text-primary' } text-gray-700 group-hover:text-primary transition-all duration-200`} size={26}/>
+                    <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Location</span> 
+                </Link>
+                <div className={` ${!minimize && 'hidden'} absolute -right-20  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
+                  Location
+                </div>
+              </li>
+            }
 
-            <li className='mb-3 relative group'>
-              <Link href="/back-office/location" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
-                  <RiHotelFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={26}/>
-                  <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Location</span> 
-              </Link>
-              <div className={` ${!minimize && 'hidden'} absolute -right-20  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
-                Location
-              </div>
-            </li>
-
-            <li className='mb-3 relative group'>
+            {/* <li className='mb-3 relative group'>
               <Link href="/back-office/schedule" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
                   <RiCalendarScheduleFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={26}/>
                   <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Schedule</span> 
@@ -70,42 +82,91 @@ const SidebarBo = () => {
               <div className={` ${!minimize && 'hidden'} absolute -right-28  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
                 Schedule
               </div>
-            </li>
+            </li> */}
+
+            
+
+            
 
             <li className='relative group'>
               <div onClick={() => {
                 setIsOpenSub(!isOpenSub)
-                setActiveMenu('package')
+                setActiveMenu('schedule')
                 setMinimize(false)
               }} 
               className={`
                 ${minimize && 'justify-center'}
-                ${isOpenSub && activeMenu === 'package' && 'bg-secondary/40'}
+                ${isOpenSub && activeMenu === 'schedule' && 'bg-secondary/40'}
                 w-full p-2 hover:bg-secondary/40 flex gap-2 items-center rounded-sm group
               `}>
-                <RiFileList2Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={30}/>
-                <span className={`whitespace-pre text-gray-950 duration-500 w-full ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Booking</span>
-                <RiArrowDownSLine className={`text-gray-700 group-hover:text-primary transition-all duration-200 ${(isOpenSub && activeMenu === 'package') && 'rotate-180'} ${minimize &&  'hidden'}`} size={20}/>
+                <RiCalendar2Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={30}/>
+                <span className={`whitespace-pre text-gray-950 duration-500 w-full ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Schedule</span>
+                <RiArrowDownSLine className={`text-gray-700 group-hover:text-primary transition-all duration-200 ${(isOpenSub && activeMenu === 'schedule') && 'rotate-180'} ${minimize &&  'hidden'}`} size={20}/>
               </div>
               <div className={` ${!minimize && 'hidden'} absolute -right-24  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
-                Booking
+                Schedule
               </div>
 
               <ul 
                 className={`transition-all duration-300 overflow-hidden bg-secondary/20 rounded-sm mt-2 text-sm ${
-                  ( isOpenSub == !minimize && activeMenu == "package" ) ? 'max-h-[300px] mb-3' : 'max-h-0 invisible '
+                  ( isOpenSub == !minimize && activeMenu == "schedule" ) ? 'max-h-[300px] mb-3' : 'max-h-0 invisible '
                 }`}
                 style={ { transitionDelay: isOpenSub ? '0.1s' : '0s' } }
               >
-                <Link href={"/back-office/booking/package"}>
-                  <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>Package</li>
+                <Link href={"/back-office/calendar/schedule"}>
+                  <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>Class</li>
                 </Link>
-                <Link href={"/back-office/booking/validity-period"}>
-                  <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>Validity Period</li>
+                <Link href={"/back-office/calendar/note"}>
+                  <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>User Notes</li>
                 </Link>
               </ul>
 
             </li>
+            
+            {
+              (CheckAvaibility(permision, 'package', role) || CheckAvaibility(permision, 'validityperiod', role)) && 
+              <li className='relative group'>
+                <div onClick={() => {
+                  setIsOpenSub(!isOpenSub)
+                  setActiveMenu('package')
+                  setMinimize(false)
+                }} 
+                className={`
+                  ${minimize && 'justify-center'}
+                  ${isOpenSub && activeMenu === 'package' && 'bg-secondary/40'}
+                  w-full p-2 hover:bg-secondary/40 flex gap-2 items-center rounded-sm group
+                `}>
+                  <RiFileList2Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={30}/>
+                  <span className={`whitespace-pre text-gray-950 duration-500 w-full ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Booking</span>
+                  <RiArrowDownSLine className={`text-gray-700 group-hover:text-primary transition-all duration-200 ${(isOpenSub && activeMenu === 'package') && 'rotate-180'} ${minimize &&  'hidden'}`} size={20}/>
+                </div>
+                <div className={` ${!minimize && 'hidden'} absolute -right-24  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
+                  Booking
+                </div>
+
+                <ul 
+                  className={`transition-all duration-300 overflow-hidden bg-secondary/20 rounded-sm mt-2 text-sm ${
+                    ( isOpenSub == !minimize && activeMenu == "package" ) ? 'max-h-[300px] mb-3' : 'max-h-0 invisible '
+                  }`}
+                  style={ { transitionDelay: isOpenSub ? '0.1s' : '0s' } }
+                >
+                  {
+                     CheckAvaibility(permision, 'package', role) &&
+                    <Link href={"/back-office/booking/package"}>
+                      <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>Package</li>
+                    </Link>
+                  }
+                  {
+                    CheckAvaibility(permision, 'validityperiod', role) &&
+                    <Link href={"/back-office/booking/validity-period"}>
+                      <li className='py-2 px-4 cursor-pointer flex gap-2 items-center'> <RiCircleFill className='text-primary' size={8}/>Validity Period</li>
+                    </Link>
+                    
+                  }
+                </ul>
+
+              </li>
+            }
 
 
             <li className='relative group'>
@@ -225,46 +286,58 @@ const SidebarBo = () => {
           </div>
 
           <ul className='px-4'>
+            
+            {
+              CheckAvaibility(permision, 'studio', role) &&
+              <li className='mb-3 relative group'>
+                <Link href="/back-office/studio" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
+                    <RiSquareFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
+                    <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Studio</span> 
+                </Link>
+                <div className={` ${!minimize && 'hidden'} absolute -right-24  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
+                  Studio
+                </div>
+              </li>
+            }
 
-            <li className='mb-3 relative group'>
-              <Link href="/back-office/studio" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
-                  <RiSquareFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
-                  <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Studio</span> 
-              </Link>
-              <div className={` ${!minimize && 'hidden'} absolute -right-24  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
-                Studio
-              </div>
-            </li>
+            {
+              CheckAvaibility(permision, 'galery', role) &&
+              <li className='mb-3 relative group'>
+                <Link href="/back-office/galery" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
+                    <RiImage2Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
+                    <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Galery</span> 
+                </Link>
+                <div className={` ${!minimize && 'hidden'} absolute -right-24  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
+                  Galery
+                </div>
+              </li>
+            }
 
-            <li className='mb-3 relative group'>
-              <Link href="/back-office/galery" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
-                  <RiImage2Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
-                  <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Galery</span> 
-              </Link>
-              <div className={` ${!minimize && 'hidden'} absolute -right-24  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
-                Galery
-              </div>
-            </li>
+            {
+              CheckAvaibility(permision, 'faq', role) &&
+              <li className='mb-3 relative group'>
+                <Link href="/back-office/faq" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
+                    <RiQuestionnaireFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
+                    <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>faq</span> 
+                </Link>
+                <div className={` ${!minimize && 'hidden'} absolute -right-20  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
+                  faq
+                </div>
+              </li>
+            }
 
-            <li className='mb-3 relative group'>
-              <Link href="/back-office/faq" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
-                  <RiQuestionnaireFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
-                  <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>faq</span> 
-              </Link>
-              <div className={` ${!minimize && 'hidden'} absolute -right-20  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
-                faq
-              </div>
-            </li>
-
-            <li className='mb-3 relative group'>
-              <Link href="/back-office/profile" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
-                  <RiUser3Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
-                  <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Profile</span> 
-              </Link>
-              <div className={` ${!minimize && 'hidden'} absolute -right-24  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
-                Profile
-              </div>
-            </li>
+            {
+              CheckAvaibility(permision, 'profile', role) &&
+              <li className='mb-3 relative group'>
+                <Link href="/back-office/profile" onClick={() => setMinimize(false)} className={` ${minimize && 'justify-center'} w-full p-2 flex gap-2 items-center rounded-sm hover:bg-secondary/40 transition-all duration-200 group`}>
+                    <RiUser3Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={24}/>
+                    <span className={`whitespace-pre text-gray-950 duration-500 ${ minimize && ' hidden opacity-0 translate-x-28 overflow-hidden' }`}>Profile</span> 
+                </Link>
+                <div className={` ${!minimize && 'hidden'} absolute -right-24  top-1 bg-background p-2 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-200 text-sm text-primary`}>
+                  Profile
+                </div>
+              </li>
+            }
 
           </ul>
 

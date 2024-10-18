@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {columns} from './_parts/column'
 import { CUstomDataTable } from "@/components/ui/custom-data-table"
@@ -17,9 +17,12 @@ import { Calendar } from "@/components/ui/calendar"
 import { DateRange } from "react-day-picker"
 import { format } from "date-fns"
 import { usePackageHistory } from "@/store/use-history-package"
+import { AuthContex } from "@/providers/auth-provider"
 
 
 const CreditTransactionpage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const { packageHistorys, packageHistoryAttributes, loading, packageHistoryUrl, getAllPackageHistory } : any = usePackageHistory()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
@@ -30,12 +33,12 @@ const CreditTransactionpage = () => {
   }, [])
   
   const init = async() => {
-    await getAllPackageHistory(`${baseUrl}/admin/history-membership`)
+    await getAllPackageHistory(`${baseUrl}${prefix}/history-membership`)
   }
 
   useEffect(() => {
     if (date?.from != undefined && date?.to != undefined) {
-      getAllPackageHistory(`${baseUrl}/admin/history-membership?start_date=${format(date.from, 'yyyy-MM-dd')}&end_date=${format(date.to, 'yyyy-MM-dd')}`)
+      getAllPackageHistory(`${baseUrl}${prefix}/history-membership?start_date=${format(date.from, 'yyyy-MM-dd')}&end_date=${format(date.to, 'yyyy-MM-dd')}`)
      }
  }, [date])
 
@@ -48,7 +51,7 @@ const CreditTransactionpage = () => {
 
   const handleUpdateTrx  = async() => {
     try {
-      await api.put(`${baseUrl}/admin/calendar/cancel-booking/${modalId}`)
+      await api.put(`${baseUrl}${prefix}/calendar/cancel-booking/${modalId}`)
       await getAllPackageHistory(packageHistoryUrl)
       toast.success('Transaction Updated')
       setIsOpenModal(false)

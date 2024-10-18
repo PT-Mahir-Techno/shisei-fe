@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useProfile } from '@/store/use-profile'
 import Cookies from 'js-cookie'
 import { AuthContex } from '@/providers/auth-provider'
+import LoadingIcons from 'react-loading-icons'
 
 const NavbarBo = () => {
 
@@ -19,7 +20,7 @@ const NavbarBo = () => {
 
   const [isOpen, setIsOpen] = React.useState(false)
   const [isFUllScreen, setIsFullScreen] = React.useState(false)
-  const { logout } = useAuth()
+  const { logout, loading } = useAuth()
   const router = useRouter()
   const {authState, setAuthState} = useContext(AuthContex)
 
@@ -32,7 +33,8 @@ const NavbarBo = () => {
       setAuthState({
         _auth: '',
         _is_auth: '',
-        _avaibility: ''
+        _avaibility: '',
+        _permision: {}
       })
       router.push(redirectUrl)
     } catch (error) {
@@ -41,7 +43,8 @@ const NavbarBo = () => {
       setAuthState({
         _auth: '',
         _is_auth: '',
-        _avaibility: ''
+        _avaibility: '',
+        _permision: {}
       })
 
       Cookies.remove('_auth')
@@ -89,8 +92,8 @@ const NavbarBo = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className='flex gap-3 items-center cursor-pointer border border-gray-300 p-1 box-border rounded-full'>
-                <div>
-                  <img src="/img/avatar.png" alt="" className='w-8 h-8 rounded-full' />
+                <div className='w-8 h-8 rounded-full bg-cover bg-center'
+                style={{ backgroundImage: `url(${data?.photo_url ?? '/img/avatar.png'})` }}>
                 </div>
                 <div className='hidden md:flex flex-col justify-start '>
                   <h2 className='text-gray-800 text-sm dark:text-slate-100 overflow-clip'>{data?.name}</h2>
@@ -107,7 +110,7 @@ const NavbarBo = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="py-4 px-2">
               <DropdownMenuItem>
-                <div className='flex items-center gap-2'
+                <div className='flex items-center gap-2 cursor-pointer'
                   onClick={() => handleClickDashboard()}
                 >
                   <RiDashboardFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
@@ -116,14 +119,14 @@ const NavbarBo = () => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <div onClick={() => handleCLickProfile()} className='flex items-center gap-2'>
+                <div onClick={() => handleCLickProfile()} className='flex items-center gap-2 cursor-pointer'>
                   <RiUser3Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
                   Profile
                 </div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setIsOpen(true)}>
-                <div className='flex items-center gap-2'>
+                <div className='flex items-center gap-2 cursor-pointer'>
                   <RiLogoutBoxRFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
                   Log Out
                 </div>
@@ -141,7 +144,12 @@ const NavbarBo = () => {
             <p className='text-gray-700 my-6 text-center'>are you sure you want to end this session ?</p>
             <div className='flex justify-end gap-4'>
               <Button onClick={() => setIsOpen(false)} variant={"outline"}>Cancel</Button>
-              <Button onClick={handleLogout}>Logout</Button>
+              <Button onClick={handleLogout} disabled={loading}>
+                {
+                  loading && <LoadingIcons.Oval strokeWidth={4} className="w-4 h-4 mr-2 animate-spin" />
+                }
+                Logout
+              </Button>
             </div>
           </div>
       </CustomModal>

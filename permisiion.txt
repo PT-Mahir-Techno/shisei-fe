@@ -1,0 +1,96 @@
+- dashboard
+ - view dashboard
+
+- location
+  - view location
+  - create location
+  - edit location
+  - delete location
+
+- schedule
+  -class
+    - view class-schedule
+    - create class-schedule
+    - edit class-schedule
+    - delete class-schedule
+  - note
+    - view note-schedule
+
+- booking
+  - package
+    - view package-booking
+    - create package-booking
+    - edit package-booking
+    - delete package-booking
+  - validity-period
+    - view validity-period-booking
+    - create validity-period-booking
+    - edit validity-period-booking
+    - delete validity-period-booking
+
+- transaction
+  - package-transaction
+    - view package-transaction
+    - update-trx package-transaction
+    - detail package-transaction
+    - export package-transaction
+  - schedule-transaction
+    - view schedule-transaction
+    - cancel schedule-transaction
+  - credit-transaction
+    - view credit-transaction
+    - send-reminder credit-transaction
+
+- user
+  - admin
+    - view admin-user
+    - create admin-user
+    - edit admin-user
+    - delete admin-user
+  - staff
+    - view staff-user
+    - create staff-user
+    - edit staff-user
+    - delete staff-user
+  - customer
+    - view customer-user
+    - create customer-user
+    - edit customer-user
+    - delete customer-user
+
+- setting
+  - role-setting
+    - view role-setting
+    - create role-setting
+    - edit role-setting
+    - delete role-setting
+  - permission-setting
+    - view permission-setting
+  - schedule-setting
+    - view schedule-setting
+    - edit schedule-setting
+  - contact-setting
+    - view contact-setting
+    - edit contact-setting
+  
+- studio
+  - view studio
+  - create studio
+  - edit studio
+  - delete studio
+
+- gallery
+  - view gallery
+  - create gallery
+  - edit gallery
+  - delete gallery
+
+- faq
+  - view faq
+  - create faq
+  - edit faq
+  - delete faq
+
+- profile
+  - view profile
+  - edit profile

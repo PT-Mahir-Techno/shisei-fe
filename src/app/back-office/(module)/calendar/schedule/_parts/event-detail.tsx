@@ -49,16 +49,20 @@ const EventDetail = ({id, close}: {id:String|undefined, close: () => void}) => {
   }
 
   return loading 
-  ? <div>
-      <div className="space-y-2  bg-background px-6 py-4">
+  ? 
+    <div className='flex flex-col gap-2'>
+        <Skeleton className="h-5 w-1/4" />
+        <Skeleton className="h-5 w-1/4" />
+        <Skeleton className="h-5 w-1/4" />
+        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-20 w-full" />
         <Skeleton className="h-5 w-full" />
         <Skeleton className="h-5 w-full" />
         <Skeleton className="h-5 w-full" />
-        <Skeleton className="h-5 w-full" />
-        <Skeleton className="h-5 w-full" />
-        <Skeleton className="h-5 w-full" />
-      </div>
+
     </div>
+
   : (
     <>
       <div className='grid grid-cols-1 md:grid-cols-6 gap-8 pt-4'>
@@ -116,7 +120,7 @@ const EventDetail = ({id, close}: {id:String|undefined, close: () => void}) => {
               <RiEditBoxFill className='text-lg mr-3'/>
               Edit Data
             </Button>
-            <Link href={`/back-office/schedule/note/${id}`}>
+            <Link href={`/back-office/calendar/schedule/note/${id}`}>
               <Button size={"sm"} className='w-full' variant={'secondary'}>
                 <RiStickyNoteFill className='text-lg mr-3'/>
                 Add Note

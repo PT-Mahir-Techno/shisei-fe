@@ -16,13 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import LoadingIcons from "react-loading-icons"
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination"
-import { boolean } from "zod"
-import { useLocation } from "@/store/use-location"
-import { Children } from "react"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

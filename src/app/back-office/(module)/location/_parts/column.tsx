@@ -66,7 +66,7 @@ export const columns: ColumnDef<LocationType>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ActionButton model={row.original} />
+        <ActionButton model={row.original}  actionFor="location"/>
       )
     },
   },

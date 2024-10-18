@@ -14,7 +14,7 @@ type PackageStoreType = {
   packageUrl: string
   getAllPackage: (url: string) => void
   getSinglePackage: (url: string) => Promise<any>
-  createPackage: (data: any) => Promise<void>
+  createPackage: (url:string, data: any) => Promise<void>
   deletePackage: (url: string) => void
   updatePackage: (url: string, data: any) => Promise<void>
 }
@@ -53,10 +53,10 @@ export const usePackage = create<PackageStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  createPackage:async (data: any) => {
+  createPackage:async (url:string, data: any) => {
     try {
       set({loading: true })
-      await api.post(`${baseUrl}/admin/membership`, data)
+      await api.post(`${baseUrl}${url}/membership`, data)
       set({loading: false, success: true })
       return Promise.resolve()
     } catch (error) {

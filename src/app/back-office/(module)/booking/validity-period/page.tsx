@@ -5,7 +5,7 @@ import CustomSheets from '@/components/ui/custom-sheets'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@radix-ui/react-label'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { RiAddCircleFill } from 'react-icons/ri'
 import { useLocation } from '@/store/use-location'
 import { useSheet } from '@/store/use-sheet'
@@ -18,19 +18,23 @@ import PeriodForm from './_part/form'
 import CustomModal from '@/components/ui/custoom-dialog'
 import LoadingIcons from 'react-loading-icons'
 import toast from 'react-hot-toast'
+import { AuthContex } from '@/providers/auth-provider'
 
 const PeriodPage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+
   const title = "Validity Period"
   const { isOpen, setIsOpen } = useSheet()
   const { periods, loading, getAllPeriod, periodAttributes, deletePeriod, periodUrl, success, errorData } : any = usePeriod()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
 
   React.useEffect(() => {
-    getAllPeriod(`${baseUrl}/admin/duration`)
+    getAllPeriod(`${baseUrl}${prefix}/duration`)
   }, [])
 
   const handleDelete = async () => {
-    await deletePeriod(`${baseUrl}/admin/duration/${modalId}`)
+    await deletePeriod(`${baseUrl}${prefix}/duration/${modalId}`)
     await getAllPeriod(periodUrl)
     
     if (!success){

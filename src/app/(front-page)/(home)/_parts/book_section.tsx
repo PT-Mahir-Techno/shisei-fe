@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar";
@@ -18,6 +18,8 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import Link from 'next/link';
+import { useHome } from '@/store/use-home';
+import { useRouter } from 'next/navigation';
 
 const languages = [
   { label: "English", value: "en" },
@@ -32,10 +34,29 @@ const languages = [
 ] as const
 
 const BookSection = () => {
-
   const [date, setDate] = React.useState<Date>()
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
+  const [selected, setSelected] = React.useState("")
+
+  const {loadingLoation, locations, getLocations } = useHome()
+  const router = useRouter()
+
+
+  useEffect(() => {
+    getLocations()
+  }, [])
+
+
+  const handleBook = () => {
+    if (date && selected){
+      const month   = date.getMonth() + 1
+      const year    = date.getFullYear()
+      const day     = date.getDate()
+      const newDate = `year=${year}&month=${month}&date=${day}`
+      router.push(`/booking?${newDate}&location=${selected}`)
+    }
+  }
 
   return (
     <>
@@ -63,6 +84,7 @@ const BookSection = () => {
                   mode="single"
                   selected={date}
                   onSelect={setDate}
+                  disabled={(date) => date < new Date()}
                   initialFocus
                 />
               </PopoverContent>
@@ -77,7 +99,7 @@ const BookSection = () => {
                   className="w-full justify-between"
                 >
                   {value
-                    ? languages.find((framework) => framework.value === value)?.label
+                    ? locations.find((item:any) => item.name === value)?.name
                     : "Select Location..."}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -88,11 +110,12 @@ const BookSection = () => {
                   <CommandList>
                     <CommandEmpty>No framework found.</CommandEmpty>
                     <CommandGroup>
-                      {languages.map((framework) => (
+                      {locations.map((item:any) => (
                         <CommandItem
-                          key={framework.value}
-                          value={framework.value}
+                          key={item.id}
+                          value={item.name}
                           onSelect={(currentValue) => {
+                            setSelected(item.id)
                             setValue(currentValue === value ? "" : currentValue)
                             setOpen(false)
                           }}
@@ -100,10 +123,10 @@ const BookSection = () => {
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4",
-                              value === framework.value ? "opacity-100" : "opacity-0"
+                              value === item.name ? "opacity-100" : "opacity-0"
                             )}
                           />
-                          {framework.label}
+                          {item.name}
                         </CommandItem>
                       ))}
                     </CommandGroup>
@@ -112,7 +135,7 @@ const BookSection = () => {
               </PopoverContent>
             </Popover>
             
-            <Link href={"/booking"} className='w-full bg-primary px-4 py-[8px]  rounded-md text-center text-white'>Book Now</Link>
+            <div onClick={handleBook} className='w-full bg-primary px-4 py-[8px]  rounded-md text-center text-white cursor-pointer'>Book Now</div>
             {/* <Button>Book Now</Button> */}
           </div>
         </div>

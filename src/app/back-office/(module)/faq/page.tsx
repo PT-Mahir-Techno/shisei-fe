@@ -30,7 +30,7 @@ const FaqPage = () => {
   }, [prefix])
 
   const handleDelete = async () => {
-    await deleteFaq(`${baseUrl}/admin/faq/${modalId}`)
+    await deleteFaq(`${baseUrl}${prefix}/faq/${modalId}`)
     await getAllFaq(faqUrl)
     toast.success('Location deleted successfully')
     setIsOpenModal(false)

@@ -78,6 +78,22 @@ export const columns: ColumnDef<StaffType>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
+    accessorKey: "role",
+    header: ({ column }) => {
+      return (
+        <div
+        className="flex items-center cursor-pointer"
+          // variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Role
+          <ArrowUpDown className="ml-3 h-4 w-4" />
+        </div>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.original.role.name}</div>,
+  },
+  {
     accessorKey: "created_at",
     header: "Created at",
     cell: ({ row }) => {

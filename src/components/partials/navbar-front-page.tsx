@@ -152,35 +152,38 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <div className='flex gap-3 items-center bg-white cursor-pointer border border-gray-300 p-1 box-border rounded-full'>
-                        <div>
-                          <img src="/img/avatar.png" alt="" className='w-8 h-8 rounded-full' />
+                        <div
+                          className='w-8 h-8 rounded-full bg-cover bg-center'
+                          style={{ backgroundImage: `url(${data?.photo_url ?? '/img/avatar.png'})` }}
+                        >
+                          {/* <img src="/img/avatar.png" alt="" className='w-8 h-8 rounded-full' /> */}
                         </div>
-                        <div className='hidden md:flex flex-col justify-start '>
-                          <h2 className='text-gray-800 text-sm dark:text-slate-100 overflow-clip'>{data?.name}</h2>
+                        <div className='hidden lg:flex flex-col justify-start '>
+                          <h2 className='text-gray-800 text-sm dark:text-slate-100 Customtruncate'>{data?.name.substring(0, 6) + '..'}</h2>
                           <p className='text-primary text-xs'>{ authState?._avaibility }</p>
                         </div>
-                        <div className='hidden md:block'>
+                        <div className='hidden lg:block'>
                           <RiArrowDropDownLine className='text-gray-700 group-hover:text-primary transition-all duration-200' size={26}/>
                         </div>
                       </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="py-4 px-2">
                       <DropdownMenuItem>
-                        <div onClick={() => handleClickDashboard()} className='flex items-center gap-2'>
+                        <div onClick={() => handleClickDashboard()} className='flex items-center gap-2 cursor-pointer'>
                           <RiDashboardFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
                           Dashboard
                         </div>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>
-                        <div onClick={() => handleCLickProfile()} className='flex items-center gap-2'>
+                        <div onClick={() => handleCLickProfile()} className='flex items-center gap-2 cursor-pointer'>
                           <RiUser3Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
                           Profile
                         </div>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={() => setIsOpen(true)}>
-                        <div className='flex items-center gap-2'>
+                        <div className='flex items-center gap-2 cursor-pointer'>
                           <RiLogoutBoxRFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
                           Log Out
                         </div>
@@ -201,6 +204,8 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
             }
           </div>
         </div>
+
+        {/* mobile nav */}
         <div id='mobile-nav' className={`lg:hidden md:hidden bg-gray-900 z-10 transition-all duration-200 box-content overflow-hidden ${isHidden ? 'translate-x-0 translate-y-0 p-2 w-full h-screen' : '-translate-x-[100%] w-0 h-0'}`}>
           <ul className='p-4 flex flex-col items-end gap-10 mt-4 text-white font-noto_serif'>
             <li>
@@ -235,6 +240,7 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
             </li>
           </ul>
         </div>
+        {/* end  mobile nav */}
 
         <CustomModal 
           open={isOpen} 

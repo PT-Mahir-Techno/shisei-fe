@@ -6,12 +6,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { baseUrl } from '@/lib/variable'
+import { AuthContex } from '@/providers/auth-provider'
 import { useLocation } from '@/store/use-location'
 import { usePackage } from '@/store/use-package'
 import { useSheet } from '@/store/use-sheet'
 import { usePeriod } from '@/store/use-validity-period'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
@@ -27,6 +28,9 @@ export const formSchema = z.object({
 
 const PackageForm = () => {
 
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+
   const {locations, getAllLocationNoPaginate} = useLocation()
   const {periods, getAllPeriodNoPaginate} = usePeriod()
   const {loading, createPackage, getAllPackage, success, errorData, packageUrl, getSinglePackage, updatePackage} = usePackage()
@@ -34,7 +38,7 @@ const PackageForm = () => {
 
   const getSingleData = async () => {
     try {
-      const res = await getSinglePackage(`${baseUrl}/admin/membership/${modelId}`)
+      const res = await getSinglePackage(`${baseUrl}${prefix}/membership/${modelId}`)
       if (res){
         await form.reset(res)
       }
@@ -57,8 +61,8 @@ const PackageForm = () => {
     if (mode === 'edit') {
       getSingleData()
     }
-    getAllLocationNoPaginate(`${baseUrl}/admin/location?type=nopaginate`)
-    getAllPeriodNoPaginate(`${baseUrl}/admin/duration?type=nopaginate`)
+    getAllLocationNoPaginate(`${baseUrl}${prefix}/location?type=nopaginate`)
+    getAllPeriodNoPaginate(`${baseUrl}${prefix}/duration?type=nopaginate`)
   }, [])
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -68,9 +72,9 @@ const PackageForm = () => {
       }
 
       if (mode == 'edit') {
-        await updatePackage(`${baseUrl}/admin/membership/${modelId}`, data)
+        await updatePackage(`${baseUrl}${prefix}/membership/${modelId}`, data)
       }else{
-        await createPackage(data)
+        await createPackage(prefix, data)
       }
 
       await getAllPackage(packageUrl)

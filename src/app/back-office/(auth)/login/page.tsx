@@ -17,6 +17,7 @@ import toast from 'react-hot-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { AuthContex } from '@/providers/auth-provider'
 import { useProfile } from '@/store/use-profile'
+import { PermisionParser } from '@/lib/utils'
 
 const formSchema = z.object({
   email: z.string().email({message: "Invalid email"}),
@@ -46,23 +47,29 @@ const LoginBoPage = () => {
     try {
       const res = await login("/admin/login", data)
 
+      let _avaibility: string;
+      let url: string;
+      let path: string;
+      let permision: object;
+
       if (typeof(res.data.role) == 'object'){
-        var _avaibility = res.data.role.name
-        var url = '/staff/profile'
-        var path =  "/staff"
+        _avaibility = res.data.role.name
+        url = '/staff/profile'
+        path =  "/staff"
+        permision = PermisionParser(res.data.role.permissions)
       } else{
-        var _avaibility = res.data.role
-        var url = '/admin/profile'
-        var path =  "/admin"
+        _avaibility = res.data.role
+        url = '/admin/profile'
+        path =  "/admin"
+        permision = {}
       }
-      console.log(_avaibility);
-      
       
       setAuthState({
         _auth: res.data.token,
         _is_auth: 'true',
         _avaibility: _avaibility,
-        _prefix: path
+        _prefix: path,
+        _permision: permision
       })
 
       await getPorfile(url)

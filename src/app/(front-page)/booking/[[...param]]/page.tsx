@@ -95,9 +95,16 @@ const BookingPage = () => {
       const month = param.get('month')
       const year = param.get('year')
       const day = param.get('date')
+
+      // set adte
+      if (month && year && day){
+        const newDate = new Date(`${year}-${month}-${day}`)
+        setDate(newDate)
+      }
+
       getSchedules(`/schedule?month=${month}&year=${year}&date=${day}`)
     }
-  }, [param, date])
+  }, [param])
 
   const handleSelect = (data:any) => {
     setIsSelect((current) => current === data.id ? '' : data.id)

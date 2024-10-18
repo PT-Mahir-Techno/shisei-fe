@@ -62,7 +62,7 @@ const StudioPageDetail = () => {
 
       <div className='container'>
           <div className='flex flex-col md:flex-row gap-3 mb-5'>
-            <h2 className='font-noto_serif font-bold text-3xl text-gray-700 dark:text-gray-200'>
+            <h2 className='font-noto_serif font-bold text-3xl text-gray-700 dark:text-gray-200 leading-10'>
               {studio?.name}
             </h2>
           </div>
@@ -137,8 +137,8 @@ const StudioPageDetail = () => {
                             }
 
                           </CarouselContent>
-                          <CarouselPrevious />
-                          <CarouselNext />
+                          <CarouselPrevious className='hidden md:block' />
+                          <CarouselNext className='hidden md:block' />
                         </Carousel>
                       </div>
                     </div>

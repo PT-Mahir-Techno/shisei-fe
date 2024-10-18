@@ -15,13 +15,14 @@ import { useModal } from "@/store/use-modal"
 import LoadingIcons from "react-loading-icons"
 import toast from "react-hot-toast"
 import { AuthContex } from "@/providers/auth-provider"
+import { CheckAvaibilityAction } from "@/lib/utils"
 
 
 const RoomPage = () => {
   
   const {authState} = useContext(AuthContex)
-  const {_prefix:prefix}   = authState
-  
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
+
   const { isOpen, setIsOpen } = useSheet()
   const { locations, loading, getAllLocation, locationAttributes, deleteLocation, locationUrl } : any = useLocation()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
@@ -45,9 +46,12 @@ const RoomPage = () => {
           <h2 className="font-noto_serif font-bold text-2xl text-gray-800">Location</h2>
           <p className="text-gray-500 text-sm">List Locations</p>
         </div>
-        <div>
-          <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add Location</Button>
-        </div>
+        {
+          CheckAvaibilityAction(permision,'view','location', role) &&
+          <div>
+            <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add Location</Button>
+          </div>
+        }
       </div>
       
       {/* <RoomTable /> */}

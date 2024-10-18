@@ -14,19 +14,23 @@ import toast from "react-hot-toast"
 import { useModal } from "@/store/use-modal"
 import LoadingIcons from "react-loading-icons"
 import CustomModal from "@/components/ui/custoom-dialog"
+import { AuthContex } from "@/providers/auth-provider"
 
 const AdminPage = () => {
+  const {authState} = React.useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+
   const title = "Admin " 
   const { isOpen, setIsOpen } = useSheet()
   const { admins, loading, getAllAdmin, adminAttributes, deleteAdmin, adminUrl } : any = useAdmin()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
 
   React.useEffect(() => {
-    getAllAdmin(`${baseUrl}/admin/admin`)
+    getAllAdmin(`${baseUrl}${prefix}/admin`)
   }, [])
 
   const handleDelete = async () => {
-    await deleteAdmin(`${baseUrl}/admin/admin/${modalId}`)
+    await deleteAdmin(`${baseUrl}${prefix}/admin/${modalId}`)
     await getAllAdmin(adminUrl)
     toast.success('Admin deleted successfully')
     setIsOpenModal(false)

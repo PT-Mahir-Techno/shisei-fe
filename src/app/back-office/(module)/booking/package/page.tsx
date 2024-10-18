@@ -5,7 +5,7 @@ import CustomSheets from '@/components/ui/custom-sheets'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@radix-ui/react-label'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { RiAddCircleFill } from 'react-icons/ri'
 import { useLocation } from '@/store/use-location'
 import { useSheet } from '@/store/use-sheet'
@@ -18,19 +18,23 @@ import PackageForm from './_part/form'
 import LoadingIcons from 'react-loading-icons'
 import CustomModal from '@/components/ui/custoom-dialog'
 import toast from 'react-hot-toast'
+import { AuthContex } from '@/providers/auth-provider'
 
 const PackagePage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+
   const title = "Package"
   const { isOpen, setIsOpen } = useSheet()
   const { packages, loading, getAllPackage, packageAttributes, deletePackage, packageUrl, success, errorData } : any = usePackage()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
 
   React.useEffect(() => {
-    getAllPackage(`${baseUrl}/admin/membership`)
+    getAllPackage(`${baseUrl}${prefix}/membership`)
   }, [])
 
   const handleDelete = async () => {
-    await deletePackage(`${baseUrl}/admin/membership/${modalId}`)
+    await deletePackage(`${baseUrl}${prefix}/membership/${modalId}`)
     await getAllPackage(packageUrl)
 
     if (!success){

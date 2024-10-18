@@ -17,7 +17,7 @@ type StudioStoreType = {
   galeries: any
   getAllStudio: (url: string) => void
   getSingleStudio: (url: string) => Promise<void>
-  createStudio: (data: any) => Promise<void>
+  createStudio: (url:string, data: any) => Promise<void>
   deleteStudio: (url: string) => Promise<void>
   updateStudio: (url: string, data: any) => Promise<void>
 }
@@ -61,7 +61,7 @@ export const useStudio = create<StudioStoreType>((set, get) => ({
       return Promise.reject(err)
     }
   },
-  createStudio:async (data: any) => {
+  createStudio:async (url:string, data: any) => {
     try {
       set({loading: true })
       const payload = new FormData()
@@ -78,7 +78,7 @@ export const useStudio = create<StudioStoreType>((set, get) => ({
         }
       }
 
-      await api.post(`${baseUrl}/admin/studio`, payload, config)
+      await api.post(`${baseUrl}${url}/studio`, payload, config)
       set({loading: false, success: true, error: false})
       return Promise.resolve()
     } catch (error) {

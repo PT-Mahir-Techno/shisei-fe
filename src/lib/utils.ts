@@ -91,3 +91,48 @@ export const formatDate2 = (date: string) => {
 export const pluckId = (array: any[]) => {
   return array.map(item => item.id)
 }
+
+// PermitionParse
+export const PermisionParser = (value:Array<any> ):object => {
+
+  const data:any = {}
+  value.forEach((item: any, index:any) => {
+    const dataindex:string   = item.permission.name.split(" ")[1] 
+    if (dataindex){
+      const strIndex:string = StripDetector(dataindex) as string
+      if (!data[strIndex]){
+        data[strIndex] = [item.permission.name.split(" ")[0]]
+      }else{
+        data[strIndex].push(item.permission.name.split(" ")[0])
+      }
+    }
+  })
+  return data;
+}
+
+export const StripDetector = (param: string) => {
+  const data = param.split("");
+
+  if (data.includes("-")){
+    const res = param.split("-")[0] + param.split("-")[1]
+    return res
+  }else{
+    return param
+  }
+}
+
+export const CheckAvaibility = (permision:any, menu:string, role:string) => {
+  if (role == 'admin') {
+    return true
+  } else {
+    return permision[menu]
+  }
+}
+
+export const CheckAvaibilityAction = (permision:any, action:string, menu:string, role:string) => {
+  if (role == 'admin') {
+    return true
+  } else {
+    return permision[menu].includes(action)
+  }
+}
