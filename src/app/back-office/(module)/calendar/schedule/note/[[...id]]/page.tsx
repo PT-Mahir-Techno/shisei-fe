@@ -90,7 +90,7 @@ const PermisionPage = () => {
               {
                 loadingNote ?
                 Array(3).fill(0).map((_, index) => (
-                  <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
+                  <div key={index} className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
                     <div>
                       <LoadingSkeleton key={index} />
                     </div>
@@ -153,7 +153,7 @@ const PermisionPage = () => {
                 ? <div>
                   {
                     Array(4).map((_, index) => (
-                      <div className='flex flex-col gap-2'>
+                      <div key={index} className='flex flex-col gap-2'>
                         <Skeleton key={index} className='w-1/2 h-4'/>
                         <Skeleton key={index} className='w-full h-4'/>
                       </div>

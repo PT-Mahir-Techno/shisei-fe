@@ -49,15 +49,15 @@ const DetailNotePage = () => {
       {
         loading ? 
         Array(6).fill(0).map((_, index) => (
-          <div className='w-full bg-background px-6 py-4 rounded-lg mb-4'>
+          <div key={index} className='w-full bg-background px-6 py-4 rounded-lg mb-4'>
             <Skeleton className='w-1/4 h-4 mb-3'/>
             <Skeleton className='w-full h-6 mb-2'/>
             <Skeleton className='w-full h-6 mb-2'/>
           </div>
         ))
         : notes.length > 0 ?
-          notes.map((note:any) => (
-            <div className="w-full bg-background px-6 py-4 rounded-lg mb-4">
+          notes.map((note:any, index:any) => (
+            <div key={index} className="w-full bg-background px-6 py-4 rounded-lg mb-4">
                 <div className='flex items-center justify-between gap-8'>
                   <div>
                     <p className='mb-4'><span className='text-gray-500 font-semibold'>{ formatedDate(note?.created_at) }</span> </p>
