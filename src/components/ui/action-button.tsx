@@ -66,7 +66,6 @@ function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', 
             <RiClipboardFill size={16} className="mr-2 text-green-500" /> Copy ID
           </DropdownMenuItem>
           <DropdownMenuSeparator /> */}
-          <div>
             {
               isCanVerify &&
               <DropdownMenuItem onClick={() => handleVerify(model.id)} className="cursor-pointer">
@@ -74,9 +73,7 @@ function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', 
                 Verify
               </DropdownMenuItem>
             }
-          </div>
 
-          <div>
             {
               isDay && (
                 <DropdownMenuItem onClick={() => handleSetDay(model.id)} className="cursor-pointer">
@@ -85,9 +82,7 @@ function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', 
                 </DropdownMenuItem>
               )
             }
-          </div>
 
-          <div>
             {
               isEdit &&
               <DropdownMenuItem onClick={() => handleSheetEdit(model.id)}  className="cursor-pointer">
@@ -104,9 +99,7 @@ function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', 
                 </DropdownMenuItem>
               </Link>
             }
-          </div>
 
-          <div>
             {
               originalLink && (
                 <Link href={originalLink}>
@@ -117,9 +110,7 @@ function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', 
                 </Link>
               )
             }
-          </div>
 
-          <div>
             {
               isDelete && 
               <DropdownMenuItem onClick={() => handleClickDelete(model.id)} className="cursor-pointer">
@@ -127,7 +118,6 @@ function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', 
                 Delete
               </DropdownMenuItem>
             }
-          </div>
 
         </DropdownMenuContent>
       </DropdownMenu>

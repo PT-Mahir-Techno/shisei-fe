@@ -42,7 +42,9 @@ export const columns: ColumnDef<StaffType>[] = [
         row.getValue("photo") 
         ? <Image alt="photo" src={row.getValue("photo")} width={60} height={60} className="rounded-full object-cover object-center"/>
       } */}
-       <Image alt="photo" src="/img/img_placeholder.png" width={60} height={60} className="rounded-full object-cover object-center"/>
+       <div className="w-12 h-12 rounded-full bg-cover bg-center"
+        style={{ backgroundImage: `url(${row.original.photo_url ?? "/img/img_placeholder.png"})` }}
+       ></div>
     </div>,
   },
   {

@@ -1,10 +1,35 @@
+'use client';
+
 import { Button } from '@/components/ui/button'
 import ProfileCard from '@/components/ui/profile-card'
 import React from 'react'
 
 import "../../styles/animations.css";
+import api from '@/lib/api';
+import { baseUrl } from '@/lib/variable';
+import toast from 'react-hot-toast';
 
 const AboutPage = () => {
+
+  const [loading, setLoading] = React.useState(false)
+  const [data, setData] = React.useState([])
+
+  const iniit = async () => {
+    try {
+      setLoading(true)
+      const res = await api.get(`${baseUrl}/staff`)
+      setData(res.data)
+      setLoading(false)
+    } catch (error:any) {
+      setLoading(false)
+      toast.error(error.data.message)
+    }
+  }
+
+  React.useEffect(() => {
+    iniit()
+  }, [])
+
   return (
     <div className='page-animation'>
       <section className='pt-40 py-12 bg-cover bg-no-repeat bg-center'
@@ -79,11 +104,11 @@ const AboutPage = () => {
             At Be-Style, we pride ourselves on having a team of instructors and staff dedicated to providing you with the best therapy experience. We <br /> are a group of individuals passionate about health and wellness, bringing deep experience and expertise to every session. 
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
             
             {
-              [...Array(6)].map((_, index) => (
-                <ProfileCard key={index} />
+              data.map((item, index) => (
+                <ProfileCard key={index} data={item} loading={loading} />
               ))
             }
 
