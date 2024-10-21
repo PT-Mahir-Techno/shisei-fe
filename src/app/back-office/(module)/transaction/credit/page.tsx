@@ -45,8 +45,6 @@ const CreditTransactionpage = () => {
  }, [date])
 
   const handleDelete = async () => {
-    // await deleteLocation(`${baseUrl}/admin/packageHistory/${modalId}`)
-    // await getAllLocation(packageHistoryUrl)
     toast.success('Location deleted successfully')
     setIsOpenModal(false)
   }
