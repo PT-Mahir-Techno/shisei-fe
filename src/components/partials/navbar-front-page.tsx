@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ModeToggle } from '../mode-toggle'
-import { RiArchiveFill, RiArrowDropDownLine, RiCloseLargeFill, RiDashboardFill, RiHome2Line, RiHome5Fill, RiLogoutBoxRFill, RiMenuFill, RiMicOffFill, RiMicrosoftFill, RiSmartphoneFill, RiTicketFill, RiUser3Fill } from 'react-icons/ri'
+import { RiArchiveFill, RiArrowDropDownLine, RiBox1Fill, RiCloseLargeFill, RiDashboardFill, RiHome2Line, RiHome5Fill, RiLogoutBoxRFill, RiMenuFill, RiMicOffFill, RiMicrosoftFill, RiPriceTag2Fill, RiSmartphoneFill, RiTicketFill, RiUser3Fill } from 'react-icons/ri'
 import { usePathname, useRouter } from 'next/navigation'
 import { useProfile } from '@/store/use-profile'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu'
@@ -206,10 +206,64 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
         </div>
 
         {/* mobile nav */}
-        <div id='mobile-nav' className={`lg:hidden md:hidden bg-gray-900 z-10 transition-all duration-200 box-content overflow-hidden ${isHidden ? 'translate-x-0 translate-y-0 p-2 w-full h-screen' : '-translate-x-[100%] w-0 h-0'}`}>
-          <ul className='p-4 flex flex-col items-end gap-10 mt-4 text-white font-noto_serif'>
+        <div id='mobile-nav' className={`lg:hidden md:hidden bg-background z-10 transition-all duration-200 box-content overflow-hidden ${isHidden ? 'translate-x-0 translate-y-0 p-2 w-full h-screen' : '-translate-x-[100%] w-0 h-0'}`}>
+          <ul className='p-4 px-8 flex flex-col items-end gap-10 mt-4 text-foreground font-noto_serif'>
+          <li>
+              <div>
+                <div className="flex gap-2 items-center">
+                  <ModeToggle/>
+                  {
+                    data ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <div className='flex gap-3 items-center bg-white cursor-pointer border border-gray-300 p-1 box-border rounded-full'>
+                            <div
+                              className='w-8 h-8 rounded-full bg-cover bg-center'
+                              style={{ backgroundImage: `url(${data?.photo_url ?? '/img/avatar.png'})` }}
+                            >
+                              {/* <img src="/img/avatar.png" alt="" className='w-8 h-8 rounded-full' /> */}
+                            </div>
+                            <div className='flex flex-col justify-start '>
+                              <h2 className='text-gray-800 text-sm dark:text-slate-100 Customtruncate'>{data?.name.substring(0, 6) + '..'}</h2>
+                              <p className='text-primary text-xs'>{ authState?._avaibility }</p>
+                            </div>
+                            <div className='block'>
+                              <RiArrowDropDownLine className='text-gray-700 group-hover:text-primary transition-all duration-200' size={26}/>
+                            </div>
+                          </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="py-4 px-2">
+                          <DropdownMenuItem>
+                            <div onClick={() => handleClickDashboard()} className='flex items-center gap-2 cursor-pointer'>
+                              <RiDashboardFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
+                              Dashboard
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem>
+                            <div onClick={() => handleCLickProfile()} className='flex items-center gap-2 cursor-pointer'>
+                              <RiUser3Fill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
+                              Profile
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => setIsOpen(true)}>
+                            <div className='flex items-center gap-2 cursor-pointer'>
+                              <RiLogoutBoxRFill className='text-gray-700 group-hover:text-primary transition-all duration-200' size={20}/>
+                              Log Out
+                            </div>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) :(
+                      <Link href={"/login"} className='rounded-full text-sm bg-background text-foreground px-3 py-2'>login / Sign Up</Link>
+                    )
+                  }
+                </div>
+              </div>
+            </li>
             <li>
-              <Link onClick={hiddenMenu} href="/" className='flex gap- items-center'>
+              <Link onClick={hiddenMenu} href="/" className='flex gap-2 items-center'>
                 Home
                 <RiHome5Fill className='text-xl'/>
               </Link>
@@ -218,6 +272,18 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
               <Link onClick={hiddenMenu} href="/booking" className='flex gap-2 items-center'>
                 Booking
                 <RiTicketFill className='text-xl'/>
+              </Link>
+            </li>
+            <li>
+              <Link onClick={hiddenMenu} href="/package" className='flex gap-2 items-center'>
+                Package
+                <RiPriceTag2Fill className='text-xl'/>
+              </Link>
+            </li>
+            <li>
+              <Link onClick={hiddenMenu} href="/studio" className='flex gap-2 items-center'>
+                Our Studios
+                <RiBox1Fill className='text-xl'/>
               </Link>
             </li>
             <li>

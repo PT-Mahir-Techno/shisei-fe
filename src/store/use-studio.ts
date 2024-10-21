@@ -16,7 +16,7 @@ type StudioStoreType = {
   openingHours: any
   galeries: any
   getAllStudio: (url: string) => void
-  getSingleStudio: (url: string) => Promise<void>
+  getSingleStudio: (url: string) => Promise<any>
   createStudio: (url:string, data: any) => Promise<void>
   deleteStudio: (url: string) => Promise<void>
   updateStudio: (url: string, data: any) => Promise<void>
@@ -70,7 +70,10 @@ export const useStudio = create<StudioStoreType>((set, get) => ({
       payload.append('subtitle', data.subtitle)
       payload.append('address', data.address)
       payload.append('maps', data.maps)
-      payload.append('photo', data.photo[0])
+
+      if (data.photo){
+        payload.append('photo', data.photo[0])
+      }
       
       const config = {
         headers: {
@@ -100,7 +103,26 @@ export const useStudio = create<StudioStoreType>((set, get) => ({
   updateStudio: async (url: string, data: any) => {
     try {
       set({loading: true })
-      await api.put(url, data)
+
+      const payload = new FormData()
+      payload.append('name', data.name)
+      payload.append('title', data.title)
+      payload.append('subtitle', data.subtitle)
+      payload.append('address', data.address)
+      payload.append('maps', data.maps)
+
+      if (data.photo[0]){
+        payload.append('photo', data.photo[0])
+      }
+      
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+
+      await api.post(url, payload, config)
+      
       set({loading: false, success: true, error: false})
       return Promise.resolve()
     } catch (error) {

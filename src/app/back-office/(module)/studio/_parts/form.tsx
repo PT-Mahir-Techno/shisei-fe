@@ -5,10 +5,12 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { baseUrl } from '@/lib/variable'
 import { AuthContex } from '@/providers/auth-provider'
+import { useSheet } from '@/store/use-sheet'
 import { useStudio } from '@/store/use-studio'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
+import React, { use, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
@@ -20,9 +22,11 @@ const formSchema = z.object({
   subtitle: z.string().min(1, "Minimum 1 character").max(1000, "Maximum 1000 characters"),
   address: z.string().min(1, "Minimum 1 character").max(1000, "Maximum 1000 characters"),
   maps: z.string().min(1, "Minimum 1 character").max(1000, "Maximum 1000 characters"),
-  photo:z.any().optional().refine((files) => files?.length === 0 || files?.[0]?.size < 5000000, {
+  photo:z.any().optional()
+  .refine((files) => files?.length === 0 || files?.[0]?.size < 5000000, {
     message: 'File size must be less than 5MB',
-  }).refine(file => file.length == 1 ? ["image/jpeg", "image/jpg", "image/png"].includes(file?.[0]?.type) ? true : false : true, 'Invalid file. choose either JPEG or PNG image')
+  })
+  .refine(file => file.length == 1 ? ["image/jpeg", "image/jpg", "image/png"].includes(file?.[0]?.type) ? true : false : true, 'Invalid file. choose either JPEG or PNG image')
 })
 
 const StudioForm = ({close}: {close: () => void}) => {
@@ -30,7 +34,20 @@ const StudioForm = ({close}: {close: () => void}) => {
   const {authState} = React.useContext(AuthContex)
   const {_prefix:prefix}   = authState
 
-  const {loading, createStudio, getAllStudio, studioUrl} = useStudio()
+  const {loading, createStudio, getAllStudio, studioUrl, getSingleStudio, updateStudio} = useStudio()
+  const {modelId, mode, setIsOpen} = useSheet()
+
+  useEffect(() => {
+    init()
+  }
+  , [mode])
+
+  const init = async () => {
+    if(mode === 'edit') {
+      const res = await getSingleStudio(`${baseUrl}${prefix}/studio/${modelId}`)
+      form.reset(res)
+    }
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,7 +65,12 @@ const StudioForm = ({close}: {close: () => void}) => {
 
   const handleSUbmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await createStudio(prefix, data)
+      if (mode === 'edit') {
+        await updateStudio(`${baseUrl}${prefix}/studio/${modelId}`, data)
+      } else {
+        await createStudio(prefix, data)
+      }
+
       await getAllStudio(studioUrl)
       form.reset()
       close()
@@ -161,13 +183,18 @@ const StudioForm = ({close}: {close: () => void}) => {
               />
             </div>
           </div>
-
-          <Button className="w-full" size={"lg"} disabled={loading}>
-            {
-              loading && <LoadingIcons.Oval strokeWidth={4} className="w-4 h-4 mr-2 animate-spin" />
-            }
-            Save
-          </Button>
+          
+          <div className='flex justify-end gap-4'>
+            <Button variant={'outline'} size={"lg"} onClick={close}>
+              Cancel
+            </Button>
+            <Button size={"lg"} disabled={loading}>
+              {
+                loading && <LoadingIcons.Oval strokeWidth={4} className="w-4 h-4 mr-2 animate-spin" />
+              }
+              Save
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

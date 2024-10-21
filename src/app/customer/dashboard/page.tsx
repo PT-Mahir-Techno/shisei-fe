@@ -137,7 +137,7 @@ const DahboardCustomerPage = () => {
                         <p className='text-primary'>{formatedDate(item?.date_start)}</p>
                         <div className='flex justify-between'>
                           <h2 className='font-noto_serif font-bold text-lg text-gray-700'>{item?.name}</h2>
-                          <Badge className='rounded' variant={'destructive'}>{item?.status}</Badge>
+                          {/* <Badge className='rounded' variant={'destructive'}>{item?.status}</Badge> */}
                         </div>
                         <div className='h-[1px] my-4 bg-gray-200'></div>
                       </div>

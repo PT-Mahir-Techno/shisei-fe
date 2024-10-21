@@ -1,44 +1,41 @@
 'use client'
 
+import { useContext, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useAuth } from "@/hooks/use-auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useContext, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import LoadingIcons from "react-loading-icons"
 import { z } from "zod"
 import { AuthContex } from "@/providers/auth-provider"
-import { useProfile } from "@/store/use-profile"
+import api from "@/lib/api"
+import { baseUrl } from "@/lib/variable"
 
 const formSchema = z.object({
-  email: z.string().min(3, { message: 'Email or phone is too short' }).max(255, { message: 'Email or phone is too long' }),
-  password: z.string().min(6, { message: 'Password is too short' }).max(255, { message: 'Password is too long' })
+  password: z.string().min(6, { message: 'Password is too short' }).max(255, { message: 'Password is too long' }),
+  password_confirmation: z.string().min(6, { message: 'Password is too short' }).max(255, { message: 'Password is too long' }),
+  otp: z.string().min(6, { message: 'Password is too short' }).max(6, { message: 'Password is too long' }),
+}).refine(data => data.password === data.password_confirmation, {
+  message: 'Password confirmation must be same as password',
+  path: ['password_confirmation']
 })
 
 const LoginPage = () => {
 
-  const { authState, setAuthState} = useContext(AuthContex)
+  const { authState} = useContext(AuthContex)
   const router = useRouter()
-  const {loading, login} = useAuth() 
-  const {getPorfile} = useProfile()
+  const [loading, setLoading] = useState(false)
   
   useEffect(() => {
     if (authState._auth && authState._is_auth && authState._avaibility) {
       router.replace('/customer/dashboard')
       toast.success("You are already logged in")
-    }
-
-    if (authState._auth && !authState._is_auth && !authState._avaibility) {
-      router.replace('/otp-verification')
-      toast.success("You must verify otp first")
     }
   }
   , [])
@@ -46,8 +43,9 @@ const LoginPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: ''
+      password: '',
+      password_confirmation: '',
+      otp: ''
     },
     resetOptions: {
       keepDirtyValues: true
@@ -56,16 +54,14 @@ const LoginPage = () => {
 
   const handleSubmit = async ( data: z.infer<typeof formSchema> ) => {
     try {
-      const res = await login("/login", data)
-      setAuthState({
-        _auth: res.data.token,
-        _is_auth: 'true',
-        _avaibility: res.data.role
-      })
-      await getPorfile('/dashboard/profile')
-      router.replace('/customer/dashboard')
-      toast.success("Login success")
+      setLoading(true)
+      await api.post(`${baseUrl}/reset-password`, data)
+
+      setLoading(false)
+      router.replace('/login')
+      toast.success("Password has been reset successfully")
     } catch (error:any) {
+      setLoading(false)
       if (error && error.data) {
         toast.error(error.data.message)
       }else{
@@ -82,25 +78,13 @@ const LoginPage = () => {
             <Image src="/be-secondary-logo.png" alt="logo" width={160} height={0} className="mb-4"/>
           </Link>
           <p className="text-gray-400">
-            Please enter your email and password.
+            Reset Password
           </p>
         </div>
 
         <Form  {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem className='w-full mb-4'>
-                  <Label>Email or Phone</Label>
-                  <FormControl>
-                    <Input placeholder="enter your email or phone" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="password"
@@ -115,20 +99,34 @@ const LoginPage = () => {
               )}
             />
 
-            <div className="flex items-center justify-between mb-6">
-              <div className="items-top flex space-x-2">
-                <Checkbox id="terms1" />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="terms1"
-                    className="text-sm text-gray-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Remember Me
-                  </label>
-                </div>
-              </div>
-              <Link href={"/forgot-password"} className="text-sm font-semibold text-destructive">Forgot Password ?</Link>
-            </div>
+            <FormField
+              control={form.control}
+              name="password_confirmation"
+              render={({ field }) => (
+                <FormItem className='w-full mb-4'>
+                  <Label>Password Confirmation</Label>
+                  <FormControl>
+                    <Input type="password" placeholder="******" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="otp"
+              render={({ field }) => (
+                <FormItem className='w-full mb-4'>
+                  <Label>OTP Code </Label>
+                  <FormControl>
+                    <Input max={6} min={6} type="text" placeholder="your otp code, recenly sended" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <div>
               <Button className="w-full" size={"lg"}
                 disabled={loading}
@@ -136,7 +134,7 @@ const LoginPage = () => {
                 {
                   loading && <LoadingIcons.Oval strokeWidth={4} className="w-4 h-4 mr-2 animate-spin" />
                 }
-                Sign In
+                Reset Password
               </Button>
             </div>
 
@@ -145,7 +143,7 @@ const LoginPage = () => {
         
 
         <div className="mt-24 text-center text-gray-600">
-          <p>Don't have an account ? <Link className="font-bold text-primary" href="/signup">Sign Up</Link></p>
+          <p>Have problem ?  please contact our support</p>
         </div>
 
     </div>
