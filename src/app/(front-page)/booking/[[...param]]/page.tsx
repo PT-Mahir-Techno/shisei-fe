@@ -18,6 +18,7 @@ import Image from 'next/image'
 import toast from 'react-hot-toast'
 import { Player } from '@lottiefiles/react-lottie-player'
 import { useHome } from '@/store/use-home'
+import { useMediaQuery } from 'react-responsive'
 
 const data = [
   {
@@ -103,6 +104,10 @@ const BookingPage = () => {
 
   const router = useRouter()
   const param  = useSearchParams()
+
+  const isMobile = useMediaQuery({
+    query: '(max-width: 900px)'
+  })
 
 
   useEffect(() => {
@@ -494,7 +499,7 @@ const BookingPage = () => {
           {/* end list schedule section */}
           
           {/* select section */}
-          <div className={`p-6 fixed bottom-0 right-0 left-0`}>
+          <div className={`p-6 fixed ${isMobile ? 'top-[65%]' : 'bottom-0'} right-0 left-0`}>
             <div className={`bg-background shadow-lg shadow-primary transition-all duration-300 overflow-hidden rounded-lg
               ${isSelect === '' ? 'h-[0px]' : 'h-auto py-6'}  
             `}>

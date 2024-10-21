@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { date } from 'zod'
 import LoadingIcons from 'react-loading-icons'
 import { useProfile } from '@/store/use-profile'
+import { useMediaQuery } from 'react-responsive'
 const DetailBookingPage = () => {
   
   const {authState} = useContext(AuthContex)
@@ -34,6 +35,10 @@ const DetailBookingPage = () => {
   const param = useParams()
   const router = useRouter()
   const {id} = param
+
+  const isMobile = useMediaQuery({
+    query: '(max-width: 900px)'
+  })
 
   useEffect(() => {
     getSingleSchedule(`/schedule/${id}`)
@@ -233,70 +238,63 @@ const DetailBookingPage = () => {
 
 
           </div>
+          <div className='relative'>
+            <div className={`${isMobile ? 'fixed top-[70%] left-[8%] right-[8%] bg-white p-8 rounded-t-xl drop-shadow-[0_0px_22px_rgba(0,0,0,0.50)] z-20' : ''}`}>
 
-          <div>
+              <p className='text-primary mb-6'>Cancel before one day prior</p>
+              {
+                authState._is_auth && authState._auth && authState._avaibility && packages.length > 0
+                ? (
+                  <div>
+                    {
+                      isBooked ?
+                      (
+                        <Button className='w-full mb-3' size={"lg"}>BOOKED</Button>
+                      ):(
+                        <div>
+                          <div className='mb-3'>
+                            <div className='text-gray-600 mb-2 text-sm font-semibold'>Select package</div>
+                              <Select onValueChange={(e) => handlePackageSelect(e)}>
+                                  <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select Package" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {packages.map((item:any, index:number) => (
+                                    <SelectItem key={index} value={item.membership_id}>{item.name} | {item.credit_left} credit left </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                          </div>
 
-            <p className='text-primary mb-6'>Cancel before one day prior</p>
-            {/* <div className='flex gap-4 mb-3'>
-              <Button onClick={() => setShowCancelModal(true)} size={"lg"} className='w-full bg-gray-800 text-white hover:bg-gray-600'>Cancel Booking</Button>
-              <Button className='w-full' size={"lg"}>Booking Success!</Button>
-            </div> */}
-
-            {/* <Link href={"/customer/schedule"}>
-              <Button className='w-full mb-4' size={"lg"}>See Detail</Button>
-            </Link> */}
-
-            {
-              authState._is_auth && authState._auth && authState._avaibility && packages.length > 0
-              ? (
-                <div>
-                  {
-                    isBooked ?
-                    (
-                      <Button className='w-full mb-3' size={"lg"}>BOOKED</Button>
-                    ):(
-                      <div>
-                        <div className='mb-3'>
-                          <div className='text-gray-600 mb-2 text-sm font-semibold'>Select package</div>
-                            <Select onValueChange={(e) => handlePackageSelect(e)}>
-                                <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select Package" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {packages.map((item:any, index:number) => (
-                                  <SelectItem key={index} value={item.membership_id}>{item.name} | {item.credit_left} credit left </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                          <Button onClick={() => handleBookingSchedule()} disabled={packageSelected == null || loadingBooking} className='w-full mb-4' size={"lg"} >
+                            {
+                              loadingBooking && <LoadingIcons.Oval strokeWidth={4} className="w-4 h-4 mr-2 animate-spin" />
+                            }
+                            Book Now
+                          </Button>
                         </div>
+                      )
+                    }
+                    <p className='text-center text-primary'>Check-in 3 hours before class begins</p>
+                  </div>
+                )
+                : null
+              }
 
-                        <Button onClick={() => handleBookingSchedule()} disabled={packageSelected == null || loadingBooking} className='w-full mb-4' size={"lg"} >
-                          {
-                            loadingBooking && <LoadingIcons.Oval strokeWidth={4} className="w-4 h-4 mr-2 animate-spin" />
-                          }
-                          Book Now
-                        </Button>
-                      </div>
-                    )
-                  }
-                  <p className='text-center text-primary'>Check-in 3 hours before class begins</p>
-                </div>
-              )
-              : null
-            }
+              
 
-            
+              {
+                packages.length === 0
+                ? (
+                  <div className='mb-2'>
+                    <Button onClick={() => handleBuyPackage()} className='w-full mb-3' size={"lg"}>BUY PACKAGE</Button>
+                  </div>
+                ): null
+              }
 
-            {
-              packages.length === 0
-              ? (
-                <div className='mb-2'>
-                  <Button onClick={() => handleBuyPackage()} className='w-full mb-3' size={"lg"}>BUY PACKAGE</Button>
-                </div>
-              ): null
-            }
-
+            </div>
           </div>
+
         </div>
         {/* end side */}
       </div>
