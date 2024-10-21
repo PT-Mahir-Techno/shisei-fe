@@ -18,7 +18,7 @@ export const scheduleFormScheme = z.object({
     .max(255, {message: "Maximum 255 characters"}),
   description: z.string()
     .min(1, {message: "Minimum 1 character"})
-    .max(1000, {message: "Maximum 255 characters"}),
+    .max(10000, {message: "Maximum 10000 characters"}),
   staff_id: z.string()
     .min(1, {message: "Minimum 1 character"})
     .max(255, {message: "Maximum 255 characters"}),

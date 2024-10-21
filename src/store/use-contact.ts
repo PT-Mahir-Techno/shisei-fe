@@ -8,8 +8,8 @@ type ContactStoreType = {
   error: boolean
   loading: boolean
   settingContact: any
-  setSettigContact: (data:object) => Promise<void>
-  getSettingContact: () => Promise<any>
+  setSettigContact: (url:string, data:object) => Promise<void>
+  getSettingContact: (url:string) => Promise<any>
 }
 
 const initState = {
@@ -24,10 +24,10 @@ export const useContact = create<ContactStoreType>((set, get) => ({
   ...initState, 
 
  
-  setSettigContact: async (data:object) => {
+  setSettigContact: async (url:string, data:object) => {
     try {
       set({loading: true })
-      await api.put(`${baseUrl}/admin/contact`, data)
+      await api.put(`${baseUrl}${url}/contact`, data)
       set({loading: false, success: true})
       return Promise.resolve()
     } catch (error) {
@@ -35,10 +35,10 @@ export const useContact = create<ContactStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  getSettingContact: async () => {
+  getSettingContact: async (url:string) => {
     try {
       set({loading: true })
-      const res = await api.get(`${baseUrl}/admin/contact`)
+      const res = await api.get(`${baseUrl}${url}/contact`)
       set({settingContact: res.data, loading: false, success: true })
       return Promise.resolve(res)
     } catch (error) {

@@ -14,7 +14,7 @@ import { scheduleFormScheme } from '@/types/schedule-type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import Editor from 'react-simple-wysiwyg';
 import { z } from 'zod'
@@ -24,8 +24,11 @@ import LoadingIcons from 'react-loading-icons'
 import { useSheet } from '@/store/use-sheet'
 import toast from 'react-hot-toast'
 import LoadingState from '@/components/ui/loading-state'
+import { AuthContex } from '@/providers/auth-provider'
 
 const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
   
   const {locations, getAllLocationNoPaginate, loading:loadingLocation} = useLocation()
   const {staffs, getAllStaffNoPaginate, loading:loadingStaff} = useStaff()
@@ -33,8 +36,8 @@ const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
   const {modelId} = useSheet()
 
   useEffect(() => {
-    getAllLocationNoPaginate(`${baseUrl}/admin/location?type=nopaginate`)
-    getAllStaffNoPaginate(`${baseUrl}/admin/staff?type=nopaginate`)
+    getAllLocationNoPaginate(`${baseUrl}${prefix}/location?type=nopaginate`)
+    getAllStaffNoPaginate(`${baseUrl}${prefix}/staff?type=nopaginate`)
   }, [])
 
   useEffect(() => {
@@ -45,7 +48,7 @@ const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
 
   const fetcSingleSchedule = async () => {
     try {
-      const res = await getSingleSchedule(`${baseUrl}/admin/schedule/${modelId}`)
+      const res = await getSingleSchedule(`${baseUrl}${prefix}/schedule/${modelId}`)
     
       if (res){
         const dateSplited = res.date.split('-')
@@ -105,12 +108,16 @@ const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
       }
 
       if (modelId) {
-        await updateSchedule(modelId, formData)
+        await updateSchedule(prefix, modelId, formData)
       }else{
-        await createSchedule(formData)
+        await createSchedule(prefix, formData)
       }
 
-      await getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${new Date().getMonth() + 1}`)
+      let scheduleUrl = role == 'admin'
+      ? `${baseUrl}${prefix}/schedule?type=nopaginate&month=${new Date().getMonth() + 1}`
+      : `${baseUrl}${prefix}/my-schedule?type=nopaginate&month=${new Date().getMonth() + 1}`
+
+      await getScheduleConverted(scheduleUrl)
       form.reset()
       close()
       toast.success('Schedule created')

@@ -1,3 +1,5 @@
+'use client'
+
 import { formatedDate } from '@/lib/utils'
 import Image from 'next/image'
 import React from 'react'

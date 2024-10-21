@@ -14,7 +14,7 @@ type RoleStoreType = {
   roleUrl: string
   getAllRole: (url: string) => void
   getSingleRole: (url: string) => Promise<any>
-  createRole: (data: any) => void
+  createRole: (url:string, data: any) => void
   updateRole: (url:string, data: any) => void
   deleteRole: (url: string) => void
   getAllRoleNoPaginate: (url: string) => void
@@ -63,10 +63,10 @@ export const useRole = create<RoleStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  createRole:async (data: any) : Promise<any> => {
+  createRole:async (url:string, data: any) : Promise<any> => {
     try {
       set({loading: true })
-      await api.post(`${baseUrl}/admin/role`, data)
+      await api.post(`${baseUrl}${url}/role`, data)
       set({loading: false, success: true })
       return Promise.resolve()
     } catch (err:any) {

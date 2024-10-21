@@ -62,14 +62,14 @@ const LocationForm = () => {
       if (mode == 'edit') {
         await updateFaq(`${baseUrl}${prefix}/faq/${modelId}`, data)
       }else{
-        await createFaq(`${baseUrl}${prefix}/faq`,data)
+        await createFaq(prefix, data)
       }
 
       await getAllFaq(faqUrl)
       form.reset()
       toast.success("Location saved")
     } catch (error:any) {
-      toast.error(error)
+      toast.error(error.data.message)
     }
     setIsOpen(false)
   }

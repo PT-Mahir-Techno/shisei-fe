@@ -32,7 +32,7 @@ const DetailNotePage = () => {
 
   useEffect(() => {
     getNotes()
-  },[id])
+  },[prefix, id])
   
   return (
     <>

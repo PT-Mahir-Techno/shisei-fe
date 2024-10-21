@@ -16,13 +16,13 @@ type ScheduleStoreType = {
   settingSchedule: any
   getAllSchedule: (url: string) => void
   getSingleSchedule: (url: string) => Promise<any>
-  createSchedule: (data: any) => void
+  createSchedule: (url:string, data: any) => void
   deleteSchedule: (url: string) => void
   getAllScheduleNoPaginate: (url: string) => void
-  getScheduleConverted: (url: string) => void
-  setSettingSchedule: (data:object) => Promise<void>
-  getSettingSchedule: () => Promise<any>
-  updateSchedule: (id: string, data: any) => void
+  getScheduleConverted: (url: string) => Promise<any>
+  setSettingSchedule: (url:string, data:object) => Promise<void>
+  getSettingSchedule: (url:string) => Promise<any>
+  updateSchedule: (url:string, id: string, data: any) => void
 }
 
 const initState = {
@@ -56,6 +56,7 @@ export const useSchedule = create<ScheduleStoreType>((set, get) => ({
       const res = await api.get(url)
       const converted = res.data.map((event: any) => transformEevent(event))
       set({convertedSchedule: converted, loading: false, success: true})
+      return Promise.resolve()
     } catch (error) {
       set({error: true, loading: false, success: false})
       return Promise.reject(error)
@@ -81,7 +82,7 @@ export const useSchedule = create<ScheduleStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  createSchedule:async (data: any) => {
+  createSchedule:async (url:string, data: any) => {
     try {
       set({loading: true })
       
@@ -91,7 +92,7 @@ export const useSchedule = create<ScheduleStoreType>((set, get) => ({
         }
       }
 
-      await api.post(`${baseUrl}/admin/schedule`, data, config)
+      await api.post(`${baseUrl}${url}/schedule`, data, config)
       set({loading: false, success: true })
       return Promise.resolve()
     } catch (error) {
@@ -99,7 +100,7 @@ export const useSchedule = create<ScheduleStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  updateSchedule:async (id:string, data: any) => {
+  updateSchedule:async (url:string, id:string, data: any) => {
     try {
       set({loading: true })
       
@@ -109,7 +110,7 @@ export const useSchedule = create<ScheduleStoreType>((set, get) => ({
         }
       }
 
-      await api.post(`${baseUrl}/admin/schedule/${id}`, data, config)
+      await api.post(`${baseUrl}${url}/schedule/${id}`, data, config)
       set({loading: false, success: true })
       return Promise.resolve()
     } catch (error) {
@@ -126,10 +127,10 @@ export const useSchedule = create<ScheduleStoreType>((set, get) => ({
       set({error: true, loading: false, success: false })
     }
   },
-  setSettingSchedule: async (data:object) => {
+  setSettingSchedule: async (url:string, data:object) => {
     try {
       set({loading: true })
-      await api.post(`${baseUrl}/admin/setting-web`, data)
+      await api.post(`${baseUrl}${url}/setting-web`, data)
       set({loading: false, success: true})
       return Promise.resolve()
     } catch (error) {
@@ -137,10 +138,10 @@ export const useSchedule = create<ScheduleStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  getSettingSchedule: async () => {
+  getSettingSchedule: async (url:string) => {
     try {
       set({loading: true })
-      const res = await api.get(`${baseUrl}/admin/setting-web`)
+      const res = await api.get(`${baseUrl}${url}/setting-web`)
       set({settingSchedule: res.data, loading: false, success: true })
       return Promise.resolve(res)
     } catch (error) {

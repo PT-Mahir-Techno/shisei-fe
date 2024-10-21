@@ -39,11 +39,10 @@ const FormNote = ({close, customers, categories}:any) => {
   
   
   useEffect(() => {
-
-    if (mode === 'edit') {
+    if (mode === 'edit' || prefix) {
       getSingleData()
     }
-  }, [modelId])
+  }, [prefix, modelId])
 
 
   const getSingleData = async () => {

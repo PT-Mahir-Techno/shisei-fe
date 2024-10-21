@@ -1,16 +1,19 @@
 'use client'
 
-import React from 'react'
-import { ArrowUpDown, MoreHorizontal} from "lucide-react"
-import ActionButton from "@/components/ui/action-button"
-import { FaqType } from "@/types/faq-type"
-import { RiBox2Fill, RiCalendarCheckFill, RiClipboardFill, RiEdit2Fill, RiLeafFill, RiVerifiedBadgeFill } from "react-icons/ri"
+import React, { useContext } from 'react'
+import { RiBox2Fill, RiClipboardFill, RiLeafFill } from "react-icons/ri"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { useModal } from '@/store/use-modal'
 import { useSheet } from '@/store/use-sheet'
+import { MoreHorizontal } from 'lucide-react'
+import { AuthContex } from '@/providers/auth-provider'
+import { CheckAvaibilityAction } from '@/lib/utils'
 
-const ReportActionButton = ({row}:any) => {
+const ReportActionButton = ({row, actionFor}:any) => {
+    const {authState} = useContext(AuthContex)
+    const {_prefix:prefix, _permision:permision, _avaibility:role} = authState
+
     const {setIsOpen, setModalId} = useModal()
     const {setIsOpen:detailOpen, setModelId} = useSheet()
 
@@ -34,20 +37,29 @@ const ReportActionButton = ({row}:any) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(JSON.stringify(row))}
+          onClick={() => navigator.clipboard.writeText(row.original.trx)}
           className="cursor-pointer"
         >
           <RiClipboardFill size={16} className="mr-2 text-green-500" /> Copy ID
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => handleStatus(row.original.id)} className="cursor-pointer">
-          <RiLeafFill size={16} className="mr-2 text-primary" />
-          Update Status
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleDetail(row.original.id)}  className="cursor-pointer">
-          <RiBox2Fill size={16} className="mr-2 text-red-500" />
-          Detail Trx 
-        </DropdownMenuItem>
+        
+        {
+          CheckAvaibilityAction(permision, 'status', actionFor, role) && prefix &&
+          <DropdownMenuItem onClick={() => handleStatus(row.original.id)} className="cursor-pointer">
+            <RiLeafFill size={16} className="mr-2 text-primary" />
+            Update Status
+          </DropdownMenuItem>
+        }
+
+        {
+          CheckAvaibilityAction(permision, 'detail', actionFor, role) && prefix &&
+          <DropdownMenuItem onClick={() => handleDetail(row.original.id)}  className="cursor-pointer">
+            <RiBox2Fill size={16} className="mr-2 text-red-500" />
+            Detail Trx 
+          </DropdownMenuItem>
+        }
+
       </DropdownMenuContent>
     </DropdownMenu>
   )

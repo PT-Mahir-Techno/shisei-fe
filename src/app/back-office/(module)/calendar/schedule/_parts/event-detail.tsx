@@ -3,18 +3,22 @@
 import { Button } from '@/components/ui/button';
 import CustomModal from '@/components/ui/custoom-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CheckAvaibilityAction } from '@/lib/utils';
 import { baseUrl } from '@/lib/variable';
+import { AuthContex } from '@/providers/auth-provider';
 import { useSchedule } from '@/store/use-schedule'
 import { useSheet } from '@/store/use-sheet';
 import { set } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react'
+import React, { useContext } from 'react'
 import toast from 'react-hot-toast';
 import { RiDeleteBin2Fill, RiEditBoxFill, RiStickyNoteFill } from 'react-icons/ri';
 import LoadingIcons from 'react-loading-icons';
 
 const EventDetail = ({id, close}: {id:String|undefined, close: () => void}) => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
 
   const {loading, schedule, getSingleSchedule} = useSchedule()
   const [showDeleteModal, setShowDeleteModal] = React.useState(false)
@@ -23,14 +27,18 @@ const EventDetail = ({id, close}: {id:String|undefined, close: () => void}) => {
 
   React.useEffect(() => {
     if (id) {
-      getSingleSchedule(`${baseUrl}/admin/schedule/${id}`)
+      getSingleSchedule(`${baseUrl}${prefix}/schedule/${id}`)
     }
   }, [id])
 
   const handleDelete = async () => {
     try {
-      await deleteSchedule(`${baseUrl}/admin/schedule/${id}`)
-      await getScheduleConverted(`${baseUrl}/admin/schedule`)
+      let scheduleUrl = role == 'admin'
+      ? `${baseUrl}${prefix}/schedule`
+      : `${baseUrl}${prefix}/my-schedule`
+
+      await deleteSchedule(`${baseUrl}${prefix}/schedule/${id}`)
+      await getScheduleConverted(scheduleUrl)
       await setShowDeleteModal(false)
       await close()
       toast.success('Event deleted successfully')
@@ -116,20 +124,29 @@ const EventDetail = ({id, close}: {id:String|undefined, close: () => void}) => {
           <Image src={schedule.image_url} alt={schedule.name} width={300} height={0} className='rounded-lg'/>
 
           <div className='flex flex-col gap-4 mt-4'>
-            <Button onClick={() => handleEditSheet()} size={"sm"} className='w-full' variant={'outline'}>
-              <RiEditBoxFill className='text-lg mr-3'/>
-              Edit Data
-            </Button>
-            <Link href={`/back-office/calendar/schedule/note/${id}`}>
-              <Button size={"sm"} className='w-full' variant={'secondary'}>
-                <RiStickyNoteFill className='text-lg mr-3'/>
-                Add Note
+            {
+              CheckAvaibilityAction(permision, 'edit', 'schedule', role) && prefix &&
+              <Button onClick={() => handleEditSheet()} size={"sm"} className='w-full' variant={'outline'}>
+                <RiEditBoxFill className='text-lg mr-3'/>
+                Edit Data
               </Button>
-            </Link>
-            <Button onClick={() => setShowDeleteModal(true)} size={"sm"}  className='w-full bg-destructive text-white hover:bg-destructive'>
-              <RiDeleteBin2Fill className='text-lg mr-3'/>
-              Delete Event
-            </Button>
+            }
+            {
+              CheckAvaibilityAction(permision, 'view', 'notes', role) && prefix &&
+              <Link href={`/back-office/calendar/schedule/note/${id}`}>
+                <Button size={"sm"} className='w-full' variant={'secondary'}>
+                  <RiStickyNoteFill className='text-lg mr-3'/>
+                  Add Note
+                </Button>
+              </Link>
+            }
+            {
+              CheckAvaibilityAction(permision, 'delete', 'schedule', role) && prefix &&
+              <Button onClick={() => setShowDeleteModal(true)} size={"sm"}  className='w-full bg-destructive text-white hover:bg-destructive'>
+                <RiDeleteBin2Fill className='text-lg mr-3'/>
+                Delete Event
+              </Button>
+            }
           </div>
         </div>
       </div>

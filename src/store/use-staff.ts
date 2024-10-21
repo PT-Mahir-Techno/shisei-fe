@@ -14,7 +14,7 @@ type StaffStoreType = {
   staffUrl: string
   getAllStaff: (url: string) => void
   getSingleStaff: (url: string) => Promise<void>
-  createStaff: (data: any) => Promise<void>
+  createStaff: (url:string, data: any) => Promise<void>
   deleteStaff: (url: string) => void
   getAllStaffNoPaginate: (url: string) => void
   updateStaff: (url: string, data: any) => Promise<void>
@@ -65,10 +65,10 @@ export const useStaff = create<StaffStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  createStaff:async (data: any) => {
+  createStaff:async (url:string, data: any) => {
     return new Promise((resolve, reject) => {
       set({loading: true })
-      api.post(`${baseUrl}/admin/staff`, data)
+      api.post(`${baseUrl}${url}/staff`, data)
       .then((res) => {
         set({loading: false, success: true })
         resolve()

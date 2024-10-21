@@ -14,7 +14,7 @@ type GalleryStoreType = {
   galleryUrl: string
   getAllGallery: (url: string) => void
   getSingleGallery: (url: string) => void
-  createGallery: (data: any) => void
+  createGallery: (url:string, data: any) => void
   deleteGallery: (url: string) => void
   getAllGalleryNoPaginate: (url: string) => void
 }
@@ -60,7 +60,7 @@ export const useGallery = create<GalleryStoreType>((set, get) => ({
       set({ error: true, loading: false, success: false })
     }
   },
-  createGallery:async (data: any) => {
+  createGallery:async (url:string, data: any) => {
     try {
       set({loading: true })
       const config = {
@@ -68,7 +68,7 @@ export const useGallery = create<GalleryStoreType>((set, get) => ({
           'Content-Type': 'multipart/form-data',
         }
       }
-      await api.post(`${baseUrl}/admin/gallery`, data, config)
+      await api.post(`${baseUrl}${url}/gallery`, data, config)
       set({loading: false, success: true })
     } catch (error) {
       set({error: true, loading: false, success: false })

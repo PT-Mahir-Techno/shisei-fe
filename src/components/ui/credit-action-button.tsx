@@ -11,13 +11,15 @@ import { AuthContex } from '@/providers/auth-provider'
 import api from '@/lib/api'
 import { baseUrl } from '@/lib/variable'
 import toast from 'react-hot-toast'
+import { CheckAvaibilityAction } from '@/lib/utils'
 
-const CreditActionButton = ({row}:any) => {
+const CreditActionButton = ({row, actionFor}:any) => {
+  
     const {setIsOpen, setModalId} = useModal()
     const {setIsOpen:detailOpen, setModelId} = useSheet()
 
     const {authState} = useContext(AuthContex)
-    const {_prefix:prefix} = authState
+    const {_prefix:prefix, _permision:permision, _avaibility:role} = authState
 
     const handleDetail = (id:string) => {
       detailOpen(true)
@@ -52,20 +54,28 @@ const CreditActionButton = ({row}:any) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(JSON.stringify(row))}
+          onClick={() => navigator.clipboard.writeText(row.original.trx)}
           className="cursor-pointer"
         >
           <RiClipboardFill size={16} className="mr-2 text-green-500" /> Copy ID
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => SendReminder(row.original.user_id)} className="cursor-pointer">
-          <RiSendPlaneFill size={16} className="mr-2 text-primary" />
-          Send Reminder
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleDetail(row.original.id)}  className="cursor-pointer">
-          <RiBox2Fill size={16} className="mr-2 text-red-500" />
-          Detail Trx 
-        </DropdownMenuItem>
+        
+        {
+          CheckAvaibilityAction(permision, 'reminder', actionFor, role) && prefix &&
+          <DropdownMenuItem onClick={() => SendReminder(row.original.user_id)} className="cursor-pointer">
+            <RiSendPlaneFill size={16} className="mr-2 text-primary" />
+            Send Reminder
+          </DropdownMenuItem>
+        }
+
+        {
+          CheckAvaibilityAction(permision, 'view', actionFor, role) && prefix &&
+          <DropdownMenuItem onClick={() => handleDetail(row.original.id)}  className="cursor-pointer">
+            <RiBox2Fill size={16} className="mr-2 text-red-500" />
+            Detail Trx 
+          </DropdownMenuItem>
+        }
       </DropdownMenuContent>
     </DropdownMenu>
   )

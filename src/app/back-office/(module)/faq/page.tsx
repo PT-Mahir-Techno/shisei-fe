@@ -15,18 +15,22 @@ import LoadingIcons from "react-loading-icons"
 import toast from "react-hot-toast"
 import { useFaq } from "@/store/use-faq"
 import { AuthContex } from "@/providers/auth-provider"
+import { CheckAvaibilityAction } from "@/lib/utils"
 
 const title = 'Faq'
 
 const FaqPage = () => {
   const {authState} = useContext(AuthContex)
-  const {_prefix:prefix}   = authState
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
 
   const { isOpen, setIsOpen } = useSheet()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
   const { faqs, getAllFaq, faqAttributes, loading, deleteFaq, faqUrl } =useFaq()
+  
   useEffect(() => {
-    getAllFaq(`${baseUrl}${prefix}/faq`)
+    if (prefix){
+      getAllFaq(`${baseUrl}${prefix}/faq`)
+    }
   }, [prefix])
 
   const handleDelete = async () => {
@@ -43,9 +47,12 @@ const FaqPage = () => {
           <h2 className="font-noto_serif font-bold text-2xl text-gray-800 mb-2">{title}</h2>
           <p className="text-gray-500 text-sm">List of all {title} </p>
         </div>
-        <div>
-          <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
-        </div>
+        {
+          CheckAvaibilityAction(permision, 'create', 'faq', role) && prefix &&
+          <div>
+            <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
+          </div>
+        }
       </div>
       
       {/* <RoomTable /> */}

@@ -3,10 +3,11 @@
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { AuthContex } from '@/providers/auth-provider'
 import { useContact } from '@/store/use-contact'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Label } from '@radix-ui/react-label'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
@@ -26,16 +27,18 @@ const formSchema = z.object({
 })
 
 const SettingContactPage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const {loading, getSettingContact, setSettigContact} = useContact()
 
   useEffect(() => {
     initSate()
-  }, [])
+  }, [prefix])
 
   const initSate = async () => {
     try {
-      const res = await getSettingContact()
+      const res = await getSettingContact(prefix)
       if (res.data) {
         form.reset(res.data)
       }
@@ -60,7 +63,7 @@ const SettingContactPage = () => {
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await setSettigContact(data)
+      await setSettigContact(prefix, data)
       await initSate()
       toast.success("Setting saved")
     } catch (error:any) {

@@ -1,15 +1,19 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import api from '@/lib/api';
 import { baseUrl } from '@/lib/variable';
 import toast from 'react-hot-toast';
 import { Console, log } from 'console';
+import { AuthContex } from '@/providers/auth-provider';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const ChartSection = () => {
+
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<any>()
@@ -68,7 +72,7 @@ const ChartSection = () => {
 
   useEffect(() => {
     init()
-  },[])
+  },[prefix])
 
 
   return (

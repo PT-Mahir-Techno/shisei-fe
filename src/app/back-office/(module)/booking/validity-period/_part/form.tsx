@@ -5,10 +5,11 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { baseUrl } from '@/lib/variable'
+import { AuthContex } from '@/providers/auth-provider'
 import { useSheet } from '@/store/use-sheet'
 import { usePeriod } from '@/store/use-validity-period'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
@@ -20,6 +21,8 @@ export const formSchema = z.object({
 })
 
 function PeriodForm() {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const { setIsOpen, mode, modelId } = useSheet()
   const { loading, getAllPeriod, createPeriod, periodUrl, getSinglePeriod, updatePeriod } : any = usePeriod()
@@ -32,7 +35,7 @@ function PeriodForm() {
 
   const getSingleData = async () => {
     try {
-      const res = await getSinglePeriod(`${baseUrl}/admin/duration/${modelId}`)
+      const res = await getSinglePeriod(`${baseUrl}${prefix}/duration/${modelId}`)
       await form.reset(res)
     } catch (error:any) {
       toast.error(error.data.message)
@@ -53,9 +56,9 @@ function PeriodForm() {
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       if (mode == 'edit') {
-        await updatePeriod(`${baseUrl}/admin/duration/${modelId}`, data)
+        await updatePeriod(`${baseUrl}${prefix}/duration/${modelId}`, data)
       }else{
-        await createPeriod(data)
+        await createPeriod(prefix, data)
       }
       await getAllPeriod(periodUrl)
       form.reset()

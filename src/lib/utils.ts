@@ -97,13 +97,14 @@ export const PermisionParser = (value:Array<any> ):object => {
 
   const data:any = {}
   value.forEach((item: any, index:any) => {
-    const dataindex:string   = item.permission.name.split(" ")[1] 
+    const dataindex:string   = item.permission.name.split(" ").length <= 2 ? item.permission.name.split(" ")[1] as string : item.permission.name.split(" ")[2] as string 
     if (dataindex){
       const strIndex:string = StripDetector(dataindex) as string
       if (!data[strIndex]){
-        data[strIndex] = [item.permission.name.split(" ")[0]]
+        // data[strIndex] = [item.permission.name.split(" ")[0]]
+        data[strIndex] = [item.permission.name.split(" ").length <= 2 ? item.permission.name.split(" ")[0]  : item.permission.name.split(" ")[1]]
       }else{
-        data[strIndex].push(item.permission.name.split(" ")[0])
+        data[strIndex].push(item.permission.name.split(" ").length <= 2 ? item.permission.name.split(" ")[0]  : item.permission.name.split(" ")[1])
       }
     }
   })
@@ -122,10 +123,30 @@ export const StripDetector = (param: string) => {
 }
 
 export const CheckAvaibility = (permision:any, menu:string, role:string) => {
+  let excludeStaff = ['profile', 'dashboard']
+
+  if (role == 'admin' || excludeStaff.includes(menu) || permision[menu]) {
+    return true
+  } else {
+    return false
+  }
+}
+
+export const CheckAvaibilityGroup = (permision:any, group:[], role:string) => {
   if (role == 'admin') {
     return true
   } else {
-    return permision[menu]
+    let res:any = []
+    group.map((item:any, index:any) => {
+      if (permision[item]){
+        res.push(true)
+      }
+    })
+    if (res.includes(true)){
+      return true
+    }else{
+      return false
+    }
   }
 }
 
@@ -133,6 +154,32 @@ export const CheckAvaibilityAction = (permision:any, action:string, menu:string,
   if (role == 'admin') {
     return true
   } else {
-    return permision[menu].includes(action)
+    if (permision[menu] && permision[menu].includes(action)){
+      return true
+    }else{
+      return false
+    }
   }
+}
+
+export const GroupPermission = (permision:any) => {
+  let data:any = {}
+
+  permision.map((item:any, index:any) => {
+    let indesString:string = item.modul.split(" ").length > 1 ? item.modul.split(" ")[0]+item.modul.split(" ")[1] as string : item.modul as string
+    if (!data[indesString]){
+      data[indesString] = [item]
+    }else{
+      data[indesString].push(item)
+    }
+  })
+
+  delete data.socialmedia
+  delete data.suggestion
+
+  return Object.entries(data);
+}
+
+export const PluckValue = (array:any[], key:string) => {
+  return array.map(item => item[key])
 }

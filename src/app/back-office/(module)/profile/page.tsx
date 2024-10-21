@@ -104,37 +104,47 @@ const ProfilePage = () => {
             <table className='w-full table-auto'>
               <tbody>
                 <tr>
-                  <td className='py-1.5 text-gray-500 dark:text-gray-200'>Name</td>
+                  <td className='py-1.5 font-semibold text-gray-500 dark:text-gray-200'>Name</td>
                   <td className='py-1.5 text-gray-500 dark:text-gray-200'>:</td>
-                  <td className='py-1.5 font-semibold'>{user?.name ?? '-'}</td>
+                  <td className='py-1.5'>{user?.name ?? '-'}</td>
                 </tr>
                 {
                   avaibility !== 'admin' && (
                     <tr>
-                      <td className='py-1.5 text-gray-500 dark:text-gray-200'>Phone</td>
+                      <td className='py-1.5 font-semibold text-gray-500 dark:text-gray-200'>Phone</td>
                       <td className='py-1.5 text-gray-500 dark:text-gray-200'>:</td>
-                      <td className='py-1.5 font-semibold'>{user?.phone ?? '-' }</td>
+                      <td className='py-1.5'>{user?.phone ?? '-' }</td>
                     </tr>
                   )
                 }
                 <tr>
-                  <td className='py-1.5 text-gray-500 dark:text-gray-200'>Email</td>
+                  <td className='py-1.5 font-semibold text-gray-600 dark:text-gray-200'>Email</td>
                   <td className='py-1.5 text-gray-500 dark:text-gray-200'>:</td>
-                  <td className='py-1.5 font-semibold'>{user?.email ?? '-' }</td>
+                  <td className='py-1.5'>{user?.email ?? '-' }</td>
                 </tr>
                 <tr>
-                  <td className='py-1.5 text-gray-500 dark:text-gray-200'>Role</td>
+                  <td className='py-1.5 font-semibold text-gray-600 dark:text-gray-200'>Role</td>
                   <td className='py-1.5 text-gray-500 dark:text-gray-200'>:</td>
-                  <td className='py-1.5 font-semibold'>
+                  <td className='py-1.5 '>
                     {avaibility}
                   </td>
                 </tr>
                 {
                   avaibility !== 'admin' && (
                     <tr>
-                      <td className='py-1.5 text-gray-500 dark:text-gray-200'>Address</td>
+                      <td className='py-1.5 font-semibold text-gray-600 dark:text-gray-200'>Address</td>
                       <td className='py-1.5 text-gray-500 dark:text-gray-200'>:</td>
-                      <td className='py-1.5 font-semibold'>{user?.alamat != 'null' ? user?.alamat : '-' }</td>
+                      <td className='py-1.5'>{user?.alamat != 'null' ? user?.alamat : '-' }</td>
+                    </tr>
+                  )
+                }
+
+                {
+                  avaibility !== 'admin' && (
+                    <tr>
+                      <td className='py-1.5 font-semibold text-gray-600 dark:text-gray-200'>About</td>
+                      <td className='py-1.5 text-gray-500 dark:text-gray-200'>:</td>
+                      <td className='py-1.5 max-w-xl'>{user?.about != 'null' ? user?.about : '-' }</td>
                     </tr>
                   )
                 }

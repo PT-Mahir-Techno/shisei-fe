@@ -4,8 +4,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import api from '@/lib/api'
 import { formatedDate } from '@/lib/utils'
 import { baseUrl } from '@/lib/variable'
+import { AuthContex } from '@/providers/auth-provider'
 import Image from 'next/image'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { RiCalendar2Fill, RiCalendarCheckFill, RiMap2Fill, RiProgress1Fill, RiTimeFill, RiTimerFill } from 'react-icons/ri'
 
@@ -24,6 +25,8 @@ const LoadingSkeleton = () =>
   </div>
 
 const FinishedScheduleSection = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const [loading, setLoading] = React.useState<boolean>(false)
   const [data, setData] = React.useState<[]>([])
@@ -43,12 +46,12 @@ const FinishedScheduleSection = () => {
 
   useEffect(() => {
     init()
-  },[])
+  },[prefix])
 
   return (
     <div className='my-8 bg-background rounded-md p-5'>
       <div className='font-semibold text-gray-500 border-b-[1px] border-gray-200 pb-4 mb-4'>
-        Finished Schedule
+        Latest Finished Schedule
       </div>
 
       {
@@ -57,8 +60,8 @@ const FinishedScheduleSection = () => {
         : data.length > 0
           ? (
               data.map((item:any, index:any) =>
-                <div key={index} className='flex justify-between items-center mb-4 border-b-[1px] border-gray-300 pb-4'>
-                  <div className='flex gap-4 items-center'>
+                <div key={index} className='flex flex-col md:flex-row md:justify-between md:items-center mb-4 border-b-[1px] border-gray-300 pb-4 gap-4 md:gap-0'>
+                  <div className='flex gap-4 items-start md:items-center'>
                     <Image src={item?.image_url ?? "/img/img_placeholder.png"} alt="photo" width={60} height={60} className='rounded-md'></Image>
                     <div>
                       <div className='mb-4'>
@@ -67,7 +70,7 @@ const FinishedScheduleSection = () => {
                         </p>
                       </div>
 
-                      <div className='flex gap-8'>
+                      <div className='flex flex-col md:flex-row gap-2 md:gap-8'>
                         <div className='flex items-center gap-2'>
                           <p className='text-sm text-gray-600 font-semibold flex items-center gap-1 '> <RiTimeFill className='text-primary' size={18}/> Start :</p>
                           <p className='text-sm text-gray-600'>{item?.time}</p>
@@ -87,9 +90,11 @@ const FinishedScheduleSection = () => {
                       </div>
                     </div>
                   </div>
-                  <div className='py-2 px-3 rounded-md flex items-center gap-1 bg-orange-400 text-white'>
-                    <RiProgress1Fill/>
-                    <p className='text-sm font-semibold'>Finished </p>
+                  <div>
+                    <div className='py-2 px-3 rounded-md flex items-center gap-1 bg-orange-400 text-white w-[100px]'>
+                      <RiProgress1Fill/>
+                      <p className='text-sm font-semibold'>Finished </p>
+                    </div>
                   </div>
                 </div>
               )

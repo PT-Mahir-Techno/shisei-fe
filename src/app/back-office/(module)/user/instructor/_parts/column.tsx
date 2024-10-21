@@ -109,7 +109,7 @@ export const columns: ColumnDef<StaffType>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ActionButton model={row.original} isDay={true} />
+        <ActionButton model={row.original} isDay={true} actionFor="staff"/>
       )
     },
   },

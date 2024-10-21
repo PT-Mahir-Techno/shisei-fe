@@ -17,6 +17,7 @@ import Image from 'next/image'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useCustomer } from '@/store/use-customer'
 import { baseUrl } from '@/lib/variable'
+import { AuthContex } from '@/providers/auth-provider'
 
 export const formSchema = z.object({
   name: z.string().min(3, {message: "Name minimum 3 characters"}).max(100, {message: "Name maximum 100 characters"}),
@@ -27,6 +28,8 @@ export const formSchema = z.object({
 })
 
 const CustomerForm = ({action}:{action: () => void}) => {
+  const {authState} = React.useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const { setIsOpen, mode, modelId } = useSheet()
   const { loading, getAllCustomer, createCustomer, customerUrl, getSingleCustomer, updateCustomer } : any = useCustomer()
@@ -36,11 +39,11 @@ const CustomerForm = ({action}:{action: () => void}) => {
       getSingleData()
     }
   }
-  , [])
+  , [prefix])
 
   const getSingleData = async () => {
     try {
-      const res = await getSingleCustomer(`${baseUrl}/admin/user/${modelId}`)
+      const res = await getSingleCustomer(`${baseUrl}${prefix}/user/${modelId}`)
       delete res.password
       await form.reset(res)
     } catch (error:any) {
@@ -66,9 +69,9 @@ const CustomerForm = ({action}:{action: () => void}) => {
     try {
 
       if (mode === 'edit') {
-        await updateCustomer(`${baseUrl}/admin/user/${modelId}`, data)
+        await updateCustomer(`${baseUrl}${prefix}/user/${modelId}`, data)
       } else{
-        await createCustomer(data)
+        await createCustomer(prefix, data)
       }
       await getAllCustomer(customerUrl)
       form.reset()

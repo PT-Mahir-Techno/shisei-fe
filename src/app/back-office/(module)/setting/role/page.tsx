@@ -5,7 +5,7 @@ import CustomSheets from '@/components/ui/custom-sheets'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@radix-ui/react-label'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { RiAddCircleFill } from 'react-icons/ri'
 import { useLocation } from '@/store/use-location'
 import { useSheet } from '@/store/use-sheet'
@@ -18,20 +18,25 @@ import LoadingIcons from 'react-loading-icons'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import { useRole } from '@/store/use-role'
+import { AuthContex } from '@/providers/auth-provider'
+import { CheckAvaibilityAction } from '@/lib/utils'
 
 const RolePage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
+
   const title = "Role"
   const { isOpen, setIsOpen } = useSheet()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
   const { roles, getAllRole, deleteRole, loading, roleUrl, roleAttributes } = useRole()
 
   React.useEffect(() => {
-    getAllRole(`${baseUrl}/admin/role`)
-  }, [])
+    getAllRole(`${baseUrl}${prefix}/role`)
+  }, [prefix])
 
   const handleDelete = async () => {
     try {
-      await deleteRole(`${baseUrl}/admin/role/${modalId}`)
+      await deleteRole(`${baseUrl}${prefix}/role/${modalId}`)
       await getAllRole(roleUrl)
       toast.success('Data has been deleted')
       setIsOpenModal(false)
@@ -48,11 +53,14 @@ const RolePage = () => {
           <h2 className="font-noto_serif font-bold text-2xl text-gray-800 dark:text-gray-100 mb-2">{title}</h2>
           <p className="text-gray-500 dark:text-gray-100 text-sm">List of all {title}</p>
         </div>
-        <div>
-          <Link href={"/back-office/setting/role/create"}>
-            <Button > <RiAddCircleFill className="mr-2"/> Add {title}</Button>
-          </Link>
-        </div>
+        {
+          CheckAvaibilityAction(permision, 'create', 'role', role) && prefix &&
+          <div>
+            <Link href={"/back-office/setting/role/create"}>
+              <Button > <RiAddCircleFill className="mr-2"/> Add {title}</Button>
+            </Link>
+          </div>
+        }
       </div>
       
       <div className="w-full bg-background px-6 py-4 rounded-lg my-8">

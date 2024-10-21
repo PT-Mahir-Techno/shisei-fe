@@ -115,7 +115,7 @@ export const columns: ColumnDef<AdminType>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ActionButton model={row.original} isEdit={false} isDelete={false} originalLink={`/back-office/calendar/note/${row.original.id}`} />
+        <ActionButton model={row.original} isEdit={false} isDelete={false} originalLink={`/back-office/calendar/note/${row.original.id}`} actionFor="notes" />
       )
     },
   },

@@ -96,7 +96,7 @@ export const columns: ColumnDef<AdminType>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ActionButton model={row.original} />
+        <ActionButton model={row.original} actionFor="package"/>
       )
     },
   },

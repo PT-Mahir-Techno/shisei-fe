@@ -15,7 +15,7 @@ import { usePayment } from "@/store/use-payment"
 import { DateRange } from "react-day-picker"
 import { addDays, format } from "date-fns"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
+import { CheckAvaibilityAction, cn } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import api from "@/lib/api"
@@ -25,7 +25,7 @@ const title = 'Package Transaction'
 
 const TransactionPackagePage = () => {
   const {authState} = useContext(AuthContex)
-  const {_prefix:prefix}   = authState
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
 
   const { isOpen, setIsOpen, modelId } = useSheet()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
@@ -41,7 +41,7 @@ const TransactionPackagePage = () => {
   
   useEffect(() => {
     init()
-  }, [])
+  }, [prefix])
 
   useEffect(() => {
      if (date?.from != undefined && date?.to != undefined) {
@@ -142,9 +142,12 @@ const TransactionPackagePage = () => {
                 </PopoverContent>
               </Popover>
             </div>
-            <div>
-              <Button onClick={() => handleExport()} > <RiFile2Fill className="mr-2"/> Export Excel</Button>
-            </div>
+            {
+              CheckAvaibilityAction(permision, 'export', 'transactionpackage', role) && prefix &&
+              <div>
+                <Button onClick={() => handleExport()} > <RiFile2Fill className="mr-2"/> Export Excel</Button>
+              </div>
+            }
             <div>
               <Button onClick={() => init()} variant={"outline"}>Reset Filter</Button>
             </div>

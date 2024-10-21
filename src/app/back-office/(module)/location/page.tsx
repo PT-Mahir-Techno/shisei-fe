@@ -46,12 +46,12 @@ const RoomPage = () => {
           <h2 className="font-noto_serif font-bold text-2xl text-gray-800">Location</h2>
           <p className="text-gray-500 text-sm">List Locations</p>
         </div>
-        {/* {
-          CheckAvaibilityAction(permision,'view','location', role) &&
-        } */}
+        {
+          CheckAvaibilityAction(permision,'view','location', role) && prefix &&
           <div>
             <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add Location</Button>
           </div>
+        }
       </div>
       
       {/* <RoomTable /> */}

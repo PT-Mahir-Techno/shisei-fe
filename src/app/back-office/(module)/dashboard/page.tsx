@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useContext} from 'react'
+import React, { useContext, useEffect, useState} from 'react'
 import CardSection from './_parts/card-section'
 import { useProfile } from '@/store/use-profile'
 import ChartSection from './_parts/chart-section'
@@ -54,11 +54,21 @@ const StaffSection = () => {
 
 
 const DashboardPage = () => {
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   
   const {authState} = useContext(AuthContex)
   const {_prefix:prefix, _avaibility:avaibility}   = authState
   
   const {data:user} = useProfile()
+  
+  if (!isClient) {
+    return ; // Render nothing on the server
+  }
 
   return (
     <>
@@ -67,7 +77,7 @@ const DashboardPage = () => {
       </div>
 
       {
-        avaibility  == 'admin'
+        (avaibility  == 'admin' && avaibility)
         ? <AdminSection/>
         : <StaffSection/>
       }

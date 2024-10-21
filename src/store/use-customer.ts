@@ -14,7 +14,7 @@ type CustomerStoreType = {
   customerUrl: string
   getAllCustomer: (url: string) => void
   getSingleCustomer: (url: string) => Promise<void>
-  createCustomer: (data: any) => Promise<void>
+  createCustomer: (url:string, data: any) => Promise<void>
   deleteCustomer: (url: string) => void
   updateCustomer: (url: string, data: any) => Promise<void>
 }
@@ -53,7 +53,7 @@ export const useCustomer = create<CustomerStoreType>((set, get) => ({
       return Promise.reject(err)
     }
   },
-  createCustomer:async (data: any) => {
+  createCustomer:async (url:string, data: any) => {
     try {
       set({loading: true })
       const payload = new FormData()
@@ -69,7 +69,7 @@ export const useCustomer = create<CustomerStoreType>((set, get) => ({
         }
       }
 
-      await api.post(`${baseUrl}/admin/user`, payload, config)
+      await api.post(`${baseUrl}${url}/user`, payload, config)
       set({loading: false, success: true, error: false})
       return Promise.resolve()
     } catch (error) {

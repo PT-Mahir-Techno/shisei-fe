@@ -6,7 +6,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import { Calendar } from '@/components/ui/calendar'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import ScheduleForm from './_parts/schedule_form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -17,6 +17,9 @@ import EventDetail from './_parts/event-detail';
 import { useSheet } from '@/store/use-sheet';
 import { useStaff } from '@/store/use-staff';
 import { RiFilter2Line } from 'react-icons/ri';
+import { AuthContex } from '@/providers/auth-provider';
+import { CheckAvaibilityAction } from '@/lib/utils';
+import toast from 'react-hot-toast';
 
 
 const renderEventContent = (eventInfo:any) => {
@@ -32,6 +35,9 @@ const renderEventContent = (eventInfo:any) => {
 }
 
 const SchedulePage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
+
   const title = "Schedule"
   const calendarRef = useRef<any>(null);
 
@@ -46,12 +52,20 @@ const SchedulePage = () => {
   const [staffId, setStaffId] = useState<string | undefined>('')
 
   useEffect(() => {
-    init()
-  },[staffId])
+    if (prefix || staffId){
+      init()
+    }
+  },[staffId, prefix])
   
-  const init = () => {
-    getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${selectedMonth}&staff=${staffId}`)
-    getAllStaffNoPaginate(`${baseUrl}/admin/staff?type=nopaginate`)
+  const init = async () => {
+    try {
+      let scheduleUrl = `${baseUrl}${prefix}/schedule?type=nopaginate&month=${selectedMonth}&staff=${staffId}`
+  
+      await getScheduleConverted(scheduleUrl)
+      await getAllStaffNoPaginate(`${baseUrl}${prefix}/staff?type=nopaginate`)
+    } catch (error:any) {
+      // toast.error(error.data.message)
+    }
   }
 
   const handleNextClick = () => {
@@ -62,7 +76,9 @@ const SchedulePage = () => {
 
       //  compare selectedMonth with calendar api month if different set it 
       if (selectedMonth !== calendarApi.getDate().getMonth() + 1){
-        getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1}&year=${calendarApi.getDate().getFullYear()}&staff=${staffId}`)
+        let scheduleUrl = `${baseUrl}${prefix}/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1}&year=${calendarApi.getDate().getFullYear()}&staff=${staffId}`
+        
+        getScheduleConverted(scheduleUrl)
         setSelectedMonth(calendarApi.getDate().getMonth() + 1)
       }
     }
@@ -79,7 +95,9 @@ const SchedulePage = () => {
       
       //  compare selectedMonth with calendar api month if different set it
       if (selectedMonth !== calendarApi.getDate().getMonth() + 1){
-        getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1}&year=${calendarApi.getDate().getFullYear()}&staff=${staffId}`)
+        let scheduleUrl =`${baseUrl}${prefix}/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1}&year=${calendarApi.getDate().getFullYear()}&staff=${staffId}`
+        
+        getScheduleConverted(scheduleUrl)
         setSelectedMonth(calendarApi.getDate().getMonth() + 1)
       }
     }
@@ -94,14 +112,22 @@ const SchedulePage = () => {
       //  compare selectedMonth with calendar api month if different set it
       if (selectedMonth !== calendarApi.getDate().getMonth() + 1){
         setSelectedMonth(calendarApi.getDate().getMonth() + 1)
-        getScheduleConverted(`${baseUrl}/admin/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1} &year=${calendarApi.getDate().getFullYear()}&staff=${staffId}`)
+
+        let scheduleUrl = role == 'admin'
+        ? `${baseUrl}${prefix}/schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1} &year=${calendarApi.getDate().getFullYear()}&staff=${staffId}`
+        : `${baseUrl}${prefix}/my-schedule?type=nopaginate&month=${calendarApi.getDate().getMonth() + 1} &year=${calendarApi.getDate().getFullYear()}&staff=${staffId}`
+
+        getScheduleConverted(scheduleUrl)
       }
     }
   }
 
   const handleOpenSheet = (param: Date) => {
-    setIsOpen(true)
-    setSelectedDate(param)
+    const allowed = CheckAvaibilityAction(permision, 'create', 'schedule', role);
+    if (allowed){
+      setIsOpen(true)
+      setSelectedDate(param)
+    }
   }
 
   const handleShowDetail = (id:string) => {
@@ -118,9 +144,12 @@ const SchedulePage = () => {
     <>
     <div className='flex gap-6'>
       <div className='bg-background p-4 box-content rounded-md'>
-        <div className='mb-6'>
-          <Button onClick={() => setIsOpen(true)} className='w-full'>Add Schedule</Button>
-        </div>
+        {
+          CheckAvaibilityAction(permision, 'create', 'schedule', role) && prefix &&
+          <div className='mb-6'>
+            <Button onClick={() => setIsOpen(true)} className='w-full'>Add Schedule</Button>
+          </div>
+        }
 
         <Calendar
           mode="single"
@@ -129,25 +158,32 @@ const SchedulePage = () => {
           className="rounded-md border"
           onDayClick={(param) => handleOpenSheet(param)}
         />
-        <div className='mt-5 mb-2 text-gray-600'>Filter By Staff</div>
-        <div className='h-80 overflow-auto'>
-          <Select onValueChange={(value) => setStaffId(value)} defaultValue={staffId}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="--select one --" />
-            </SelectTrigger>
-            <SelectContent>
-              {
-                staffs.map((staff) => (
-                  <SelectItem key={staff.id} value={staff.id}>{staff.name}</SelectItem>
-                ))
-              }
-              {/* <SelectItem value={'1'}>{"Joko"}</SelectItem> */}
-            </SelectContent>
-          </Select>
-          <div className='mt-4'>
-            <Button variant={'outline'} onClick={() => handleResetFilter()} className='w-full'><RiFilter2Line className='mr-3'/> Reset Filter</Button>
+
+        {
+          prefix && role == 'admin' &&
+          <div>
+            <div className='mt-5 mb-2 text-gray-600'>Filter By Staff</div>
+            <div className='h-80 overflow-auto'>
+              <Select onValueChange={(value) => setStaffId(value)} defaultValue={staffId}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="--select one --" />
+                </SelectTrigger>
+                <SelectContent>
+                  {
+                    staffs.map((staff) => (
+                      <SelectItem key={staff.id} value={staff.id}>{staff.name}</SelectItem>
+                    ))
+                  }
+                  {/* <SelectItem value={'1'}>{"Joko"}</SelectItem> */}
+                </SelectContent>
+              </Select>
+              <div className='mt-4'>
+                <Button variant={'outline'} onClick={() => handleResetFilter()} className='w-full'><RiFilter2Line className='mr-3'/> Reset Filter</Button>
+              </div>
+            </div>
           </div>
-        </div>
+        }
+
       </div>
       <div className='flex-1 h-[80vh] bg-background p-4 box-content rounded-md'>
       <FullCalendar

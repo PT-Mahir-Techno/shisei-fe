@@ -114,7 +114,7 @@ export const columns: ColumnDef<AdminType>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ActionButton model={row.original} isCanVerify={true} />
+        <ActionButton model={row.original} isCanVerify={true} actionFor="user" />
       )
     },
   },

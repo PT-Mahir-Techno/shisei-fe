@@ -4,8 +4,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import api from '@/lib/api'
 import { formatedDate, numberToIdr } from '@/lib/utils'
 import { baseUrl } from '@/lib/variable'
+import { AuthContex } from '@/providers/auth-provider'
 import Image from 'next/image'
-import React from 'react'
+import React, { useContext } from 'react'
 import toast from 'react-hot-toast'
 import { RiVerifiedBadgeFill } from 'react-icons/ri'
 
@@ -21,6 +22,8 @@ const LoadingSkeleton = () =>
 </tr>
 
 const LatestPackageTransaction = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const [loading, setLoading]  = React.useState(false)
   const [data, setData] = React.useState<any>()
@@ -39,7 +42,7 @@ const LatestPackageTransaction = () => {
 
   React.useEffect(() => {
     init()
-  },[])
+  },[prefix])
 
   return (
     <>

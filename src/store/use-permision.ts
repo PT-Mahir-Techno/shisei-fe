@@ -1,4 +1,5 @@
 import api from "@/lib/api";
+import { GroupPermission } from "@/lib/utils";
 import { baseUrl } from "@/lib/variable";
 import { PermissionType } from "@/types/permision-type";
 import { create } from "zustand";

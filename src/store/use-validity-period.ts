@@ -14,7 +14,7 @@ type PeriodStoreType = {
   periodUrl: string
   getAllPeriod: (url: string) => void
   getSinglePeriod: (url: string) => Promise<void>
-  createPeriod: (data: any) => void
+  createPeriod: (url: string, data: any) => void
   deletePeriod: (url: string) => void
   getAllPeriodNoPaginate: (url: string) => void
   updatePeriod: (url: string, data: any) => void
@@ -63,10 +63,10 @@ export const usePeriod = create<PeriodStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  createPeriod:async (data: any) => {
+  createPeriod:async (url:string ,data: any) => {
     try {
       set({loading: true })
-      await api.post(`${baseUrl}/admin/duration`, data)
+      await api.post(`${baseUrl}${url}/duration`, data)
       set({loading: false, success: true })
       return Promise.resolve()
     } catch (error) {

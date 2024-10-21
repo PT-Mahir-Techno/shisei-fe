@@ -3,10 +3,11 @@
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { AuthContex } from '@/providers/auth-provider'
 import { useSchedule } from '@/store/use-schedule'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Label } from '@radix-ui/react-label'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
@@ -20,21 +21,22 @@ const formSchema = z.object({
 })
 
 const SettingSchedulePage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const {loading, getSettingSchedule, setSettingSchedule} = useSchedule()
 
   useEffect(() => {
     initSate()
-  }, [])
+  }, [prefix])
 
   const initSate = async () => {
     try {
-      const res = await getSettingSchedule()
+      const res = await getSettingSchedule(prefix)
       if (res.data) {
         form.reset(res.data)
       }
     } catch (error:any) {
-      toast.error(error.data.message)
     }
   }
 
@@ -48,7 +50,7 @@ const SettingSchedulePage = () => {
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await setSettingSchedule(data)
+      await setSettingSchedule(prefix, data)
       await initSate()
       toast.success("Setting saved")
     } catch (error:any) {

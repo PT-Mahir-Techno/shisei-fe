@@ -17,6 +17,7 @@ import phoneCodes from '@/lib/dial-code'
 import Image from 'next/image'
 import { useRole } from '@/store/use-role'
 import { baseUrl } from '@/lib/variable'
+import { AuthContex } from '@/providers/auth-provider'
 
 export const formSchema = z.object({
   name: z.string().min(1, {message: "Name is required"}),
@@ -28,6 +29,8 @@ export const formSchema = z.object({
 })
 
 const StaffForm = ({action}:{action: () => void}) => {
+  const {authState} = React.useContext(AuthContex)
+  const {_prefix:prefix}   = authState
 
   const { setIsOpen, mode, modelId } = useSheet()
   const { loading, getAllStaff, createStaff, staffUrl, getSingleStaff, updateStaff  } : any = useStaff()
@@ -37,13 +40,13 @@ const StaffForm = ({action}:{action: () => void}) => {
     if (mode === 'edit') {
       getSingleData()
     }
-    getAllRoleNoPaginate(`${baseUrl}/admin/role?type=nopaginate`)
+    getAllRoleNoPaginate(`${baseUrl}${prefix}/role?type=nopaginate`)
   }
   , [])
 
   const getSingleData = async () => {
     try {
-      const res = await getSingleStaff(`${baseUrl}/admin/staff/${modelId}`)
+      const res = await getSingleStaff(`${baseUrl}${prefix}/staff/${modelId}`)
       delete res.password
       await form.reset(res)
     } catch (error:any) {
@@ -69,9 +72,9 @@ const StaffForm = ({action}:{action: () => void}) => {
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       if (mode === 'edit') {
-        await updateStaff(`${baseUrl}/admin/staff/${modelId}`, data)
+        await updateStaff(`${baseUrl}${prefix}/staff/${modelId}`, data)
       } else{
-        await createStaff(data)
+        await createStaff(prefix, data)
       }
       
       await getAllStaff(staffUrl)

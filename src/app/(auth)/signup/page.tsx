@@ -13,7 +13,7 @@ import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import phoneCodes from "@/lib/dial-code"
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { baseUrl } from "@/lib/variable"
 import api from "@/lib/api"
 import Cookies from 'js-cookie';
@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
 import LoadingIcons from "react-loading-icons"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { AuthContex } from "@/providers/auth-provider"
 
 const formSchema = z.object({
   name: z.string().nonempty().min(3, {message: "Minimum 3 characters"}).max(50, {message: "Maximum 50 characters"}),
@@ -37,7 +38,22 @@ const formSchema = z.object({
 })
 
 const SignUpPage = () => {
+  const { authState, setAuthState} = useContext(AuthContex)
   const {loading, register} = useAuth()
+
+  useEffect(() => {
+    if (authState._auth && !authState._is_auth && !authState._avaibility) {
+      router.replace('/dashboard')
+      toast.success("You are already logged in")
+    }
+
+    if (authState._auth && !authState._is_auth && !authState._avaibility) {
+      router.replace('/otp-verification')
+      toast.success("You must verify otp first")
+    }
+
+  }
+  , [authState])
 
   const router = useRouter()
 
@@ -61,7 +77,7 @@ const SignUpPage = () => {
     try {
       await register(`${baseUrl}/register`, data)
       toast.success("Register Success")
-      router.replace('/verify-success')
+      router.replace('/otp-verification')
     } catch (error:any) {
       if (error.response){
         toast.error(error.response.message)
@@ -152,8 +168,8 @@ const SignUpPage = () => {
                             <SelectLabel >Phone Code</SelectLabel>
                             {
                               phoneCodes.map((item, index) => (
-                                <SelectItem key={index} value={item.dial_code as string} className="w-full">
-                                  <div className="flex justify-between gap-8 items-center w-full">
+                                <SelectItem key={item.name} value={item.dial_code as string} className="w-full">
+                                  <div key={item.name} className="flex justify-between gap-8 items-center w-full">
                                     <div className='flex items-center gap-2'>
                                       <div className="w-4 h-4">
                                         <Image src={item.image} alt="flag" width={20} height={20} />

@@ -3,16 +3,11 @@
 import { Button } from '@/components/ui/button'
 import CustomSheets from '@/components/ui/custom-sheets'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@radix-ui/react-label'
-import React, { useEffect } from 'react'
-import { RiAddCircleFill, RiDeleteBin2Fill, RiEditBoxFill } from 'react-icons/ri'
-import { useLocation } from '@/store/use-location'
+import React, { useContext, useEffect } from 'react'
 import { useSheet } from '@/store/use-sheet'
 import { useModal } from '@/store/use-modal'
 import { baseUrl } from '@/lib/variable'
-import { CUstomDataTable } from '@/components/ui/custom-data-table'
-import { usePeriod } from '@/store/use-validity-period'
 import CustomModal from '@/components/ui/custoom-dialog'
 import LoadingIcons from 'react-loading-icons'
 import toast from 'react-hot-toast'
@@ -23,6 +18,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { usePermision } from '@/store/use-permision'
 import { Skeleton } from '@/components/ui/skeleton'
+import { GroupPermission } from '@/lib/utils'
+import { AuthContex } from '@/providers/auth-provider'
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
@@ -30,6 +27,9 @@ const formSchema = z.object({
 })
 
 const PermisionPage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+
   const title = "Permision"
   const { isOpen, setIsOpen } = useSheet()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId, setModalId } = useModal()
@@ -44,11 +44,11 @@ const PermisionPage = () => {
   })
  
   useEffect(() => {
-    getAllPermisionNoPaginate(`${baseUrl}/admin/role-permission?type=nopaginate`)
-  }, [])
+    getAllPermisionNoPaginate(`${baseUrl}${prefix}/role-permission?type=nopaginate`)
+  }, [prefix])
 
   const handleDelete = async () => {
-    await deletePermision(`${baseUrl}/admin/role-permission/${modalId}`)
+    await deletePermision(`${baseUrl}${prefix}/role-permission/${modalId}`)
     await getAllPermision(permisionUrl)
     
     if (!success){
@@ -107,16 +107,22 @@ const PermisionPage = () => {
           (
             <div className="w-full bg-background px-6 py-4 rounded-lg my-8 grid grid-cols-6 gap-4">
               {
-                permisions?.map((item: any) => (
-                  <div key={item.id} className="flex items-center space-x-2">
-                    <Checkbox id="terms" disabled checked />
-                    <label
-                      htmlFor="terms"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      {item.name} 
-                    </label>
-                    {/* <RiDeleteBin2Fill onClick={() => handleModal(item.id)} className="text-red-500 cursor-pointer" /> */}
+                GroupPermission(permisions)?.map((item: any, index: any) => (
+                  <div key={index}>
+                    <div className='text-gray-600 font-semibold mb-4'>{item[0]}</div>
+                    {
+                      item[1]?.map((permision: any, indexData:any) => (
+                        <div key={indexData} className="flex items-center space-x-2 mb-4">
+                          <Checkbox id="terms"  checked />
+                          <label
+                            htmlFor="terms"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {permision.name} 
+                          </label>
+                        </div>
+                      ))
+                    }
                   </div>
                 ))
               }

@@ -5,14 +5,16 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
+import { GroupPermission } from "@/lib/utils"
 import { baseUrl } from "@/lib/variable"
+import { AuthContex } from "@/providers/auth-provider"
 import { usePermision } from "@/store/use-permision"
 import { useRole } from "@/store/use-role"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Label } from "@radix-ui/react-label"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { RiArrowLeftSLine } from "react-icons/ri"
@@ -24,6 +26,8 @@ const formSchema = z.object({
   permission_id: z.array(z.string()).refine((value) => value.length > 0, {message: "at least one permission is required"}),
 })
 const CreateRolePage = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
   const title = "Role"
 
   const {permisions, getAllPermisionNoPaginate, loading:loadingPermission} = usePermision()
@@ -32,17 +36,19 @@ const CreateRolePage = () => {
   const {id} = useParams()
 
   useEffect(() => {
-    getAllPermisionNoPaginate(`${baseUrl}/admin/role-permission?type=nopaginate`)
-  }, [])
+    if (prefix){
+      getAllPermisionNoPaginate(`${baseUrl}${prefix}/role-permission?type=nopaginate`)
+    }
+  }, [prefix])
 
   useEffect(() => {
-    if(id){
+    if(prefix || id){
       findRole()
     }
-  }, [id])
+  }, [prefix, id])
 
   const findRole = async () => {
-    const res = await getSingleRole(`${baseUrl}/admin/role/${id}`)
+    const res = await getSingleRole(`${baseUrl}${prefix}/role/${id}`)
     form.reset({
       name: res.role.name,
       permission_id: res.permissions.map((permission:any) => permission.id)
@@ -61,17 +67,21 @@ const CreateRolePage = () => {
     try {
       
       if (id){
-        await updateRole(`/admin/role/${id}`, data)
+        await updateRole(`${prefix}/role/${id}`, data)
       }else{
-        await createRole(data)
+        await createRole(prefix, data)
       }
 
-      await getAllRole(`${baseUrl}/admin/role`)
+      await getAllRole(`${baseUrl}${prefix}/role`)
       form.reset()
 
       router.push('/back-office/setting/role')
 
-      toast.success('Role created successfully')
+      if (id){
+        toast.success('Role updated successfully')
+      } else{
+        toast.success('Role created successfully')
+      }
     } catch (error:any) {
       toast.error(error.message)
     }
@@ -121,7 +131,50 @@ const CreateRolePage = () => {
                   </div>
                   )
                 :<div className="w-full bg-background px-6 py-4 rounded-lg grid grid-cols-6 gap-4">
-                  {
+
+                {
+                    GroupPermission(permisions)?.map((permisionData: any, index: any) => (
+                      <div key={index}>
+                        <div className='text-gray-600 font-semibold mb-4'>{permisionData[0]}</div>
+                        {
+                          permisionData[1]?.map((item: any, indexData:any) => (
+                            <div key={indexData} className="mb-4">
+                              <FormField
+                                key={item.id}
+                                control={form.control}
+                                name="permission_id"
+                                render={({ field }) => (
+                                  <FormItem key={item.id}>
+                                    <div className="flex items-center space-x-2">
+                                      <FormControl>
+                                        <Checkbox  checked={field.value?.includes(item.id)}
+                                          onCheckedChange={(checked) => {
+                                            return checked
+                                              ? field.onChange([...field.value, item.id])
+                                              : field.onChange(
+                                                  field.value?.filter(
+                                                    (value) => value !== item.id
+                                                  )
+                                                )
+                                          }}
+                                      />
+                                      </FormControl>
+                                      <FormLabel className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                        {item.name} 
+                                      </FormLabel>
+                                    </div>
+                                    <FormMessage className="text-red-500" />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          ))
+                        }
+                      </div>
+                    ))
+                  }
+
+                  {/* {
                     permisions.map((item: any) => (
                       <FormField
                         key={item.id}
@@ -152,7 +205,7 @@ const CreateRolePage = () => {
                         )}
                       />
                     ))
-                  }
+                  } */}
                 </div>
               }
 

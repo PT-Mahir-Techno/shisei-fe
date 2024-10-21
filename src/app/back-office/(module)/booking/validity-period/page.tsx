@@ -2,12 +2,8 @@
 
 import { Button } from '@/components/ui/button'
 import CustomSheets from '@/components/ui/custom-sheets'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Label } from '@radix-ui/react-label'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { RiAddCircleFill } from 'react-icons/ri'
-import { useLocation } from '@/store/use-location'
 import { useSheet } from '@/store/use-sheet'
 import { useModal } from '@/store/use-modal'
 import { baseUrl } from '@/lib/variable'
@@ -19,10 +15,11 @@ import CustomModal from '@/components/ui/custoom-dialog'
 import LoadingIcons from 'react-loading-icons'
 import toast from 'react-hot-toast'
 import { AuthContex } from '@/providers/auth-provider'
+import { CheckAvaibilityAction } from '@/lib/utils'
 
 const PeriodPage = () => {
   const {authState} = useContext(AuthContex)
-  const {_prefix:prefix}   = authState
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
 
   const title = "Validity Period"
   const { isOpen, setIsOpen } = useSheet()
@@ -31,7 +28,7 @@ const PeriodPage = () => {
 
   React.useEffect(() => {
     getAllPeriod(`${baseUrl}${prefix}/duration`)
-  }, [])
+  }, [prefix])
 
   const handleDelete = async () => {
     await deletePeriod(`${baseUrl}${prefix}/duration/${modalId}`)
@@ -53,9 +50,12 @@ const PeriodPage = () => {
           <h2 className="font-noto_serif font-bold text-2xl text-gray-800 dark:text-gray-100 mb-2">{title}</h2>
           <p className="text-gray-500 dark:text-gray-100 text-sm">List of all {title}</p>
         </div>
-        <div>
-          <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
-        </div>
+        {
+          CheckAvaibilityAction(permision, 'create', 'validityperoid', role) && prefix &&
+          <div>
+            <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
+          </div>
+        }
       </div>
       
       <div className="w-full bg-background px-6 py-4 rounded-lg my-8">

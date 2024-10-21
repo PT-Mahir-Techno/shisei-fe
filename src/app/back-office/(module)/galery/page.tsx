@@ -7,6 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
+import { CheckAvaibilityAction } from '@/lib/utils'
 import { baseUrl } from '@/lib/variable'
 import { AuthContex } from '@/providers/auth-provider'
 import { useGallery } from '@/store/use-galery'
@@ -38,7 +39,7 @@ const formSchema = z.object({
 const GaleryPage = () => {
 
   const {authState} = React.useContext(AuthContex)
-  const {_prefix:prefix}   = authState
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
 
   const { isOpen, setIsOpen } = useSheet()
   const { gallerys, getAllGalleryNoPaginate, loading, createGallery, deleteGallery } = useGallery()
@@ -62,7 +63,7 @@ const GaleryPage = () => {
     try {
       const formData = new FormData()
       formData.append('image', data.image[0])
-      await createGallery(formData)
+      await createGallery(prefix, formData)
       await getAllGalleryNoPaginate(`${baseUrl}${prefix}/gallery`)
 
       form.reset()
@@ -104,9 +105,13 @@ const GaleryPage = () => {
           <h2 className="font-noto_serif font-bold text-2xl text-gray-800 mb-2">{title}</h2>
           <p className="text-gray-500 text-sm">List of all {title} </p>
         </div>
-        <div>
-          <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
-        </div>
+
+        {
+          CheckAvaibilityAction(permision, "create", "gallery", role) && prefix &&
+          <div>
+            <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
+          </div>
+        }
       </div>
 
         {
@@ -130,7 +135,10 @@ const GaleryPage = () => {
                       <div className='text-gray-700 text-sm'>actions</div>
                       <div className='flex'>
                         <RiEyeFill onClick={() => handleDetailImage(item.image_url)} size={20} className="mr-2 text-primary cursor-pointer"/>
-                        <RiDeleteBin2Fill onClick={() => handleOpenModal(item.id)} size={20} className="mr-2 text-destructive cursor-pointer"/>
+                        {
+                          CheckAvaibilityAction(permision, "delete", "gallery", role) && prefix &&
+                          <RiDeleteBin2Fill onClick={() => handleOpenModal(item.id)} size={20} className="mr-2 text-destructive cursor-pointer"/>
+                        }
                       </div>
                     </div>
                   </div>

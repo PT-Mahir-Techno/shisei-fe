@@ -14,19 +14,25 @@ import { columns } from "./_parts/column"
 import CustomModal from "@/components/ui/custoom-dialog"
 import LoadingIcons from "react-loading-icons"
 import toast from "react-hot-toast"
+import { AuthContex } from "@/providers/auth-provider"
 
 const NoteUserPage = () => {
+  const {authState} = React.useContext(AuthContex)
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
+
   const title = "User Note"
   const { isOpen, setIsOpen } = useSheet()
   const { customers, loading, getAllCustomer, customerAttributes, deleteCustomer, customerUrl, error, errorData } : any = useCustomer()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
 
   React.useEffect(() => {
-    getAllCustomer(`${baseUrl}/admin/user`)
-  }, [])
+    if (prefix){
+      getAllCustomer(`${baseUrl}${prefix}/user`)
+    }
+  }, [prefix])
 
   const handleDelete = async () => {
-    await deleteCustomer(`${baseUrl}/admin/user/${modalId}`)
+    await deleteCustomer(`${baseUrl}${prefix}/user/${modalId}`)
     await getAllCustomer(customerUrl)
 
     if (error){

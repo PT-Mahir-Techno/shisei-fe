@@ -184,7 +184,7 @@ const SchedduleCustomerPage = () => {
             <Pagination className='flex justify-start mt-12'>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious onClick={() => historyAttributes.prev_page_url && getHistory(historyAttributes.prev_page_url) }/>
+                  <PaginationPrevious onClick={() => historyAttributes.prev_page_url && getHistory(`${historyAttributes.prev_page_url}&menu=history`) }/>
                 </PaginationItem>
       
                   <PaginationLink href="#" className='mx-6'>
@@ -192,7 +192,7 @@ const SchedduleCustomerPage = () => {
                   </PaginationLink>
       
                 <PaginationItem>
-                  <PaginationNext onClick={() => historyAttributes.next_page_url && getHistory(historyAttributes.next_page_url) } />
+                  <PaginationNext onClick={() => historyAttributes.next_page_url && getHistory(`${historyAttributes.next_page_url}&menu=history`) } />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>

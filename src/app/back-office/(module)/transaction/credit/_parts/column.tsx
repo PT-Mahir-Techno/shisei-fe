@@ -127,7 +127,7 @@ export const columns: ColumnDef<any>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <CreditActionButton row={row} />  
+        <CreditActionButton row={row} actionFor="historycredit" />  
       )
     },
   }

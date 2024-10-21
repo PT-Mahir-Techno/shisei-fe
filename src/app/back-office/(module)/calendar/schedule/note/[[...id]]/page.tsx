@@ -17,7 +17,7 @@ import { useSchedule } from '@/store/use-schedule'
 import { useParams } from 'next/navigation'
 import { useNote } from '@/store/use-note'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatedDate } from '@/lib/utils'
+import { CheckAvaibilityAction, formatedDate } from '@/lib/utils'
 
 
 const title = "Note"
@@ -34,7 +34,7 @@ const LoadingSkeleton = () =>
 
 const PermisionPage = () => {
   const {authState}        = useContext(AuthContex)
-  const {_prefix:prefix}   = authState
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
   const {id}               = useParams()
 
   const [customers, setCustomers] = useState([])
@@ -46,8 +46,10 @@ const PermisionPage = () => {
 
 
   useEffect(() => {
-    init()
-    if (id) {
+    if (prefix) {
+      init()
+    }
+    if (id || prefix) {
       handleSingleSchedule(id[0])
     }
   }, [prefix, id])
@@ -75,10 +77,15 @@ const PermisionPage = () => {
           <h2 className="font-noto_serif font-bold text-2xl text-gray-800 dark:text-gray-100 mb-2">{title}</h2>
         </div>
         <div className='flex gap-4 flex-wrap justify-end'>
-          <Link href={`/back-office/schedule`}>
+          <Link href={`/back-office/calendar/schedule`}>
             <Button> <RiArrowLeftLine className="mr-2"/> Back</Button>
           </Link>
-          <Button onClick={() => setIsOpen(true)} variant={"outline"}> <RiAddCircleFill className="mr-2"/> Add Note</Button>
+
+          {
+            CheckAvaibilityAction(permision, 'create', 'notes', role) && prefix &&
+            <Button onClick={() => setIsOpen(true)} variant={"outline"}> <RiAddCircleFill className="mr-2"/> Add Note</Button>
+          }
+          
           <Button onClick={() => setIsOpenModal(true)} variant={"outline"}> <RiAddCircleFill className="mr-2"/> Add Note Category</Button>
         </div>
       </div>
@@ -115,7 +122,12 @@ const PermisionPage = () => {
                                 <p className="text-gray-500 text-sm dark:text-gray-400">{item?.user?.email}</p>
                               </div>
                             </div>
-                            <Button onClick={() => handleModalEdit(item.id)} variant={"outline"} size={"sm"}><RiEditBoxFill/> Edit Note</Button>
+
+                            {
+                              CheckAvaibilityAction(permision, 'edit', 'notes', role) && prefix &&
+                              <Button onClick={() => handleModalEdit(item.id)} variant={"outline"} size={"sm"}><RiEditBoxFill/> Edit Note</Button>
+                            }
+
                           </div>
                           <div className='pt-4'>
                             <h2 className="text-gray-700 dark:text-gray-100 text-sm">

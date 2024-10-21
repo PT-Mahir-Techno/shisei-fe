@@ -29,8 +29,10 @@ const CreditTransactionpage = () => {
   const [date, setDate] = useState<DateRange | undefined>()
 
   useEffect(() => {
-    init()
-  }, [])
+    if (prefix){
+      init()
+    }
+  }, [prefix])
   
   const init = async() => {
     await getAllPackageHistory(`${baseUrl}${prefix}/history-membership`)

@@ -14,19 +14,24 @@ import { columns } from "./_parts/column"
 import CustomModal from "@/components/ui/custoom-dialog"
 import LoadingIcons from "react-loading-icons"
 import toast from "react-hot-toast"
+import { AuthContex } from "@/providers/auth-provider"
+import { CheckAvaibilityAction } from "@/lib/utils"
 
 const CustomerPage = () => {
+  const {authState} = React.useContext(AuthContex)
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
+
   const title = "Customer"
   const { isOpen, setIsOpen } = useSheet()
   const { customers, loading, getAllCustomer, customerAttributes, deleteCustomer, customerUrl, error, errorData } : any = useCustomer()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
 
   React.useEffect(() => {
-    getAllCustomer(`${baseUrl}/admin/user`)
+    getAllCustomer(`${baseUrl}${prefix}/user`)
   }, [])
 
   const handleDelete = async () => {
-    await deleteCustomer(`${baseUrl}/admin/user/${modalId}`)
+    await deleteCustomer(`${baseUrl}${prefix}/user/${modalId}`)
     await getAllCustomer(customerUrl)
 
     if (error){
@@ -45,9 +50,12 @@ const CustomerPage = () => {
           <h2 className="font-noto_serif font-bold text-2xl text-gray-800">{title}</h2>
           <p className="text-gray-500 text-sm">List {title}</p>
         </div>
-        <div>
-          <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
-        </div>
+        {
+          CheckAvaibilityAction(permision, 'create', 'user', role) && prefix &&
+          <div>
+            <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
+          </div>
+        }
       </div>
       
       <div className="w-full bg-background px-6 py-4 rounded-lg my-8">

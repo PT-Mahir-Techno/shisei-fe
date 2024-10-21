@@ -15,11 +15,12 @@ import LoadingIcons from 'react-loading-icons'
 import { useModal } from '@/store/use-modal'
 import toast from 'react-hot-toast'
 import { AuthContex } from '@/providers/auth-provider'
+import { CheckAvaibilityAction } from '@/lib/utils'
 
 const title = "Studio"
 function StudioPage() {
   const {authState} = React.useContext(AuthContex)
-  const {_prefix:prefix}   = authState
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
 
   const {isOpen, setIsOpen} = useSheet()
   const {loading, studios, studioUrl, studioAttributes, getAllStudio, deleteStudio} = useStudio()
@@ -28,7 +29,7 @@ function StudioPage() {
   useEffect(() => {
     initState()
   }
-  , [])
+  , [prefix])
 
   const initState = async () => {
     await getAllStudio(`${baseUrl}${prefix}/studio`)
@@ -52,7 +53,10 @@ function StudioPage() {
           <p className="text-gray-500 text-sm">List of all {title} </p>
         </div>
         <div>
-          <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
+          {
+            CheckAvaibilityAction(permision,'create','studio', role) && prefix &&
+            <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
+          }
         </div>
       </div>
 

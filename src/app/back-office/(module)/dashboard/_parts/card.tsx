@@ -1,3 +1,5 @@
+'use client'
+
 import { numberToIdr } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'

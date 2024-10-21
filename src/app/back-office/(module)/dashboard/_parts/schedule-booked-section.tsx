@@ -1,11 +1,12 @@
 'use client'
 
-import React from 'react'
+import React, { useContext } from 'react'
 import ScheduleBooked from './scheule-booked'
 import api from '@/lib/api'
 import { baseUrl } from '@/lib/variable'
 import toast from 'react-hot-toast'
 import { Skeleton } from '@/components/ui/skeleton'
+import { AuthContex } from '@/providers/auth-provider'
 
 const LoadingSkeleton = () => 
 <div className='flex flex-col gap-2 mb-6'>
@@ -15,6 +16,9 @@ const LoadingSkeleton = () =>
   </div>
 
 const ScheduleBookedSection = () => {
+  const {authState} = useContext(AuthContex)
+  const {_prefix:prefix}   = authState
+  
   const [loading, setLoading]  = React.useState(false)
   const [data, setData] = React.useState<any>()
 
@@ -32,7 +36,7 @@ const ScheduleBookedSection = () => {
 
   React.useEffect(() => {
     init()
-  },[])
+  },[prefix])
 
   return (
     <div>

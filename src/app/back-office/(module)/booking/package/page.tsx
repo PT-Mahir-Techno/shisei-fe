@@ -19,10 +19,11 @@ import LoadingIcons from 'react-loading-icons'
 import CustomModal from '@/components/ui/custoom-dialog'
 import toast from 'react-hot-toast'
 import { AuthContex } from '@/providers/auth-provider'
+import { CheckAvaibilityAction } from '@/lib/utils'
 
 const PackagePage = () => {
   const {authState} = useContext(AuthContex)
-  const {_prefix:prefix}   = authState
+  const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
 
   const title = "Package"
   const { isOpen, setIsOpen } = useSheet()
@@ -53,9 +54,12 @@ const PackagePage = () => {
           <h2 className="font-noto_serif font-bold text-2xl text-gray-800 dark:text-gray-100">Package</h2>
           <p className="text-gray-500 dark:text-gray-100 text-sm">List Package</p>
         </div>
-        <div>
-          <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add Package</Button>
-        </div>
+        {
+          CheckAvaibilityAction(permision, 'create', 'package', role) && prefix &&
+          <div>
+            <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add Package</Button>
+          </div>
+        }
       </div>
       
       <div className="w-full bg-background px-6 py-4 rounded-lg my-8">

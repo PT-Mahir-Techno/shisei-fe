@@ -149,7 +149,7 @@ export const columns: ColumnDef<PaymentType>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ReportActionButton row={row} />  
+        <ReportActionButton row={row} actionFor="transactionpackage"/>  
       )
     },
   },

@@ -80,7 +80,7 @@ export const columns: ColumnDef<RoleType>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ActionButton model={row.original} isEdit={false} editLink={`/back-office/setting/role/create/${row.original.id}`} />
+        <ActionButton model={row.original} isEdit={false} editLink={`/back-office/setting/role/create/${row.original.id}`} actionFor="role"/>
       )
     },
   },

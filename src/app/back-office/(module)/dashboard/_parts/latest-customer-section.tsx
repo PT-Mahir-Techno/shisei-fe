@@ -1,11 +1,12 @@
 'use client'
 
-import React from 'react'
+import React, { useContext } from 'react'
 import LatestCustomer from './latest-customer'
 import { baseUrl } from '@/lib/variable'
 import api from '@/lib/api'
 import toast from 'react-hot-toast'
 import { Skeleton } from '@/components/ui/skeleton'
+import { AuthContex } from '@/providers/auth-provider'
 
 const LoadingSkeleton = () => 
 <div className='flex flex-col gap-2 py-2'>
@@ -16,6 +17,9 @@ const LoadingSkeleton = () =>
 
 
 const LatestCustomerSection = () => {
+  const {authState} = useContext(AuthContex)
+
+  const {_prefix:prefix}   = authState
   const [loading, setLoading]  = React.useState(false)
   const [data, setData] = React.useState<any>()
 
@@ -33,7 +37,7 @@ const LatestCustomerSection = () => {
 
   React.useEffect(() => {
     init()
-  },[])
+  },[prefix])
 
   return (
     <div>

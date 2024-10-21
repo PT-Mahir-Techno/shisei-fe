@@ -15,19 +15,30 @@ import LoadingIcons from "react-loading-icons"
 import CustomModal from "@/components/ui/custoom-dialog"
 import { useStaff } from "@/store/use-staff"
 import AvaibilityDay from "./_parts/avaibility-day"
+import { AuthContex } from "@/providers/auth-provider"
+import { CheckAvaibilityAction } from "@/lib/utils"
 
 const InstructorPage = () => {
+  const {authState} = React.useContext(AuthContex)
+  const {_prefix:prefix, _permision:permision, _avaibility:role} = authState
+
   const title = "Staff " 
   const { isOpen, setIsOpen } = useSheet()
   const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId, isOpenDay, setIsOpenDay } = useModal()
   const { staffs, loading, getAllStaff, staffAttributes, deleteStaff, staffUrl } : any = useStaff()
 
   React.useEffect(() => {
-    getAllStaff(`${baseUrl}/admin/staff`)
-  }, [])
+    init()
+  }, [prefix])
+
+  const init = async () => {
+    if (prefix){
+      await getAllStaff(`${baseUrl}${prefix}/staff`)
+    }
+  }
 
   const handleDelete = async () => {
-    await deleteStaff(`${baseUrl}/admin/staff/${modalId}`)
+    await deleteStaff(`${baseUrl}${prefix}/staff/${modalId}`)
     await getAllStaff(staffUrl)
     toast.success('Staff deleted successfully')
     setIsOpenModal(false)
@@ -40,9 +51,12 @@ const InstructorPage = () => {
           <h2 className="font-noto_serif font-bold text-2xl text-gray-800">{title}</h2>
           <p className="text-gray-500 text-sm">List {title}</p>
         </div>
-        <div>
-          <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
-        </div>
+        {
+          CheckAvaibilityAction(permision, 'create', 'staff', role) && prefix &&
+          <div>
+            <Button onClick={() => setIsOpen(true)}> <RiAddCircleFill className="mr-2"/> Add {title}</Button>
+          </div>
+        }
       </div>
       
       <div className="w-full bg-background px-6 py-4 rounded-lg my-8">

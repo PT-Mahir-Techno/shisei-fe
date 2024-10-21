@@ -24,6 +24,7 @@ const formSchema  = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters').max(255, 'Name must be at most 255 characters'),
   email: z.string().email('Invalid email address').min(3, 'Email must be at least 3 characters').max(255, 'Email must be at most 255 characters'),
   phone: z.string().min(3, 'Phone number must be at least 3 characters').max(255, 'Phone number must be at most 255 characters'),
+  about: z.string().max(5000, 'Address must be at most 255 characters').min(3, 'Address must be at least 3 characters'),
   alamat: z.string().max(255, 'Address must be at most 255 characters').min(3, 'Address must be at least 3 characters'),
 })
 
@@ -41,7 +42,7 @@ const ProfileSetting = ({close}: profileSettingProps) => {
   const handlesubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       const newData = {...data, code_phone:user.code_phone}
-      await updateProfile(`${prefix}/update-profile`, newData)
+      await updateProfile(`${prefix}/profile/update-profile`, newData)
       await getPorfile(`${prefix}/profile`)
       toast.success('Profile successfuly updated')
     } catch (error:any) {
@@ -107,6 +108,19 @@ const ProfileSetting = ({close}: profileSettingProps) => {
                 <Label htmlFor="name" className="mb-1 text-gray-600">Address</Label>
                 <FormControl>
                   <Textarea  {...field} placeholder="address" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="about"
+            render={({ field }) => (
+              <FormItem className='mb-4'>
+                <Label htmlFor="about" className="mb-1 text-gray-600">About Me</Label>
+                <FormControl>
+                  <Textarea  {...field} placeholder="about" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

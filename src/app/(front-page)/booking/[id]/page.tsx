@@ -70,7 +70,13 @@ const DetailBookingPage = () => {
         payment_id: packageSelected.payment_id,
         package_id: id,
       }
-      const res = await api.post(`${baseUrl}/dashboard/set-schedule`, payload)
+      const header = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }
+      };
+      const res = await api.post(`${baseUrl}/dashboard/set-schedule`, payload, header)
       setLoadingBooking(false)
       if (res){
         setIsModalSuccess(true)

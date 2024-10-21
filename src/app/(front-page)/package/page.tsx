@@ -13,6 +13,10 @@ import { AuthContex } from '@/providers/auth-provider'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
 import { useRouter } from 'next/navigation'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import Image from 'next/image'
+import { PaymentMethos } from '@/lib/variable'
+
 
 
 const BookingPackagePage = () => {
@@ -22,6 +26,7 @@ const BookingPackagePage = () => {
   const [selectedPackage, setSelectedPackage] = React.useState<any>(null)
   const [showModalTransaction, setShowModalTransaction] = React.useState(false)
   const [showModalUnAuthenticated, setShowModalUnAuthenticated] = React.useState(false)
+  const [selectedPayment, setSelectedPayment] = React.useState<any>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -42,9 +47,9 @@ const BookingPackagePage = () => {
 
   const procesedTransaction = async () => {
     try {
-      if (selectedPackage !== null){
+      if (selectedPackage !== null && selectedPayment !== null) {
         const payload = {
-          payment_method : 'va'
+          payment_method : selectedPayment,
         }
         const res = await procesedPackage(`/payment/${selectedPackage.id}`, payload)
 
@@ -52,7 +57,10 @@ const BookingPackagePage = () => {
         // console.log(res)
         window.location.href = res?.url
         
+      }else{
+        toast.error('Please select payment method or package')
       }
+      setSelectedPayment(null)
       setSelectedPackage(null)
       setShowModalTransaction(false)
       // router.push('/bill/success')
@@ -118,8 +126,35 @@ const BookingPackagePage = () => {
               
               
               <div className='pb-4 mb-5 border-b-2 border-gray-200'>
-                <h2 className='font-noto_serif font-bold text-lg text-gray-700 dark:text-gray-200'>Payment Method</h2>
+                <h2 className='font-noto_serif font-bold text-gray-700 dark:text-gray-200'>Payment Method</h2>
               </div>
+
+              <div className='flex gap-2 items-center mb-4'>
+                <Image alt='visa' src="/img/bank/visa.png" width={40} height={0} />
+                <Image alt='mastercard' src="/img/bank/MASTERCARD.png" width={40} height={0} />
+                <Image alt='atm-bersama' src="/img/bank/atm_bersama.png" width={40} height={0} />
+              </div>
+
+              <div className='mb-6'>
+                <Select onValueChange={(val) => setSelectedPayment(val)} value={selectedPayment}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="select payment method" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {
+                      PaymentMethos.map((item:any, index:any) => (
+                        <SelectItem key={index} value={item.name}>
+                          <div className='flex items-center gap-4'>
+                            <Image alt={item.icon} src={item.icon} width={30} height={0} />
+                            <p>{item.title}</p>
+                          </div>
+                        </SelectItem>
+                      ))
+                    }
+                  </SelectContent>
+                </Select>
+              </div>
+
               <p className='mb-3 text-gray-600 dark:text-gray-200 text-sm flex gap-1'> 
                 <RiErrorWarningFill size={26} className='text-primary'/> Click the button to continue and proceed to the payment.
               </p>

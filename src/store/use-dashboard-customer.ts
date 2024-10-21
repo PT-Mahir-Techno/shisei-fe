@@ -31,7 +31,9 @@ export const useDashboardCustomer = create<DashboardCustomerType>((set, get) => 
     try {
       set({loading: true })
       const res = await api.get(`${baseUrl}/dashboard`)
-      console.log(res.data.package)
+      console.log('packageeeeee', res.data.package)
+      console.log('notificationnnnn', res.data.notification)
+      console.log('scheduleeeee', res.data.schedule)
       await set({packages: res.data.package, notification: res.data.notification, schedule: res.data.schedule, log: res.data.log, loading: false, success: true, error: false})
       return Promise.resolve()
     } catch (error) {

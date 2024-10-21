@@ -34,7 +34,7 @@ const ScheduleTransactionpage = () => {
 
   useEffect(() => {
     init()
-  }, [])
+  }, [prefix])
   
   const init = async() => {
     await getAllSchedule(`${baseUrl}${prefix}/calendar`)

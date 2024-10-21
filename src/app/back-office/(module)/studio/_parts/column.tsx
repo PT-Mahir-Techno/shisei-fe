@@ -98,7 +98,7 @@ export const columns: ColumnDef<any>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ActionButton model={row.original} originalLink={`${'/back-office/studio/'}${row.original.id}`}/>
+        <ActionButton model={row.original} originalLink={`${'/back-office/studio/'}${row.original.id}`} actionFor="studio"/>
       )
     },
   },
