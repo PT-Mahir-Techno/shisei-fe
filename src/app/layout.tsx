@@ -29,8 +29,11 @@ const noto_serif = Noto_Serif_JP({
 })
 
 export const metadata: Metadata = {
-  title: "Be Style",
+  title: "Be-Style",
   description: "The best place for therapy that helps you discovera better version of yourself",
+  icons: {
+    icon: '/icon.png', // /public path
+  },
 };
 
 export default function RootLayout({
