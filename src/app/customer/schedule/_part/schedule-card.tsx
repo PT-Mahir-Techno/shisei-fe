@@ -4,9 +4,8 @@ import { Button } from '@/components/ui/button'
 import CustomModal from '@/components/ui/custoom-dialog'
 import api from '@/lib/api'
 import { baseUrl } from '@/lib/variable'
-import { useSchedule } from '@/store/use-schedule'
 import Image from 'next/image'
-import React, { useEffect } from 'react'
+import React from 'react'
 import toast from 'react-hot-toast'
 
 import { RiCalendarScheduleFill, RiMapPin2Fill, RiTimeFill, RiUser3Fill } from 'react-icons/ri'
@@ -16,19 +15,6 @@ const ScheduleCard = ({data, fetch}:any) => {
   const dateNow = new Date()
   const [isOpen, setIsOpen] = React.useState(false)
   const [loadingCancel, setLoadingCancel] = React.useState(false)
-  const { getSettingSchedule } = useSchedule()
-  const [settingSchedule, setSettingSchedule] = React.useState<any>({})
-
-  useEffect(() => {
-    // getSettingSchedule()
-  }, [])
-
-  const init = async () => {
-    const res = await getSettingSchedule()
-    if (res.data) {
-      setSettingSchedule(res.data)
-    }
-  }
 
   const handleCancel = async () => {
     setLoadingCancel(true)
