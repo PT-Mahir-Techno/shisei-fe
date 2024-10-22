@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import api from '@/lib/api'
+import { useContactPage } from '@/store/use-contact-page'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import LoadingIcons from 'react-loading-icons'
@@ -22,6 +23,16 @@ const formSchema = z.object({
 const SendMessageSection = () => {
   const [loading, setLoading] = React.useState(false)
 
+  const {contact, getContacts} = useContactPage()
+
+  useEffect(() => {
+    init()
+  },[])
+
+  const init = async () => {
+    await getContacts()
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,7 +45,16 @@ const SendMessageSection = () => {
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     setLoading(true)
     try {
-      await api.post('/send-suggestion', data)
+      const {phone} = contact
+      
+      // wa.me 
+
+      const link = `https://wa.me/${phone}?text=${encodeURIComponent(data.message)}`
+      
+      // redirect to whatsapp
+      window.location.href = link
+
+      // await api.post('/send-suggestion', data)
       form.reset()
       toast.success('Message sent successfully')
       setLoading(false)
