@@ -27,7 +27,7 @@ const AdminPage = () => {
 
   React.useEffect(() => {
     getAllAdmin(`${baseUrl}${prefix}/admin`)
-  }, [])
+  }, [prefix])
 
   const handleDelete = async () => {
     await deleteAdmin(`${baseUrl}${prefix}/admin/${modalId}`)

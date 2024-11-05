@@ -17,6 +17,7 @@ type CustomerStoreType = {
   createCustomer: (url:string, data: any) => Promise<void>
   deleteCustomer: (url: string) => void
   updateCustomer: (url: string, data: any) => Promise<void>
+  searchCustomer: (url: string, data: any) => Promise<void>
 }
 
 const initState = {
@@ -96,5 +97,16 @@ export const useCustomer = create<CustomerStoreType>((set, get) => ({
       set({error: true, loading: false, success: false, errorData: error})
       return Promise.reject(error)
     }
+  },
+
+  searchCustomer: async (url: string, data: any) => {
+    try {
+      set({loading: true })
+      const res = await api.get(url, {params: data})
+      set({customers: res.data.data, loading: false, success: true, error: false, customerAttributes: res.data})
+    } catch (error) {
+      set({error: true, loading: false, success: false})
+    }
   }
+
 }))

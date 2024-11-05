@@ -43,7 +43,7 @@ export const columns: ColumnDef<AdminType>[] = [
         row.getValue("photo") 
         ? <Image alt="photo" src={row.getValue("photo")} width={60} height={60} className="rounded-full object-cover object-center"/>
       } */}
-      <Image alt="photo" src="/img/img_placeholder.png" width={60} height={60} className="rounded-full object-cover object-center"/>
+      <Image alt="photo" src={row.original.photo_url ?? "/img/img_placeholder.png "} width={60} height={60} className="rounded-full object-cover object-center w-14 h-14"/>
     </div>,
   },
   {

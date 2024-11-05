@@ -15,6 +15,7 @@ import CustomModal from "@/components/ui/custoom-dialog"
 import LoadingIcons from "react-loading-icons"
 import toast from "react-hot-toast"
 import { AuthContex } from "@/providers/auth-provider"
+import { Input } from "@/components/ui/input"
 
 const NoteUserPage = () => {
   const {authState} = React.useContext(AuthContex)
@@ -44,6 +45,18 @@ const NoteUserPage = () => {
     setIsOpenModal(false)
   }
 
+  const handleSearch = async (value: string) => {
+    try {
+      var url = `${baseUrl}${prefix}/user`
+      if (value) {
+        url += `?name=${value}` 
+      }
+      await getAllCustomer(url)
+    } catch (error:any) {
+      toast.error(error.data.message)      
+    }
+  }
+
   return (
     <>
       <div className="mb-3 flex items-center justify-between">
@@ -63,7 +76,11 @@ const NoteUserPage = () => {
           totalPages={customerAttributes.last_page}
           links= {customerAttributes.links}
           nextPage={getAllCustomer}
-        />
+        >
+          <div className="max-w-md">
+            <Input onChange={(e) => handleSearch(e.target.value) } type="text" placeholder="search by name" />
+          </div>
+        </CUstomDataTable>
       </div>
         
       <CustomSheets isOpen={isOpen} title={`Add ${title}`} close={() => setIsOpen(false)}>

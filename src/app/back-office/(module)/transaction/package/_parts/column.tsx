@@ -50,11 +50,11 @@ export const columns: ColumnDef<PaymentType>[] = [
         <div className="flex items-center gap-2">
           <div>
             <Image
-              src={row.original.user.photo_url && "/img/img_placeholder.png"}
+              src={row.original.user.photo_url ?? "/img/img_placeholder.png"}
               alt={row.original.user.name}
               width={50}
               height={50}
-              className="rounded-full"
+              className="rounded-full w-14 h-14"
             />
           </div>
           <div>

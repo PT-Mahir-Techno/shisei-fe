@@ -46,7 +46,6 @@ const SendMessageSection = () => {
     setLoading(true)
     try {
       const {phone} = contact
-      
       // wa.me 
 
       const link = `https://wa.me/${phone}?text=${encodeURIComponent(data.message)}`
