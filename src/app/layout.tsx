@@ -2,7 +2,7 @@ import "./styles/globals.css";
 import "./styles/animations.css";
 
 import type { Metadata } from "next";
-import { Noto_Serif_JP, Poppins } from "next/font/google";
+import { Domine, Noto_Serif_JP, Poppins } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { cn } from "@/lib/utils";
 import ProgressProviders from "@/providers/ProgressBarProvider";
@@ -20,10 +20,10 @@ const poppins = Poppins({
 });
 
 
-const noto_serif = Noto_Serif_JP({
+const noto_serif = Domine({
   subsets: ["latin"],
   variable: "--font-noto-serif",
-  weight: ["600", "700", ],
+  weight: ["600", "700"],
   display: 'swap', 
   adjustFontFallback: false
 })
