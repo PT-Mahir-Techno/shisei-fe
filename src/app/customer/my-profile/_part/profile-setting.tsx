@@ -38,6 +38,9 @@ const formSchema  = z.object({
   country: z.string().min(3, 'Country minimum 3 character').max(255, 'Country must be at most 255 characters'),
   address: z.string().max(255, 'Address must be at most 255 characters').min(3, 'Address must be at least 3 characters'),
   birth: z.date(),
+  height: z.string().max(255, 'height must be at most 255 characters').min(1, 'height is required'),
+  weight: z.string().max(255, 'weight must be at most 255 characters').min(1, 'weight is required'),
+  complaint: z.string().max(255, 'blood must be at most 255 characters').min(3, 'blood is required'),
 })
 
 const ProfileSetting = ({close}: profileSettingProps) => {
@@ -51,7 +54,14 @@ const ProfileSetting = ({close}: profileSettingProps) => {
   const handlesubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       const birth = format(data.birth, 'yyyy-MM-dd')
-      const newData = {...data, code_phone:user.code_phone, birth: birth}
+      const newData = {
+        ...data, 
+        code_phone:user.code_phone, 
+        birth: birth,
+        bb: data.weight,
+        tb: data.height,
+        keluhan: data.complaint
+      }
       await updateProfile('/dashboard/profile/update-profile', newData)
       await getPorfile('/dashboard/profile')
       toast.success('Profile successfuly updated')
@@ -61,7 +71,7 @@ const ProfileSetting = ({close}: profileSettingProps) => {
   }
 
   return (
-    <>
+    <div className='overflow-y-auto h-[80vh] px-4'>
       <div className='pb-2 mb-4 font-noto_serif font-bold text-xl text-gray-800 dark:text-gray-200 border-b border-gray-200'>
         Profile Setting
       </div>
@@ -196,7 +206,49 @@ const ProfileSetting = ({close}: profileSettingProps) => {
               </FormItem>
             )}
           />
+          <div className='flex gap-4'>
+            <FormField
+              control={form.control}
+              name="weight"
+              render={({ field }) => (
+                <FormItem className='w-full mb-4'>
+                  <Label>Weight (kg)</Label>
+                  <FormControl>
+                    <Input type='number' placeholder="enter your weight" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="height"
+              render={({ field }) => (
+                <FormItem className='w-full mb-4'>
+                  <Label>Height (cm)</Label>
+                  <FormControl>
+                    <Input type='number' placeholder="enter your height" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
+          <FormField
+            control={form.control}
+            name="complaint"
+            render={({ field }) => (
+              <FormItem className='mb-4'>
+                <Label htmlFor="name" className="mb-1 text-gray-600">Complaint</Label>
+                <FormControl>
+                  <Textarea  {...field} placeholder="Complaint" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
           <FormField
             control={form.control}
             name="address"
@@ -225,7 +277,7 @@ const ProfileSetting = ({close}: profileSettingProps) => {
 
         </form>
       </Form>
-    </>
+    </div>
   )
 }
 

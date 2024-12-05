@@ -11,7 +11,7 @@ import Image from "next/image"
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
  
-export const columns: ColumnDef<any>[] = [
+export const columns: ColumnDef<AdminType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -51,56 +51,6 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "category",
-    header: ({ column }) => {
-      return (
-        <div
-        className="flex items-center cursor-pointer"
-          // variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Category
-          <ArrowUpDown className="ml-3 h-4 w-4" />
-        </div>
-      )
-    },
-    cell: ({ row }) => {
-      return <div className="lowercase">{row.original?.category?.name ?? 'uncategorized'}</div>
-    },
-  },
-  {
-    accessorKey: "price",
-    header: ({ column }) => {
-      return (
-        <div
-        className="flex items-center cursor-pointer"
-          // variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price
-          <ArrowUpDown className="ml-3 h-4 w-4" />
-        </div>
-      )
-    },
-    cell: ({ row }) => <div className="font-bold text-foreground/70">{numberToIdr(row.getValue("price"))}</div>,
-  },
-  {
-    accessorKey: "total_credit",
-    header: ({ column }) => {
-      return (
-        <div
-        className="flex items-center cursor-pointer"
-          // variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Credit
-          <ArrowUpDown className="ml-3 h-4 w-4" />
-        </div>
-      )
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("total_credit")}</div>,
-  },
-  {
     accessorKey: "created_at",
     header: "Created at",
     cell: ({ row }) => {
@@ -114,7 +64,7 @@ export const columns: ColumnDef<any>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <ActionButton model={row.original} actionFor="package" isGenerate={true} />
+        <ActionButton model={row.original} actionFor="package"/>
       )
     },
   },

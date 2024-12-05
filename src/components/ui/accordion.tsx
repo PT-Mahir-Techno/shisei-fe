@@ -5,7 +5,7 @@ import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import { ChevronDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { RiTriangleFill } from "react-icons/ri"
+import { RiArrowDropDownLine, RiTriangleFill } from "react-icons/ri"
 
 const Accordion = AccordionPrimitive.Root
 
@@ -35,7 +35,7 @@ const AccordionTrigger = React.forwardRef<
       {...props}
     >
       {children}
-      <RiTriangleFill className="text-primary dark:text-slate-200 h-3 w-3 shrink-0 transition-transform duration-200" />
+      <RiArrowDropDownLine className="text-primary dark:text-slate-200 h-6 w-6 shrink-0 transition-transform duration-200" />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ))

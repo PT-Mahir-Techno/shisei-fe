@@ -3,7 +3,7 @@ const nextConfig = {
   // output: 'export',
   // distDir: 'dist',
   images: {
-    domains: ['thumbs.dreamstime.com', 'shisei-be.mahirtechno.my.id'],
+    domains: ['thumbs.dreamstime.com', 'shisei-be.mahirtechno.my.id', 'via.placeholder.com'],
   }
 };
 

@@ -28,7 +28,7 @@ const CustomerPage = () => {
 
   React.useEffect(() => {
     getAllCustomer(`${baseUrl}${prefix}/user`)
-  }, [])
+  }, [prefix, role])
 
   const handleDelete = async () => {
     await deleteCustomer(`${baseUrl}${prefix}/user/${modalId}`)

@@ -1,72 +1,71 @@
 import api from "@/lib/api";
 import { baseUrl } from "@/lib/variable";
-import { PackageType } from "@/types/package-type";
 import { create } from "zustand";
 
-type PackageStoreType = {
-  package: any
-  packages: PackageType[]
-  packageAttributes: object
+type ExtendDayStoreType = {
+  extendDay: any
+  extendDays: any[]
+  extendDayAttributes: object
   loading: boolean
   success: boolean
   error: boolean
   errorData: any
-  packageUrl: string
-  getAllPackage: (url: string) => void
-  getAllPackageNoPaginate: (url: string) => void
-  getSinglePackage: (url: string) => Promise<any>
-  createPackage: (url:string, data: any) => Promise<void>
-  deletePackage: (url: string) => void
-  updatePackage: (url: string, data: any) => Promise<void>
+  extendDayUrl: string
+  getAllExtendDay: (url: string) => void
+  getSingleExtendDay: (url: string) => Promise<void>
+  createExtendDay: (url: string, data: any) => void
+  deleteExtendDay: (url: string) => void
+  getAllExtendDayNoPaginate: (url: string) => void
+  updateExtendDay: (url: string, data: any) => void
 }
 
 const initState = {
-  package : {},
-  packages: [],
-  packageAttributes: {},
+  extendDay : {},
+  extendDays: [],
+  extendDayAttributes: {},
   success: false,
   error: false,
   errorData: {},
   loading: false,
-  packageUrl: ''
+  extendDayUrl: ''
 }
 
 
-export const usePackage = create<PackageStoreType>((set, get) => ({
+export const useExtendDay = create<ExtendDayStoreType>((set, get) => ({
   ...initState, 
-  getAllPackage: async (url: string) => {
+  getAllExtendDay: async (url: string) => {
     try {
-      set({loading: true, packageUrl: url})
+      set({loading: true, extendDayUrl: url})
       const res = await api.get(url)
-      set({packages: res.data.data, loading: false, success: true, packageAttributes: res.data})
+      set({extendDays: res.data.data, loading: false, success: true, extendDayAttributes: res.data})
     } catch (error) {
       set({error: true, loading: false, success: false})
     }
   },
-  getAllPackageNoPaginate: async (url: string) => {
+  getAllExtendDayNoPaginate: async (url: string) => {
     try {
-      set({loading: true, packageUrl: url})
+      set({loading: true, extendDayUrl: url})
       const res = await api.get(url)
-      set({packages: res.data, loading: false, success: true})
+      set({extendDays: res.data, loading: false, success: true, extendDayAttributes: res.data})
     } catch (error) {
       set({error: true, loading: false, success: false})
     }
   },
-  getSinglePackage: async (url: string) => {
+  getSingleExtendDay: async (url: string) => {
     try {
       set({loading: true })
       const res = await api.get(url)
-      set({package: res.data, loading: false, success: true })
+      set({extendDay: res.data, loading: false, success: true })
       return Promise.resolve(res.data)
     } catch (error) {
       set({ error: true, loading: false, success: false })
       return Promise.reject(error)
     }
   },
-  createPackage:async (url:string, data: any) => {
+  createExtendDay:async (url:string ,data: any) => {
     try {
       set({loading: true })
-      await api.post(`${baseUrl}${url}/membership`, data)
+      await api.post(`${baseUrl}${url}/extend-day`, data)
       set({loading: false, success: true })
       return Promise.resolve()
     } catch (error) {
@@ -74,7 +73,7 @@ export const usePackage = create<PackageStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  deletePackage: async (url: string) => {
+  deleteExtendDay: async (url: string) => {
     try {
       set({loading: true })
       await api.delete(url)
@@ -83,7 +82,7 @@ export const usePackage = create<PackageStoreType>((set, get) => ({
       set({error: true, loading: false, success: false })
     }
   },
-  updatePackage: async (url: string, data: any) => {
+  updateExtendDay: async (url: string, data: any) => {
     try {
       set({loading: true })
       await api.put(url, data)

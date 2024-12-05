@@ -1,72 +1,71 @@
 import api from "@/lib/api";
 import { baseUrl } from "@/lib/variable";
-import { PackageType } from "@/types/package-type";
 import { create } from "zustand";
 
-type PackageStoreType = {
-  package: any
-  packages: PackageType[]
-  packageAttributes: object
+type PackageCategoryStoreType = {
+  packageCategory: any
+  packageCategorys: any[]
+  packageCategoryAttributes: object
   loading: boolean
   success: boolean
   error: boolean
   errorData: any
-  packageUrl: string
-  getAllPackage: (url: string) => void
-  getAllPackageNoPaginate: (url: string) => void
-  getSinglePackage: (url: string) => Promise<any>
-  createPackage: (url:string, data: any) => Promise<void>
-  deletePackage: (url: string) => void
-  updatePackage: (url: string, data: any) => Promise<void>
+  packageCategoryUrl: string
+  getAllPackageCategory: (url: string) => void
+  getSinglePackageCategory: (url: string) => Promise<any>
+  createPackageCategory: (url:string, data: any) => Promise<void>
+  deletePackageCategory: (url: string) => void
+  updatePackageCategory: (url: string, data: any) => Promise<void>
+  getAllPackageCategoryNoPaginate: (url: string) => void
 }
 
 const initState = {
-  package : {},
-  packages: [],
-  packageAttributes: {},
+  packageCategory : {},
+  packageCategorys: [],
+  packageCategoryAttributes: {},
   success: false,
   error: false,
   errorData: {},
   loading: false,
-  packageUrl: ''
+  packageCategoryUrl: ''
 }
 
 
-export const usePackage = create<PackageStoreType>((set, get) => ({
+export const usePackageCategory = create<PackageCategoryStoreType>((set, get) => ({
   ...initState, 
-  getAllPackage: async (url: string) => {
+  getAllPackageCategory: async (url: string) => {
     try {
-      set({loading: true, packageUrl: url})
+      set({loading: true, packageCategoryUrl: url})
       const res = await api.get(url)
-      set({packages: res.data.data, loading: false, success: true, packageAttributes: res.data})
+      set({packageCategorys: res.data.data, loading: false, success: true, packageCategoryAttributes: res.data})
     } catch (error) {
       set({error: true, loading: false, success: false})
     }
   },
-  getAllPackageNoPaginate: async (url: string) => {
+  getAllPackageCategoryNoPaginate: async (url: string) => {
     try {
-      set({loading: true, packageUrl: url})
+      set({loading: true, packageCategoryUrl: url})
       const res = await api.get(url)
-      set({packages: res.data, loading: false, success: true})
+      set({packageCategorys: res.data, loading: false, success: true, packageCategoryAttributes: res.data})
     } catch (error) {
       set({error: true, loading: false, success: false})
     }
   },
-  getSinglePackage: async (url: string) => {
+  getSinglePackageCategory: async (url: string) => {
     try {
       set({loading: true })
       const res = await api.get(url)
-      set({package: res.data, loading: false, success: true })
+      set({packageCategory: res.data, loading: false, success: true })
       return Promise.resolve(res.data)
     } catch (error) {
       set({ error: true, loading: false, success: false })
       return Promise.reject(error)
     }
   },
-  createPackage:async (url:string, data: any) => {
+  createPackageCategory:async (url:string, data: any) => {
     try {
       set({loading: true })
-      await api.post(`${baseUrl}${url}/membership`, data)
+      await api.post(`${baseUrl}${url}/category`, data)
       set({loading: false, success: true })
       return Promise.resolve()
     } catch (error) {
@@ -74,7 +73,7 @@ export const usePackage = create<PackageStoreType>((set, get) => ({
       return Promise.reject(error)
     }
   },
-  deletePackage: async (url: string) => {
+  deletePackageCategory: async (url: string) => {
     try {
       set({loading: true })
       await api.delete(url)
@@ -83,7 +82,7 @@ export const usePackage = create<PackageStoreType>((set, get) => ({
       set({error: true, loading: false, success: false })
     }
   },
-  updatePackage: async (url: string, data: any) => {
+  updatePackageCategory: async (url: string, data: any) => {
     try {
       set({loading: true })
       await api.put(url, data)

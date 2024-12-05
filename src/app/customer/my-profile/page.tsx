@@ -127,6 +127,21 @@ const MyProfileCustomerPage = () => {
                   <td className='py-1.5 text-gray-500 dark:text-gray-200'>:</td>
                   <td className='py-1.5 font-semibold'>Customer</td>
                 </tr>
+                <tr>
+                  <td className='py-1.5 text-gray-500 dark:text-gray-200'>Height</td>
+                  <td className='py-1.5 text-gray-500 dark:text-gray-200'>:</td>
+                  <td className='py-1.5 font-semibold'>{ user?.tb ?? '-'}</td>
+                </tr>
+                <tr>
+                  <td className='py-1.5 text-gray-500 dark:text-gray-200'>Weight</td>
+                  <td className='py-1.5 text-gray-500 dark:text-gray-200'>:</td>
+                  <td className='py-1.5 font-semibold'>{ user?.bb ?? '-' }</td>
+                </tr>
+                <tr>
+                  <td className='py-1.5 text-gray-500 dark:text-gray-200'>Complain</td>
+                  <td className='py-1.5 text-gray-500 dark:text-gray-200'>:</td>
+                  <td className='py-1.5 font-semibold'>{ user?.keluhan ?? '-' }</td>
+                </tr>
               </tbody>
             </table>
           </div>

@@ -1,15 +1,16 @@
 import { Button } from '@/components/ui/button'
 import { numberToIdr } from '@/lib/utils'
 import React from 'react'
-import { RiCalendarScheduleLine, RiMapPin2Line, RiRefundLine } from 'react-icons/ri'
+import { RiCalendarScheduleLine, RiMapPin2Line, RiPriceTag3Fill, RiPriceTagLine, RiRefundLine } from 'react-icons/ri'
 
 type PaclageCardProps = {
   selected?: boolean
   select?: () => void
   data: any
+  hiddenSelect: boolean
 }
 
-const PackageCard = ({selected, select, data}: PaclageCardProps) => {
+const PackageCard = ({selected, select, data, hiddenSelect=false}: PaclageCardProps) => {
 
   return (
     <>
@@ -27,7 +28,7 @@ const PackageCard = ({selected, select, data}: PaclageCardProps) => {
             <RiRefundLine className='text-primary' size={26}/>
             <p className='text-gray-600'>{data?.total_credit} Credit</p>
           </div>
-          <div className='flex items-center gap-2 mb-12'>
+          <div className='flex items-center gap-2 mb-3'>
             <RiMapPin2Line className='text-primary' size={26}/>
             <p className='text-gray-600'>
               {
@@ -37,13 +38,27 @@ const PackageCard = ({selected, select, data}: PaclageCardProps) => {
               }
             </p>
           </div>
-          <div>
-            {
-              !selected
-              ? <Button onClick={select} size={"lg"} className='w-full'>Select Package</Button>
-              : <Button size={"lg"} className='w-full bg-gray-800 hover:bg-gray-600'>Selected</Button>
-            }
+          <div className='flex items-center gap-2 mb-12'>
+            <RiPriceTagLine className='text-primary' size={26}/>
+            <p className='text-gray-600'>
+              {
+                data?.category === null
+                ? "All category"
+                : data?.category?.name
+              }
+            </p>
           </div>
+          {
+            !hiddenSelect && (
+              <div>
+                {
+                  !selected
+                  ? <Button onClick={select} size={"lg"} className='w-full'>Select Package</Button>
+                  : <Button size={"lg"} className='w-full bg-gray-800 hover:bg-gray-600'>Selected</Button>
+                }
+              </div>
+            )
+          }
         </div>
       </div>
     </>

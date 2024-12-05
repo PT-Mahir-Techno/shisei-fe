@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { array } from "zod"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -182,4 +183,8 @@ export const GroupPermission = (permision:any) => {
 
 export const PluckValue = (array:any[], key:string) => {
   return array.map(item => item[key])
+}
+
+export const transformToSelect = (array:any[]) => {
+  return array.map(item => ({value: item.id, label: item.name}))
 }

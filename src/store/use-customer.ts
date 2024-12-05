@@ -13,6 +13,7 @@ type CustomerStoreType = {
   errorData: any
   customerUrl: string
   getAllCustomer: (url: string) => void
+  getAllCustomerNoPaginate: (url: string) => void
   getSingleCustomer: (url: string) => Promise<void>
   createCustomer: (url:string, data: any) => Promise<void>
   deleteCustomer: (url: string) => void
@@ -39,6 +40,16 @@ export const useCustomer = create<CustomerStoreType>((set, get) => ({
       set({loading: true, customerUrl: url})
       const res = await api.get(url)
       set({customers: res.data.data, loading: false, success: true, error: false, customerAttributes: res.data})
+    } catch (error) {
+      set({error: true, loading: false, success: false})
+    }
+  },
+
+  getAllCustomerNoPaginate: async (url: string) => {
+    try {
+      set({loading: true, customerUrl: url})
+      const res = await api.get(url)
+      set({customers: res.data, loading: false, success: true, error: false, customerAttributes: res.data})
     } catch (error) {
       set({error: true, loading: false, success: false})
     }

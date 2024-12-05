@@ -2,6 +2,8 @@ import { RiAccountPinBoxFill, RiCalendar2Fill, RiDashboardFill, RiFileList2Fill,
 
 export const baseUrl:string = "https://shisei-be.mahirtechno.my.id/api";
 
+export const appUrl:string  = "https://be-style.mahirtechno.my.id/"
+
 export const menus = [
   {
     "title": "Dashboard",
@@ -26,11 +28,11 @@ export const menus = [
         "name" : "schedule",
         "path": "/back-office/calendar/schedule",
       },
-      {
-        "title": "User Notes",
-        "name" : "notes",
-        "path": "/back-office/calendar/note",
-      }
+      // {
+      //   "title": "User Notes",
+      //   "name" : "notes",
+      //   "path": "/back-office/calendar/note",
+      // }
     ]
   },
   {
@@ -45,9 +47,19 @@ export const menus = [
         "path": "/back-office/booking/package",
       },
       {
+        "title": "Package Category",
+        "name" : "package-category",
+        "path": "/back-office/booking/package-category",
+      },
+      {
         "title": "Validity Period",
         "name" : "validityperoid",
         "path": "/back-office/booking/validity-period",
+      },
+      {
+        "title": "Extend Day",
+        "name" : "extend-day",
+        "path": "/back-office/booking/extend-day",
       }
     ]
   },
@@ -91,7 +103,7 @@ export const menus = [
         "path": "/back-office/user/instructor",
       },
       {
-        "title": "User",
+        "title": "Customer",
         "name" : "user",
         "path": "/back-office/user/customer",
       },

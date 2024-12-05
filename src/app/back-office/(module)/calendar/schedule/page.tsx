@@ -238,8 +238,8 @@ const SchedulePage = () => {
         <ScheduleForm date={selectedDate} close={() => setIsOpen(false)} />
       </CustomModal>
 
-      <CustomModal open={isShowDetail} title={`Detail ${title}`} onOpenChange={() => setIsShowDetail(false)}
-        size='md:max-w-5xl'
+      <CustomModal open={isShowDetail} title={``} onOpenChange={() => setIsShowDetail(false)}
+        size='md:max-w-2xl'
       >
         <EventDetail id={eventId} close={() => setIsShowDetail(false)} />
       </CustomModal>

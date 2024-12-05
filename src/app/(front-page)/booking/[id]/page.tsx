@@ -31,6 +31,7 @@ const DetailBookingPage = () => {
   const [isModalSuccess, setIsModalSuccess] = React.useState(false)
   const [loadingBooking, setLoadingBooking] = React.useState(false)
   const [isBooked, setIsBooked] = React.useState(false)
+  const [isNotelegible, setIsNotelegible] = React.useState(false)
 
   const param = useParams()
   const router = useRouter()
@@ -50,22 +51,32 @@ const DetailBookingPage = () => {
   const initState = async () => {
     try {
       const res = await api.get(`${baseUrl}/dashboard/package`)
-      // if (schedule.calendar){
-      //   schedule.calendar.map((item:any, key:any) => {
-      //     if (item.user_id == user.id){
-      //       setIsBooked(true)
-      //     }
-      //   })
-      // }
-
+      if (schedule.calendar){
+        schedule.calendar.map((item:any, key:any) => {
+          if (item.user_id == user.id){
+            setIsBooked(true)
+          }
+        })
+      }
       setPackages(res.data)
     } catch (error:any) {
     }
   }
 
-  const handlePackageSelect = (data:any) =>  {
-    const find = packages.find((item:any) => item.membership_id === data)
-    setPackageSelected(find)
+  const handlePackageSelect = async (data:any) =>  {
+    setIsNotelegible(false)
+    const find = packages.find((item:any) => item.id === data)
+    const checkmembershipurl = `${baseUrl}/dashboard/schedule-category-check`
+      const resmem:any = await api.post(checkmembershipurl, {
+        'schedule_id': id,
+        'payment_id': find.payment_id
+      })
+
+      if (!resmem.check){
+        setIsNotelegible(true)
+      }else{
+        setPackageSelected(find)
+      }
   }
   
   const handleBookingSchedule =  async () =>{
@@ -123,12 +134,12 @@ const DetailBookingPage = () => {
           {/* <p className='text-sm text-primary mb-4'>2 classes remaining</p> */}
           
 
-          {/* {
-            authState._is_auth && authState._auth && authState._avaibility && packages.length <= 0 
+          {
+            authState._is_auth && authState._auth && authState._avaibility && packages.length > 0  && isNotelegible
             && (
-              <div className='text-sm text-destructive mb-12'>You do not have an eligible package, Buy a package to continue booking.</div>
+              <div className='font-bold text-destructive mb-12'>You do not have an eligible package, Buy a package to continue booking. <span className='text-gray-700'><Link href={'/package'}>Buy Package Here</Link></span></div>
             )
-          } */}
+          }
         
           {
             authState._is_auth && authState._auth && authState._avaibility && packages.length > 0 ?
@@ -260,7 +271,7 @@ const DetailBookingPage = () => {
                                 </SelectTrigger>
                                 <SelectContent>
                                   {packages.map((item:any, index:number) => (
-                                    <SelectItem key={index} value={item.membership_id}>{item.name} | {item.credit_left} credit left </SelectItem>
+                                    <SelectItem key={index} value={item.id}>{item.name} | {item.credit_left} credit left </SelectItem>
                                   ))}
                                 </SelectContent>
                               </Select>

@@ -25,12 +25,14 @@ import { useSheet } from '@/store/use-sheet'
 import toast from 'react-hot-toast'
 import LoadingState from '@/components/ui/loading-state'
 import { AuthContex } from '@/providers/auth-provider'
+import { usePackageCategory } from '@/store/use-package-category'
 
 const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
   const {authState} = useContext(AuthContex)
   const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
   
   const {locations, getAllLocationNoPaginate, loading:loadingLocation} = useLocation()
+  const {packageCategorys, getAllPackageCategoryNoPaginate} = usePackageCategory()
   const {staffs, getAllStaffNoPaginate, loading:loadingStaff} = useStaff()
   const {createSchedule, loading, getScheduleConverted, getSingleSchedule, updateSchedule} = useSchedule()
   const {modelId} = useSheet()
@@ -38,6 +40,7 @@ const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
   useEffect(() => {
     getAllLocationNoPaginate(`${baseUrl}${prefix}/location?type=nopaginate`)
     getAllStaffNoPaginate(`${baseUrl}${prefix}/staff?type=nopaginate`)
+    getAllPackageCategoryNoPaginate(`${baseUrl}${prefix}/category?type=nopaginate`)
   }, [])
 
   useEffect(() => {
@@ -79,6 +82,8 @@ const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
       staff_id: '',
       max_order: '',
       color: '',
+      category_id: '',
+      credit: 1
     }
   })
 
@@ -102,6 +107,8 @@ const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
       formData.append('staff_id', data.staff_id)
       formData.append('max_order', data.max_order.toString())
       formData.append('color', data.color)
+      formData.append('category_id', data.category_id)
+      formData.append('credit', data.credit.toString())  
 
       if (data.photo[0]){
         formData.append('image', data.photo[0])
@@ -147,7 +154,7 @@ const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
                 )}
               />
 
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
                   <FormField
                     control={form.control}
                     name="max_order"
@@ -169,6 +176,45 @@ const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
                         <Label>Photo</Label>
                         <FormControl>
                           <Input accept='image/*' {...form.register('photo')} type='file' />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="category_id"
+                    render={({ field }) => (
+                      <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                        <FormItem>
+                          <Label htmlFor="valid_days">Category</Label>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="--select one --" />
+                                </SelectTrigger>
+                              </FormControl>
+                            <SelectContent>
+                              {
+                                packageCategorys?.map((ctg: any) => (
+                                  <SelectItem key={ctg.id} value={ctg.id}>{ctg.name}</SelectItem>
+                                ))
+                              }
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      </div>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="credit"
+                    render={({ field }) => (
+                      <FormItem className='w-full mb-4'>
+                        <Label>Credit</Label>
+                        <FormControl>
+                          <Input type='number' placeholder="Credit" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

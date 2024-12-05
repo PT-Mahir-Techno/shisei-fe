@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useSheet } from "@/store/use-sheet"
 import { MoreHorizontal } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { RiCalendarCheckFill, RiDeleteBin5Fill, RiEdit2Fill, RiEyeFill, RiVerifiedBadgeFill } from "react-icons/ri"
+import { RiCalendarCheckFill, RiDeleteBin5Fill, RiEdit2Fill, RiEyeFill, RiLink, RiVerifiedBadgeFill } from "react-icons/ri"
 import { useModal } from "@/store/use-modal"
 import Link from "next/link"
 import api from "@/lib/api"
@@ -15,12 +15,12 @@ import toast from "react-hot-toast"
 import { useCustomer } from "@/store/use-customer"
 import { CheckAvaibilityAction } from "@/lib/utils"
 
-function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', isCanVerify=false, isDelete=true, actionFor=null} : any) {
+function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', isCanVerify=false, isDelete=true, actionFor=null, isGenerate=false} : any) {
   const {authState} = useContext(AuthContex)
   const {_prefix:prefix, _permision:permision, _avaibility:role} = authState
 
   const { setIsOpen, setModelId, setMode } = useSheet()
-  const { setIsOpen: setIsOpenModal, setModalId, setIsOpenDay } = useModal()
+  const { setIsOpen: setIsOpenModal, setModalId, setIsOpenDay, setIsGenerate } = useModal()
   const { getAllCustomer } = useCustomer()
 
   const handleClickDelete = (id:string) => {
@@ -37,6 +37,11 @@ function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', 
     setIsOpen(true)
     setModelId(id)
     setMode('edit')
+  }
+
+  const handleGenerateLink = (id:string) => {
+    setIsGenerate(true)
+    setModalId(id)
   }
 
   const handleVerify = async (id:string) => {
@@ -143,6 +148,14 @@ function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', 
                   </DropdownMenuItem>
                 }
               </div>
+            }
+
+            {
+              isGenerate && 
+              <DropdownMenuItem onClick={() => handleGenerateLink(model.id)} className="cursor-pointer">
+                <RiLink size={16} className="mr-2 text-primary" />
+                Private Order
+              </DropdownMenuItem>
             }
 
         </DropdownMenuContent>

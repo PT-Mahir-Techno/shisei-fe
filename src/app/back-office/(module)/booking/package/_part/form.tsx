@@ -9,6 +9,7 @@ import { baseUrl } from '@/lib/variable'
 import { AuthContex } from '@/providers/auth-provider'
 import { useLocation } from '@/store/use-location'
 import { usePackage } from '@/store/use-package'
+import { usePackageCategory } from '@/store/use-package-category'
 import { useSheet } from '@/store/use-sheet'
 import { usePeriod } from '@/store/use-validity-period'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -24,6 +25,8 @@ export const formSchema = z.object({
   duration_id: z.string().min(1, {message: "Duration is required"}),
   total_credit: z.number().min(1, {message: "Minimum 1 character"}).max(999999999999, {message: "Maximum 100 characters"}),
   location_id: z.optional(z.string()),
+  is_private: z.string().min(1, {message: "Minimum 1 character"}).max(255, {message: "Maximum 255 characters"}),
+  category_id: z.string().min(1, {message: "Category is required"}),
 })
 
 const PackageForm = () => {
@@ -33,6 +36,7 @@ const PackageForm = () => {
 
   const {locations, getAllLocationNoPaginate} = useLocation()
   const {periods, getAllPeriodNoPaginate} = usePeriod()
+  const {packageCategorys, getAllPackageCategoryNoPaginate} = usePackageCategory()
   const {loading, createPackage, getAllPackage, success, errorData, packageUrl, getSinglePackage, updatePackage} = usePackage()
   const {setIsOpen, mode, modelId} = useSheet()
 
@@ -53,6 +57,10 @@ const PackageForm = () => {
     defaultValues: {
       name: "",
       duration_id: "",
+      total_credit: 0,
+      location_id: "",
+      is_private: "",
+      category_id: "",
     },
   })
 
@@ -63,6 +71,7 @@ const PackageForm = () => {
     }
     getAllLocationNoPaginate(`${baseUrl}${prefix}/location?type=nopaginate`)
     getAllPeriodNoPaginate(`${baseUrl}${prefix}/duration?type=nopaginate`)
+    getAllPackageCategoryNoPaginate(`${baseUrl}${prefix}/category?type=nopaginate`)
   }, [])
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -162,6 +171,55 @@ const PackageForm = () => {
 
             <FormField
               control={form.control}
+              name="is_private"
+              render={({ field }) => (
+                <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                  <FormItem>
+                    <Label htmlFor="valid_days">Make It Private</Label>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="--select one --" />
+                          </SelectTrigger>
+                        </FormControl>
+                      <SelectContent>
+                        <SelectItem value='1'>YES</SelectItem>
+                        <SelectItem value='0'>NO</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                </div>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="category_id"
+              render={({ field }) => (
+                <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                  <FormItem>
+                    <Label htmlFor="valid_days">Category</Label>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="--select one --" />
+                          </SelectTrigger>
+                        </FormControl>
+                      <SelectContent>
+                        {
+                          packageCategorys?.map((ctg: any) => (
+                            <SelectItem key={ctg.id} value={ctg.id}>{ctg.name}</SelectItem>
+                          ))
+                        }
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                </div>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="location_id"
               render={({ field }) => (
                 <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
@@ -200,6 +258,8 @@ const PackageForm = () => {
           </div>
         </form>
       </Form>
+
+      
     </>
   )
 }
