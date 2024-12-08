@@ -58,7 +58,7 @@ const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
         const date = `${dateSplited[2]}/${dateSplited[1]}/${dateSplited[0]}`
     
         form.reset({
-          location_id: res.location.id,
+          location_id: res?.location?.id ,
           staff_id: res.staff.id,
           date: new Date(date),
           max_order: res.max_order,
@@ -66,6 +66,7 @@ const ScheduleForm = ({date, close} : {date:any, close: () => void}) => {
         })
       }
     } catch (error:any) {
+      console.log(error)
       toast.error(error.data.message)
     }
   }
