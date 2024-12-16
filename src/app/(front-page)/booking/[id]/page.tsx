@@ -137,7 +137,7 @@ const DetailBookingPage = () => {
           {
             authState._is_auth && authState._auth && authState._avaibility && packages.length > 0  && isNotelegible
             && (
-              <div className='font-bold text-destructive mb-12'>You do not have an eligible package, Buy a package to continue booking. <span className='text-gray-700'><Link href={'/package'}>Buy Package Here</Link></span></div>
+              <div className='font-bold text-destructive mb-12'>You do not have an eligible package, Buy a package to continue booking. <span className='text-gray-700'><Link href={'/package'}><Button size={"sm"} className='text-xs'>Buy Package Here</Button></Link></span></div>
             )
           }
         

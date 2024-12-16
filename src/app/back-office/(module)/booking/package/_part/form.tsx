@@ -97,10 +97,9 @@ const PackageForm = () => {
   }
 
   return (
-    <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <div>
+          <div className='overflow-y-auto h-[80vh] p-1 overflow-scroll'>
             <FormField
               control={form.control}
               name="name"
@@ -258,9 +257,6 @@ const PackageForm = () => {
           </div>
         </form>
       </Form>
-
-      
-    </>
   )
 }
 

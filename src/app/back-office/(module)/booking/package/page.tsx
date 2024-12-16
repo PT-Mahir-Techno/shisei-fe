@@ -105,7 +105,7 @@ const PackagePage = () => {
           }
           <div>
             <Link href={"/back-office/booking/package/create-order"}>
-              <Button> <RiShoppingBag2Fill className="mr-2"/> Create Order</Button>
+              <Button className='bg-green-500 text-white hover:bg-green-800'> <RiShoppingBag2Fill className="mr-2"/> Create Order</Button>
             </Link>
           </div>
         </div>

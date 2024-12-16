@@ -4,7 +4,7 @@ import { ModeToggle } from '@/components/mode-toggle'
 import {  DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
 import { DropdownMenu, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
 import React, { useContext } from 'react'
-import { RiArrowDropDownLine, RiDashboardFill, RiFullscreenExitLine, RiFullscreenFill, RiLogoutBoxRFill, RiUser3Fill } from 'react-icons/ri'
+import { RiArrowDropDownLine, RiDashboardFill, RiFullscreenExitLine, RiFullscreenFill, RiHome2Fill, RiHome3Fill, RiHome4Fill, RiLogoutBoxRFill, RiUser3Fill } from 'react-icons/ri'
 import CustomModal from '../ui/custoom-dialog'
 import { Button } from '../ui/button'
 import { useRouter } from 'next/navigation'
@@ -13,6 +13,8 @@ import { useProfile } from '@/store/use-profile'
 import Cookies from 'js-cookie'
 import { AuthContex } from '@/providers/auth-provider'
 import LoadingIcons from 'react-loading-icons'
+import { Icon } from 'lucide-react'
+import Link from 'next/link'
 
 const NavbarBo = () => {
 
@@ -78,6 +80,12 @@ const NavbarBo = () => {
   return (
     <>
       <nav className='w-full min-h-[80px] bg-background shadow flex items-center px-8 justify-between'>
+        <Link href={"/"}>
+          <Button variant={'secondary'}> 
+            <RiHome4Fill size={18} className='mr-3'/>
+            Back To Home
+          </Button>
+        </Link>
         <div className='w-1/4'>
         </div>
         <div className='flex items-center gap-4'>

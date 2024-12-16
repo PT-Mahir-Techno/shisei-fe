@@ -140,6 +140,11 @@ export const menus = [
         "name" : "templatemessage",
         "path": "/back-office/setting/message",
       },
+      {
+        "title": "Template Reminder",
+        "name" : "templatereminder",
+        "path": "/back-office/setting/message",
+      },
     ]
   },
   {
