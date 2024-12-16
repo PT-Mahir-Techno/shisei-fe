@@ -45,8 +45,8 @@ const ReminderMessagePage = () => {
     <>
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <h2 className="font-noto_serif font-bold text-2xl text-gray-800">Reminder Reminder Notification</h2>
-          <p className="text-gray-500 text-sm">List Reminder Reminder Notification</p>
+          <h2 className="font-noto_serif font-bold text-2xl text-gray-800">Reminder Notification</h2>
+          <p className="text-gray-500 text-sm">List Reminder Notification</p>
         </div>
         {
           CheckAvaibilityAction(permision,'create','remindermessage', role) && prefix &&
