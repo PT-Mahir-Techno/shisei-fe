@@ -4,7 +4,7 @@ import { ModeToggle } from '@/components/mode-toggle'
 import {  DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
 import { DropdownMenu, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
 import React, { useContext } from 'react'
-import { RiArrowDropDownLine, RiDashboardFill, RiFullscreenExitLine, RiFullscreenFill, RiHome2Fill, RiHome3Fill, RiHome4Fill, RiLogoutBoxRFill, RiUser3Fill } from 'react-icons/ri'
+import { RiArrowDropDownLine, RiCloseLargeFill, RiDashboardFill, RiFullscreenExitLine, RiFullscreenFill, RiHome2Fill, RiHome3Fill, RiHome4Fill, RiLogoutBoxRFill, RiMenuFill, RiUser3Fill } from 'react-icons/ri'
 import CustomModal from '../ui/custoom-dialog'
 import { Button } from '../ui/button'
 import { useRouter } from 'next/navigation'
@@ -25,6 +25,7 @@ const NavbarBo = () => {
   const { logout, loading } = useAuth()
   const router = useRouter()
   const {authState, setAuthState} = useContext(AuthContex)
+  const [isHidden, setIsHidden] = React.useState(false)
 
 
   const handleLogout = async () => {
@@ -78,25 +79,33 @@ const NavbarBo = () => {
   }
 
   return (
-    <>
+    <div className='fixed right-0 top-0 left-0 w-full'>
       <nav className='w-full min-h-[80px] bg-background shadow flex items-center px-8 justify-between'>
-        <Link href={"/"}>
+        <div className='lg:hidden md:hidden'>
+          {
+            isHidden
+            ? <RiCloseLargeFill onClick={() => setIsHidden(false)} className='text-3xl text-gray-900 cursor-pointer lg:hidden md:hidden' />
+            : <RiMenuFill onClick={() => setIsHidden(true)} className='text-3xl text-gray-900 cursor-pointer lg:hidden md:hidden' />
+          }
+        </div>
+        {/* <Link href={"/"} className={`hidden md:flex`}>
           <Button variant={'secondary'}> 
             <RiHome4Fill size={18} className='mr-3'/>
             Back To Home
           </Button>
-        </Link>
+        </Link> */}
         <div className='w-1/4'>
         </div>
         <div className='flex items-center gap-4'>
-
-          {
-            !isFUllScreen
-            ? <RiFullscreenExitLine onClick={HandleFullScreen} className='text-gray-900 group-hover:text-primary transition-all duration-200 cursor-pointer' size={24}/>
-            : <RiFullscreenFill onClick={HandleFullScreen} className='text-gray-900 group-hover:text-primary transition-all duration-200 cursor-pointer' size={24}/>
-          }
-          
+          <div className='hidden md:flex items-center gap-4'>
+            {
+              !isFUllScreen
+              ? <RiFullscreenExitLine onClick={HandleFullScreen} className='text-gray-900 group-hover:text-primary transition-all duration-200 cursor-pointer' size={24}/>
+              : <RiFullscreenFill onClick={HandleFullScreen} className='text-gray-900 group-hover:text-primary transition-all duration-200 cursor-pointer' size={24}/>
+            }
           <ModeToggle />
+          </div>
+          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className='flex gap-3 items-center cursor-pointer border border-gray-300 p-1 box-border rounded-full'>
@@ -161,7 +170,19 @@ const NavbarBo = () => {
             </div>
           </div>
       </CustomModal>
-    </>
+
+      <div id='mobile-nav' className={`lg:hidden md:hidden bg-background z-10 transition-all duration-200 box-content overflow-hidden ${isHidden ? 'translate-x-0 translate-y-0 p-2 w-full h-screen' : '-translate-x-[100%] w-0 h-0'}`}>
+        <ul className='p-4 px-8 flex flex-col items-end gap-10 mt-4 text-foreground font-noto_serif'>
+          {/* <li>
+            <Link onClick={hiddenMenu} href="/" className='flex gap-2 items-center'>
+              Home
+              <RiHome5Fill className='text-xl'/>
+            </Link>
+          </li> */}
+        </ul>
+      </div>
+
+    </div>
   )
 }
 

@@ -15,7 +15,7 @@ import { CheckAvaibilityAction } from '@/lib/utils'
 
 const CreditActionButton = ({row, actionFor}:any) => {
   
-    const {setIsOpen, setModalId} = useModal()
+    const {setIsOpen, setModalId, setModalReminder} = useModal()
     const {setIsOpen:detailOpen, setModelId} = useSheet()
 
     const {authState} = useContext(AuthContex)
@@ -32,15 +32,18 @@ const CreditActionButton = ({row, actionFor}:any) => {
     }
 
     const SendReminder = async (data:any) => {
-      try {
-        const payload = {
-          user_id: data
-        }
-        await api.post(`${baseUrl}${prefix}/history-membership/send-reminder`, payload)
-        toast.success("Reminder has been sent")
-      } catch (error:any) {
-        toast.error(error.data.message)
-      } 
+      // try {
+      //   const payload = {
+      //     user_id: data
+      //   }
+      //   await api.post(`${baseUrl}${prefix}/history-membership/send-reminder`, payload)
+      //   toast.success("Reminder has been sent")
+      // } catch (error:any) {
+      //   toast.error(error.data.message)
+      // } 
+
+      setModalId(data)
+      setModalReminder(true)
     }
 
   return (
@@ -65,17 +68,17 @@ const CreditActionButton = ({row, actionFor}:any) => {
           CheckAvaibilityAction(permision, 'reminder', actionFor, role) && prefix &&
           <DropdownMenuItem onClick={() => SendReminder(row.original.user_id)} className="cursor-pointer">
             <RiSendPlaneFill size={16} className="mr-2 text-primary" />
-            Send Reminder
+            Send Message Package
           </DropdownMenuItem>
         }
 
-        {
+        {/* {
           CheckAvaibilityAction(permision, 'view', actionFor, role) && prefix &&
           <DropdownMenuItem onClick={() => handleDetail(row.original.id)}  className="cursor-pointer">
             <RiBox2Fill size={16} className="mr-2 text-red-500" />
             Detail Trx 
           </DropdownMenuItem>
-        }
+        } */}
       </DropdownMenuContent>
     </DropdownMenu>
   )

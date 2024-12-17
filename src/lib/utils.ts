@@ -188,3 +188,8 @@ export const PluckValue = (array:any[], key:string) => {
 export const transformToSelect = (array:any[]) => {
   return array.map(item => ({value: item.id, label: item.name}))
 }
+
+
+export const transformToSelect2 = (array:any[]) => {
+  return array.map(item => ({value: item.id, label: item.template}))
+}

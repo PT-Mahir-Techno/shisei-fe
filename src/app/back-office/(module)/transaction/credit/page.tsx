@@ -11,13 +11,16 @@ import toast from "react-hot-toast"
 import api from "@/lib/api"
 import { Popover } from "@radix-ui/react-popover"
 import { PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
+import { cn, transformToSelect, transformToSelect2 } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { DateRange } from "react-day-picker"
-import { format } from "date-fns"
+import { format, set } from "date-fns"
 import { usePackageHistory } from "@/store/use-history-package"
 import { AuthContex } from "@/providers/auth-provider"
+import CustomModal from "@/components/ui/custoom-dialog"
+import Select from 'react-select';
+
 
 
 const CreditTransactionpage = () => {
@@ -25,8 +28,11 @@ const CreditTransactionpage = () => {
   const {_prefix:prefix}   = authState
 
   const { packageHistorys, packageHistoryAttributes, loading, packageHistoryUrl, getAllPackageHistory } : any = usePackageHistory()
-  const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId } = useModal()
+  const { setIsOpen: setIsOpenModal, isOpen: isOpenModal, modalId, isModalReminder, setModalReminder, setModalId } = useModal()
   const [date, setDate] = useState<DateRange | undefined>()
+  const [selectedMessage, setSelectedMessage] = useState<any>('')
+  const [messages, setMessages] = useState<any>([])
+  const [isLoadingMessage, setIsLoadingMessage] = useState(false)
 
   useEffect(() => {
     if (prefix){
@@ -36,6 +42,7 @@ const CreditTransactionpage = () => {
   
   const init = async() => {
     await getAllPackageHistory(`${baseUrl}${prefix}/history-membership`)
+    await handleGetTemplateMessage()
   }
 
   useEffect(() => {
@@ -59,6 +66,38 @@ const CreditTransactionpage = () => {
     } catch (error:any) {
       toast.error(error.data.message)
     }
+  }
+
+  const handleGetTemplateMessage = async () => {
+    try {
+      const res = await api.get(`${baseUrl}${prefix}/template-active?type=nopaginate`) 
+      setMessages(res?.data)
+    } catch (error) {
+    }
+  }
+
+
+  const handleSendMessage = async () => {
+    if (!selectedMessage) {
+      toast.error('Please select message')
+      return
+    }
+    setIsLoadingMessage(true)
+    try {
+      const payload = {
+        user_id: modalId,
+        template_id: selectedMessage?.value
+      }
+      await api.post(`${baseUrl}${prefix}/history-membership/send-reminder`, payload)
+      setModalReminder(false)
+      setSelectedMessage('')
+      setModalId('')
+      toast.success("Reminder has been sent")
+      setIsLoadingMessage(false)
+    } catch (error:any) {
+      setIsLoadingMessage(false)
+      toast.error(error.data.message)
+    } 
   }
 
   return (
@@ -127,6 +166,44 @@ const CreditTransactionpage = () => {
           </div>
         </CUstomDataTable>
       </div>
+
+      <CustomModal
+        open={isModalReminder} 
+        onOpenChange={() => {
+          setModalReminder(false)
+          setSelectedMessage('')
+          setModalId('')
+        }} 
+        title='Send Message Package'
+      >
+          <div>
+            <div className='flex gap-3 items-center mb-4'>
+              <div className='w-full'>
+                <Select
+                  onChange={(newValue, actionMeta) => setSelectedMessage(newValue)}
+                  options={transformToSelect2(messages)}
+                  name='message'
+                  isMulti={false}
+                />
+              </div>
+            </div>
+            <div className='flex justify-end gap-4'>
+              <Button onClick={() => {
+                setModalReminder(false)
+                setSelectedMessage('')
+                setModalId('')
+              }} variant={"outline"}>Cancel</Button>
+              <Button onClick={() => handleSendMessage()}
+                disabled={loading}
+              >
+                {isLoadingMessage &&
+                  <LoadingIcons.Oval stroke='#fff' strokeWidth={5} className="w-4 h-4 mr-3" />
+                }
+                Send Message
+              </Button>
+            </div>
+          </div>
+      </CustomModal>
     </>
   )
 }

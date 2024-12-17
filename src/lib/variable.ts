@@ -136,7 +136,7 @@ export const menus = [
         "path": "/back-office/setting/contact",
       },
       {
-        "title": "Template Message",
+        "title": "Template Package",
         "name" : "templatemessage",
         "path": "/back-office/setting/message",
       },

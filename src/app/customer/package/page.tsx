@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import React, { useEffect } from 'react'
-import { RiArrowDropDownLine, RiHourglassFill, RiStackFill } from 'react-icons/ri'
+import { RiArrowDropDownLine, RiHourglassFill, RiShoppingBag2Fill, RiStackFill } from 'react-icons/ri'
 import ActivePackageCard from './_parts/active-package'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import ExpiredPackageCard from './_parts/expired_package'
@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import api from '@/lib/api'
 import { baseUrl } from '@/lib/variable'
 import toast from 'react-hot-toast'
+import Link from 'next/link'
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
 
@@ -51,7 +52,12 @@ const PackageCustomerPage = () => {
 
   return (
     <>
-      <section className='bg-background p-5 rounded-lg mb-8'>
+      <section className='bg-background p-5 rounded-lg mb-8 mt-16'>
+        <div className='mb-6 flex justify-end'>
+          <Link href='/booking'>
+            <Button size={"lg"}> <RiShoppingBag2Fill className='mr-2'/> Buy a package</Button>
+          </Link>
+        </div>
         <div className='flex justify-between items-center pb-3 border-b border-gray-200 mb-5'>
           <div className='flex gap-2 items-center'>
             <RiStackFill className='text-primary' size={26} />

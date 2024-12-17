@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { RiArrowDropDownLine, RiCalendarScheduleFill, RiHistoryFill} from 'react-icons/ri'
+import { RiArrowDropDownLine, RiCalendarScheduleFill, RiHistoryFill, RiSearch2Fill} from 'react-icons/ri'
 import ScheduleCard from './_part/schedule-card'
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu'
@@ -15,6 +15,7 @@ import { baseUrl } from '@/lib/variable'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import { Skeleton } from '@/components/ui/skeleton'
+import Link from 'next/link'
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
 const SchedduleCustomerPage = () => {
@@ -77,7 +78,12 @@ const SchedduleCustomerPage = () => {
 
   return (
     <>
-      <section className='bg-background p-5 rounded-lg mb-8'>
+      <section className='bg-background p-5 rounded-lg mb-8 mt-16'>
+        <div className='mb-6 flex justify-end'>
+          <Link href='/booking'>
+            <Button size={'lg'}> <RiSearch2Fill className='mr-2'/> Search a schedule</Button>
+          </Link>
+        </div>
         <div className='flex gap-4 mb-6'>
           <RiCalendarScheduleFill className='text-primary' size={28} />
           <h2 className='font-noto_serif font-bold text-xl text-gray-800'>Your Schedule</h2>
