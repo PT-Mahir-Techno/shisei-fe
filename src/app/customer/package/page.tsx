@@ -52,7 +52,7 @@ const PackageCustomerPage = () => {
 
   return (
     <>
-      <section className='bg-background p-5 rounded-lg mb-8 mt-16'>
+      <section className='bg-background p-5 rounded-lg mb-8'>
         <div className='mb-6 flex justify-end'>
           <Link href='/booking'>
             <Button size={"lg"}> <RiShoppingBag2Fill className='mr-2'/> Buy a package</Button>

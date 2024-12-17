@@ -46,7 +46,7 @@ const CustomerLayout = ({children}: {children: React.ReactNode}) => {
           <NavbarBo/>
 
           <MainLayout>
-            <main className='p-8 h-[90vh] overflow-auto'>
+            <main className='p-8 h-[90vh] overflow-auto mt-20'>
                 {children}
             </main>
           </MainLayout>

@@ -44,7 +44,7 @@ const BackOfficeLayout = ({children}: {children: React.ReactNode}) => {
           <NavbarBo/>
           
           <MainLayout>
-            <main className='p-8 h-[92vh] overflow-auto'>
+            <main className='p-8 h-[92vh] overflow-auto mt-20'>
                 {children}
             </main>
           </MainLayout>

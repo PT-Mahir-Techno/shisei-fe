@@ -78,7 +78,7 @@ const SchedduleCustomerPage = () => {
 
   return (
     <>
-      <section className='bg-background p-5 rounded-lg mb-8 mt-16'>
+      <section className='bg-background p-5 rounded-lg mb-8'>
         <div className='mb-6 flex justify-end'>
           <Link href='/booking'>
             <Button size={'lg'}> <RiSearch2Fill className='mr-2'/> Search a schedule</Button>
