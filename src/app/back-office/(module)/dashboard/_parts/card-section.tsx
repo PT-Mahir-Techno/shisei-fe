@@ -51,7 +51,7 @@ const CardSection = () => {
             subtitle="schedules"
             count={data?.schedule}
             icon="/img/icon/calendar.png"
-            link="/back-office/schedule"
+            link="/back-office/calendar/schedule"
             is_curency={false}
           />
         }
@@ -65,7 +65,7 @@ const CardSection = () => {
             subtitle="schedules"
             count={data?.package}
             icon="/img/icon/list.png"
-            link="/back-office/schedule"
+            link="/back-office/booking/package"
             is_curency={false}
           />
         }
@@ -79,7 +79,7 @@ const CardSection = () => {
             subtitle="schedules"
             count={data?.schedule}
             icon="/img/icon/booked.png"
-            link="/back-office/schedule"
+            link="/back-office/transaction/schedule"
             is_curency={false}
           />
         }
@@ -93,7 +93,7 @@ const CardSection = () => {
             subtitle="schedules"
             count={data?.sold}
             icon="/img/icon/sold.png"
-            link="/back-office/schedule"
+            link="/back-office/transaction/package"
             is_curency={false}
           />
         }
@@ -106,7 +106,6 @@ const CardSection = () => {
             title="Total Income"
             count={data?.income}
             icon="/img/icon/income.png"
-            link="/back-office/schedule"
             is_curency={true}
           />
         }
@@ -120,7 +119,7 @@ const CardSection = () => {
             subtitle="customers"
             count={data?.customer}
             icon="/img/icon/customer.png"
-            link="/back-office/schedule"
+            link="/back-office/user/customer"
             is_curency={false}
           />
         }
@@ -134,7 +133,7 @@ const CardSection = () => {
             subtitle="staffs"
             count={data?.staff}
             icon="/img/icon/staff.png"
-            link="/back-office/schedule"
+            link="/back-office/user/instructor"
             is_curency={false}
           />
         }
@@ -148,7 +147,6 @@ const CardSection = () => {
             subtitle="schedules"
             count={data?.cancel}
             icon="/img/icon/cancel.png"
-            link="/back-office/schedule"
             is_curency={false}
           />
         }

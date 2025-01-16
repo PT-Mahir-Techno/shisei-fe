@@ -77,8 +77,10 @@ export const useLocation = create<LocationStoreType>((set, get) => ({
       set({loading: true })
       await api.delete(url)
       set({loading: false, success: true })
+      return Promise.resolve()
     } catch (error) {
       set({error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   },
   updateLoacation: async (url: string, data: any) => {

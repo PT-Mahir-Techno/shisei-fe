@@ -33,10 +33,15 @@ const RoomPage = () => {
   }, [prefix])
 
   const handleDelete = async () => {
-    await deleteLocation(`${baseUrl}${prefix}/location/${modalId}`)
-    await getAllLocation(locationUrl)
-    toast.success('Location deleted successfully')
-    setIsOpenModal(false)
+    try {
+      await deleteLocation(`${baseUrl}${prefix}/location/${modalId}`)
+      await getAllLocation(locationUrl)
+      toast.success('Location deleted successfully')
+      setIsOpenModal(false)
+    } catch (error:any) {
+      setIsOpenModal(false)
+      toast.error(error.data.message)
+    }
   }
 
   return (

@@ -46,6 +46,7 @@ const ExtendDayPage = () => {
 
   React.useEffect(() => {
     getAllExtendDay(`${baseUrl}${prefix}/extend-day`)
+    getAllCustomerNoPaginate(`${baseUrl}${prefix}/user?type=nopaginate`)
   }, [prefix])
 
   const handleDelete = async () => {

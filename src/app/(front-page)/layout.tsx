@@ -10,7 +10,7 @@ const HomeLayout = ({children, withBg=false}: {children: React.ReactNode, withBg
       <NavbarFrontPage withBg={withBg}/>
       {/* end navbar */}
 
-      <MainLayout>
+      <MainLayout >
         {children}
       </MainLayout>
 
