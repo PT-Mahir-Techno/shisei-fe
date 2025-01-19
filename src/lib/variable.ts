@@ -1,8 +1,8 @@
 import { RiAccountPinBoxFill, RiCalendar2Fill, RiDashboardFill, RiFileList2Fill, RiImage2Fill, RiMap2Fill, RiQuestionnaireFill, RiSettings3Fill, RiShoppingBagFill, RiSquareFill, RiUser3Fill } from 'react-icons/ri'
 
-export const baseUrl:string = "https://shisei-be.mahirtechno.my.id/api";
+export const baseUrl:string = "https://backend.be-style.id/api";
 
-export const appUrl:string  = "https://be-style.mahirtechno.my.id/"
+export const appUrl:string  = "https://be-style.id/"
 
 export const menus = [
   {
