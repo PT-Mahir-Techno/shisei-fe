@@ -20,10 +20,10 @@ export default function Home() {
       >
         <div className="container">
           <h1 className="text-4xl md:text-7xl lg:text-7xl text-white leading-normal font-bold font-noto_serif">
-            Find Calm and <br /> Balance with <br /> Our Therapy
+          Enhance Your <br /> Posture, Elevate <br /> Your Life
           </h1>
           <p className="text-slate-100 mt-7 leading-normal">
-            The best place for therapy that helps you discover <br /> a better version of yourself.
+            The best place for posture improvement that helps <br /> you discover a better version of yourself
           </p>
         </div>
       </section>
@@ -40,13 +40,15 @@ export default function Home() {
           <div className="w-[500px] bg-primary p-[40px] rounded-md ">
             <Image src="/be-main-logo.png" alt="logo" width={300} height={0}/>
           </div>
-          <div className="w-[500px]">
+          <div className="w-[600px]">
             <div className="text-primary mb-2">About Us</div>
             <div className={"font-noto_serif mb-2 text-2xl font-bold"}>
-              <span className="text-gray-600 dark:text-slate-300">Welcome in</span>  <span className="text-primary">Be-Style®</span> 
+              <span className="text-gray-600 dark:text-slate-300">Welcome to</span>  <span className="text-primary">Be-Style</span> 
             </div>
             <div className="text-sm text-gray-500 mb-4 dark:text-slate-200">
-              Be-Style is a specialized studio focusing on posture improvement and overall well-being. We offer a variety of therapy and fitness sessions tailored to individual needs, helping our clients achieve better health and wellness.
+              At Be-Style Studio, we believe that good posture is the foundation of a healthier, more confident life. Originating from Japan, our unique Shisei Method focuses on instant posture improvement without pain, medication, or invasive procedures.
+              Our expert trainers are dedicated to helping you achieve a naturally aligned body, reducing discomfort, and enhancing overall well-being. Whether you struggle with back pain, poor posture, or mobility issues, Be-Style provides personalized solutions tailored to your needs.
+              Join us and experience posture transformation like never before—feel lighter, move better, and live healthier
             </div>
             <div>
               <Button>Read More</Button>
@@ -75,7 +77,7 @@ export default function Home() {
               <div>
                 <div className="text-lg font-bold mb-2 text-slate-100">Flexible Packages</div>
                 <div className="text-sm leading-normal text-slate-300">
-                  Therapy package options that can be adjusted to your needs and budget.
+                  Choose a plan that fits your lifestyle, goals, and budget.
                 </div>
               </div>
             </div>
@@ -87,7 +89,7 @@ export default function Home() {
               <div>
                 <div className="text-lg font-bold mb-2 text-slate-100">Professional Therapists</div>
                 <div className="text-sm leading-normal text-slate-300">
-                  Therapy package options that can be adjusted to your needs and budget.
+                  Every session is tailored to your body’s needs for optimal results.
                 </div>
               </div>
             </div>
@@ -103,7 +105,7 @@ export default function Home() {
               <div>
                 <div className="text-lg font-bold mb-2 text-slate-100">Personalized Service</div>
                 <div className="text-sm leading-normal text-slate-300">
-                  Therapy package options that can be adjusted to your needs and budget.
+                  Our certified experts guide you through effective posture improvement techniques.
                 </div>
               </div>
             </div>
@@ -115,7 +117,7 @@ export default function Home() {
               <div>
                 <div className="text-lg font-bold mb-2 text-slate-100">Easy Booking</div>
                 <div className="text-sm leading-normal text-slate-300">
-                  Therapy package options that can be adjusted to your needs and budget.
+                    Experience noticeable changes without discomfort, using our proven Shisei Method from Japan.
                 </div>
               </div>
             </div>
@@ -139,9 +141,8 @@ export default function Home() {
                 Do you have issues like these?
               </div>
               <div className="text-sm text-slate-500 leading-relaxed dark:text-slate-300 text-justify lg:pr-24">
-                Rest the overused muscles and consciously move the underused ones. By combining this "relaxation" and "training," you can achieve a balanced body and make changes without strain... this is the concept of Be-Style. <br /> <br />
-
-                Would you like to learn the power of "self-conditioning" to address and improve your body's discomfort or pain at the root, so you can balance your body on your own?
+                Rest your overused muscles and activate the underused ones. By combining relaxation and targeted movement, you can achieve a balanced body and make lasting changes without strain—this is the core concept of Be-Style.
+                Would you like to discover the power of self-conditioning to address discomfort or pain at its root, so you can naturally restore balance to your body?
               </div>
             </div>
 
@@ -162,12 +163,11 @@ export default function Home() {
             </div>
             <div className="w-full flex flex-col justify-center">
               <div className={"font-noto_serif mb-6 text-2xl md:text-3xl font-bold text-gray-600 line-clamp-4 dark:text-slate-200"}>
-                A program that integrates the latest technology.
+                Smart Training: Where Technology Meets Wellness
               </div>
               <div className="text-sm text-justify text-slate-500 leading-relaxed dark:text-slate-300">
-                We incorporate various programs into our private sessions to tailor them to each client.
-                <br/><br/>
-                We also integrate the latest training techniques, such as the "Power Plate," which enables effective muscle training in a short time, and the "Pilates Reformer," which allows you to train effectively from the inside out without putting much strain on your body.
+                At Be-Style, we customize private sessions by integrating various techniques tailored to each client’s unique needs.
+                We also incorporate cutting-edge training methods, such as the Power Plate, which enhances muscle activation efficiently in a short time, and the Pilates Reformer, which helps strengthen and realign the body from the inside out with minimal strain
               </div>
             </div>
           </div>

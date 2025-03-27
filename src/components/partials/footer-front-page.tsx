@@ -26,8 +26,8 @@ const FooterFrontPage = () => {
               <div className="mb-6">
                 <Image src="/be-main-logo.png" alt="logo" width={200} height={100}/>
               </div>
-              <div className="text-sm max-w-[276px] text-slate-200 leading-6">
-                The best platform to find therapy services that help you achieve mental and physical well-being.
+              <div className="text-sm max-w-[300px] text-slate-200 leading-6">
+              The ultimate studio for posture improvement and body realignment, helping you achieve optimal physical well-being with an instant and pain-free approach.
               </div>
             </div>
 

@@ -76,8 +76,7 @@ const BookingPackagePage = () => {
           <div className='mb-3 pb-3 border-b border-gray-200'>
             <h2 className='font-noto_serif font-bold text-2xl text-gray-700 dark:text-gray-100'>Choose Your Packages</h2>
           </div>
-          <p className='text-gray-600 mb-8 dark:text-gray-200'>With class packages, you can purchase as many or as few classes as you'd like and <br /> 
-          use them whenever you're ready. Class packs typically have an expiration date.</p>
+          <p className='text-gray-600 mb-8 dark:text-gray-200'>With our class packages, you have the freedom to purchase as many or as few sessions as you need and use them at your convenience. Please note that class packs come with an expiration date, so be sure to make the most of them! </p>
 
           {
             loading
@@ -119,7 +118,7 @@ const BookingPackagePage = () => {
                     <h2 className='font-noto_serif font-bold text-lg text-gray-700 mb-2'>{selectedPackage?.name}</h2>
                     <div className='flex justify-between items-center font-noto_serif font-bold text-xl text-gray-700'>
                       <span>Total :</span>
-                      <span>Rp. {numberToIdr(selectedPackage?.price)}</span>
+                      <span>{numberToIdr(selectedPackage?.price)}</span>
                     </div>
                   </div>
               }

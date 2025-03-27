@@ -28,7 +28,7 @@ const GalerySection = () => {
   return (
     <div className="container mb-[120px]">
       <div className={"font-noto_serif text-3xl font-semibold text-center mb-16"}>
-        <span className="text-primary">Be-Style®</span><span>Galerry.</span>
+        <span className="text-primary">Be-Style®</span><span>Gallery.</span>
       </div>
         {
           loading

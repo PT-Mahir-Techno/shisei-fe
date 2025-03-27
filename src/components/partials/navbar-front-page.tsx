@@ -118,7 +118,7 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
               </Link>
               <Link href="/package">
                 <li className={`${pathName.startsWith("/package") ? "bg-background text-foreground" : "text-slate-200"} px-3 py-2 mx-2 rounded-md cursor-pointer hover:bg-background hover:text-foreground transition-all duration-200`}>
-                  package
+                  Package
                 </li>
               </Link>
               <Link href="/studio">
@@ -191,7 +191,7 @@ const NavbarFrontPage = ({withBg = false}:{withBg: boolean}) => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) :(
-                  <Link href={"/login"} className='rounded-full text-sm bg-background text-foreground px-3 py-2'>login / Sign Up</Link>
+                  <Link href={"/login"} className='rounded-full text-sm bg-background text-foreground px-3 py-2'>Login</Link>
                 )
               }
             </div>

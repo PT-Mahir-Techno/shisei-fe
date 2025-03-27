@@ -17,7 +17,7 @@ const PackageCard = ({selected, select, data, hiddenSelect=false}: PaclageCardPr
       <div className={`${selected ? 'border-2 border-gray-200' : ''} py-4 px-3 bg-gray-50 hover:bg-accent/50 rounded-lg transition-all duration-300`}>
         <div className='text-center pb-4 mb-3 border-b-2 border-gray-200'>
           <h2 className='font-noto_serif font-bold text-lg'>{data?.name}</h2>
-          <p className='text-gray-600 font-semibold text-primary'>Rp. {numberToIdr(data?.price)}</p>
+          <p className='text-gray-600 font-semibold text-primary'>{numberToIdr(data?.price)}</p>
         </div>
         <div>
           <div className='flex items-center gap-2 mb-3'>

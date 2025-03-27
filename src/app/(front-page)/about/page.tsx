@@ -52,10 +52,12 @@ const AboutPage = () => {
                 About Us
               </div>
               <div className={"font-noto_serif mb-4 text-3xl font-bold text-gray-600 dark:text-slate-200"}>
-                Welcome in <span className='text-primary'> Be-Style® </span>
+                Welcome to <span className='text-primary'> Be-Style® </span>
               </div>
               <div className="text-sm text-slate-500 leading-relaxed text-justify dark:text-slate-300">
-                Be-Style is a specialized studio focusing on posture improvement and overall well-being. We offer a variety of therapy and fitness sessions tailored to individual needs, helping our clients achieve better health and wellness.
+                At Be-Style Studio, we go beyond traditional exercise, we focus on instant posture correction and body realignment for long-term wellness. Using the Shisei Method from Japan, we combine breathwork, targeted training, and body reset techniques to help you restore balance effortlessly and move pain-free.
+                Unlike conventional workouts, our personalized 1-on-1 approach provides immediate improvements in posture, mobility, and body function without intense strain. Whether you're struggling with back pain, stiffness, or poor posture, Be-Style helps you realign, reset, and move with confidence from the very first session.
+                Discover the power of effortless movement. Experience Be-Style today!
               </div>
             </div>
           </div>
@@ -65,14 +67,11 @@ const AboutPage = () => {
               <div className={"font-noto_serif mb-4 text-3xl font-bold text-gray-600 dark:text-slate-200"}>
                 Thanks to you, we have reached <span className='text-primary'> 22,000 sessions!</span>
               </div>
-              <div className="text-sm text-slate-500 leading-relaxed text-justify dark:text-slate-300">
-              Be-Style was started in 2012 in a room at a community center in Shiga Prefecture. When I invited my close friends to give lessons, I noticed changes in the bodies of the people who attended the sessions. Their discomfort decreased, their appearance changed, and gradually, word of mouth began to expand my circle.
-              <br /><br />
-              Therefore, in June 2014, about two years later, I opened the Be-Style Moriyama Store, a studio specializing in posture improvement, with the desire to spread information about self-conditioning to as many people as possible. We received such an incredible response that we had a waiting list for cancellations within two months. The circle continued to grow, and in September 2016, the Be-Style Osaka branch, a studio specializing in posture correction, was opened.
-              <br /><br />
-              Through referrals and word-of-mouth from customers who have experienced the benefits, we have conducted sessions for more than 22,000 people and served over 4,800 people throughout the year.
-              <br /><br />
-              Next time, please try it for yourself.
+              <div>
+                Be-Style began in 2012 in a small room in Shiga Prefecture, Japan. We introduced the concept of self-conditioning, inviting locals to experience our sessions. Many noticed significant improvements after just one session without fatigue. Their body aches disappeared, their posture became more upright and attractive, and word quickly spread, fueling our growth. <br />
+                In 2014, we opened our first studio in Moriyama. Within just two months, demand surged, and we had to implement a waiting list system. By 2016, we expanded further, opening another branch in Osaka, Japan. <br />
+                In 2023, we brought Be-Style’s Self-Conditioning Method to Indonesia through our academy, naming it Shisei Academy. Seeing the widespread posture issues in the country and the lack of safe, effective solutions, we made it our mission to help Indonesians improve their posture effortlessly.
+                In 2024, we continued to grow by opening a new studio in Tokyo, further strengthening our presence in Japan. In 2025, we reached another milestone by launching our first studio in Jakarta, bringing our innovative posture improvement method to even more people.
               </div>
             </div>
 
@@ -81,12 +80,12 @@ const AboutPage = () => {
               </div>
               <div className='flex gap-5 justify-between'>
                 <div className='flex-1 bg-primary p-6 rounded-lg'>
-                  <h2 className='font-noto_serif font-bold text-center text-slate-200 text-4xl'>22k+</h2>
+                  <h2 className='font-noto_serif font-bold text-center text-slate-200 text-4xl'>40k+</h2>
                   <p className='text-sm text-center text-slate-200 mt-2'>Sessions booked</p>
                 </div>
                 <div className='flex-1 bg-primary p-6 rounded-lg'>
-                  <h2 className='font-noto_serif font-bold text-center text-slate-200 text-4xl'>22k+</h2>
-                  <p className='text-sm text-center text-slate-200 mt-2'>Sessions booked</p>
+                  <h2 className='font-noto_serif font-bold text-center text-slate-200 text-4xl'>8k+</h2>
+                  <p className='text-sm text-center text-slate-200 mt-2'>Clients</p>
                 </div>
               </div>
             </div>

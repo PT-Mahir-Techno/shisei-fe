@@ -33,7 +33,7 @@ const StudioPage = () => {
         style={{ backgroundImage: 'url("/img/navbar-bg-2.png")' }}
       >
         <div className="container">
-          <h2 className='font-noto_serif font-bold text-4xl text-center text-slate-100'>Our Philosophy</h2>
+          <h2 className='font-noto_serif font-bold text-4xl text-center text-slate-100'>Our Studios</h2>
         </div>
       </section>
 
