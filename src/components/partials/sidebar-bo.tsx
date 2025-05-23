@@ -38,7 +38,7 @@ const SidebarBo = () => {
 
   return (
     <div className='z-50'>
-    <aside className={`${ minimize ? 'w-[80px]' : 'w-[260px]' } h-screen bg-background shadow transition-all duration-200`}>
+      <aside className={`${ minimize ? 'w-[80px]' : 'w-[260px]' } h-screen bg-background shadow transition-all duration-200`}>
         <div className='mb-8 relative'>
           <div className={`${ minimize ? 'w-[80px]' : 'w-[260px]' } p-4`}>
             {
