@@ -1,6 +1,7 @@
-import { RiAccountPinBoxFill, RiCalendar2Fill, RiDashboardFill, RiFileList2Fill, RiImage2Fill, RiMap2Fill, RiQuestionnaireFill, RiSettings3Fill, RiShoppingBagFill, RiSquareFill, RiUser3Fill } from 'react-icons/ri'
+import { RiAccountPinBoxFill, RiCalendar2Fill, RiCopperCoinFill, RiCoupon2Fill, RiDashboardFill, RiFileList2Fill, RiImage2Fill, RiMap2Fill, RiQuestionnaireFill, RiSettings3Fill, RiShoppingBagFill, RiSquareFill, RiUser3Fill } from 'react-icons/ri'
 
-export const baseUrl:string = "https://backend.be-style.id/api";
+// export const baseUrl:string = "https://backend.be-style.id/api";
+export const baseUrl:string = "https://shisei-be.mahirtechno.my.id/api";
 
 export const appUrl:string  = "https://be-style.id/"
 
@@ -85,6 +86,18 @@ export const menus = [
         "path": "/back-office/transaction/credit",
       },
     ]
+  },
+  {
+    "title": "Coupon",
+    "name" : "coupon",
+    "path": "/back-office/coupon",
+    "icon": RiCoupon2Fill,
+  },
+  {
+    "title": "Corporate",
+    "name" : "corporate",
+    "path": "/back-office/corporate",
+    "icon": RiCopperCoinFill,
   },
   {
     "title": "Account",
