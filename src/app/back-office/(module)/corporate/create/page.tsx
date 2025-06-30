@@ -28,12 +28,13 @@ const CorporateCreateForm = () => {
   const [modelId, setModelId] = React.useState('')
   const router = useRouter()
 
-  const { loading, getAllCorporate, createCorporate, corporateUrl, getSingleCorporate, corporate, updateCorporate } = useCorporate()
+  const { loading, getAllCorporate, createCorporate, corporateUrl, getSingleCorporate, corporate, updateCorporate, error } = useCorporate()
 
   const form = useForm<z.infer<typeof corporateSchema>>({
     resolver: zodResolver(corporateSchema),
     defaultValues: {
       name: '',
+      whitelist_email: ''
     },
   })
 
@@ -46,13 +47,14 @@ const CorporateCreateForm = () => {
       }else {
         await createCorporate(`${prefix}/corporate`, data)
       }
+
       await getAllCorporate(corporateUrl)
 
       router.push('/back-office/corporate')
       toast.success("Location created")
       form.reset()
     } catch (error:any) {
-      toast.error(error)
+      toast.error(error?.data?.message)
     }
   }
 
@@ -80,7 +82,23 @@ const CorporateCreateForm = () => {
                       <FormItem>
                         <Label htmlFor="name" className="mb-1 text-gray-600">Corporate Name</Label>
                         <FormControl>
-                          <Input {...field} placeholder="cprporate name" />
+                          <Input {...field} placeholder="corporate name" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                />
+              </div>
+
+              <div className="grid w-full items-center gap-1.5 mb-5">
+                <FormField
+                    control={form.control}
+                    name="whitelist_email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Label htmlFor="whitelist_email" className="mb-1 text-gray-600">White list domain email for this corporate</Label>
+                        <FormControl>
+                          <Input {...field} placeholder="@gmail.com" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

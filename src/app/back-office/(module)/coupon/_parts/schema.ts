@@ -1,15 +1,15 @@
 // schema.ts
 import * as z from "zod";
 
-export const promoSchema = z.object({
+export const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   code: z.string().min(1, "Code is required"),
-  type_discount: z.enum(["percent", "price"]),
+  type_discount: z.string().min(1, "Type discount is required"),
   discount: z.number().min(1, "Discount is required"),
-  start_date: z.date().nullable(),
-  end_date: z.date().nullable(),
-  limit_per_member: z.string().nullable().optional(),
-  kuota: z.string().nullable().optional(),
-  type: z.enum(["member", "corporate"]),
+  start_date: z.any(),
+  end_date: z.any(),
+  limit_per_member: z.number().nullable().optional(),
+  kuota: z.number().nullable().optional(),
+  type: z.string().min(1, "Type is required"),
   corporate_id: z.string().nullable().optional(),
 });

@@ -67,14 +67,14 @@ export const menus = [
   },
   {
     "title": "Coupon",
-    "name" : "booking",
+    "name" : "coupon",
     "icon": RiCoupon3Fill,
-    "group": ["coupon", "validityperoid"],
+    "group": ["coupon"],
     "children": [
       {
-        "title": "Package",
-        "name" : "package",
-        "path": "/back-office/booking/package",
+        "title": "Coupon",
+        "name" : "coupon",
+        "path": "/back-office/coupon",
       },
     ]
   },

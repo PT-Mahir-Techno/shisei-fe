@@ -65,10 +65,12 @@ export const useCorporate = create<CorporateStoreType>((set, get) => ({
   createCorporate:async (url:string, data: any) => {
     try {
       set({loading: true })
-      await api.post(`${baseUrl}${url}`, data)
+      const res = await api.post(`${baseUrl}${url}`, data)
       set({loading: false, success: true })
+      return Promise.resolve(res.data)
     } catch (error) {
       set({error: true, loading: false, success: false })
+      return Promise.reject(error)
     }
   },
   deleteCorporate: async (url: string) => {

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useSheet } from "@/store/use-sheet"
 import { MoreHorizontal } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { RiCalendarCheckFill, RiDeleteBin5Fill, RiEdit2Fill, RiEyeFill, RiLink, RiVerifiedBadgeFill } from "react-icons/ri"
+import { RiCalendarCheckFill, RiDeleteBin5Fill, RiEdit2Fill, RiEyeFill, RiLink, RiUserAddFill, RiVerifiedBadgeFill } from "react-icons/ri"
 import { useModal } from "@/store/use-modal"
 import Link from "next/link"
 import api from "@/lib/api"
@@ -98,6 +98,16 @@ function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', 
               }
             </div>
           }
+
+          {
+            prefix && actionFor == 'corporate' &&
+            <Link href={`/back-office/corporate/add-member/${model.id}`}>
+              <DropdownMenuItem  className="cursor-pointer">
+                <RiUserAddFill size={16} className="mr-2 text-primary" />
+                Add Member
+              </DropdownMenuItem>
+            </Link>
+          }
             
             {
               CheckAvaibilityAction(permision, 'edit', actionFor, role) && prefix &&
@@ -149,6 +159,8 @@ function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', 
                 }
               </div>
             }
+
+
 
             {
               isGenerate && 
