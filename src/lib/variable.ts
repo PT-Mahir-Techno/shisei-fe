@@ -1,8 +1,10 @@
-import { RiAccountPinBoxFill, RiCalendar2Fill, RiDashboardFill, RiFileList2Fill, RiImage2Fill, RiMap2Fill, RiQuestionnaireFill, RiSettings3Fill, RiShoppingBagFill, RiSquareFill, RiUser3Fill } from 'react-icons/ri'
+import { RiAccountPinBoxFill, RiBox1Fill, RiCalendar2Fill, RiCoupon3Fill, RiCoupon3Line, RiDashboardFill, RiFileList2Fill, RiFolder4Fill, RiFolder4Line, RiImage2Fill, RiMap2Fill, RiQuestionnaireFill, RiSettings3Fill, RiShoppingBagFill, RiSquareFill, RiUser3Fill } from 'react-icons/ri'
 
-export const baseUrl:string = "https://backend.be-style.id/api";
+// export const baseUrl:string = "https://backend.be-style.id/api";
+// export const appUrl:string  = "https://be-style.id/"
 
-export const appUrl:string  = "https://be-style.id/"
+export const baseUrl:string = "https://shisei-be.mahirtechno.my.id/api";
+export const appUrl:string  = "https://shisei-fe.mahirtechno.my.id"
 
 export const menus = [
   {
@@ -11,12 +13,12 @@ export const menus = [
     "path": "/back-office/dashboard",
     "icon": RiDashboardFill,
   },
-  {
-    "title": "Locations",
-    "name" : "location",
-    "path": "/back-office/location",
-    "icon": RiMap2Fill
-  },
+  // {
+  //   "title": "Locations",
+  //   "name" : "location",
+  //   "path": "/back-office/location",
+  //   "icon": RiMap2Fill
+  // },
   {
     "title": "Schedule",
     "name" : "schedule",
@@ -36,7 +38,7 @@ export const menus = [
     ]
   },
   {
-    "title": "Booking",
+    "title": "Package",
     "name" : "booking",
     "icon": RiFileList2Fill,
     "group": ["package", "validityperoid"],
@@ -47,9 +49,9 @@ export const menus = [
         "path": "/back-office/booking/package",
       },
       {
-        "title": "Package Category",
-        "name" : "package-category",
-        "path": "/back-office/booking/package-category",
+        "title": "Extend Day",
+        "name" : "extend-day",
+        "path": "/back-office/booking/extend-day",
       },
       {
         "title": "Validity Period",
@@ -57,10 +59,23 @@ export const menus = [
         "path": "/back-office/booking/validity-period",
       },
       {
-        "title": "Extend Day",
-        "name" : "extend-day",
-        "path": "/back-office/booking/extend-day",
-      }
+        "title": "Package Category",
+        "name" : "package-category",
+        "path": "/back-office/booking/package-category",
+      },
+    ]
+  },
+  {
+    "title": "Coupon",
+    "name" : "booking",
+    "icon": RiCoupon3Fill,
+    "group": ["coupon", "validityperoid"],
+    "children": [
+      {
+        "title": "Package",
+        "name" : "package",
+        "path": "/back-office/booking/package",
+      },
     ]
   },
   {
@@ -87,6 +102,20 @@ export const menus = [
     ]
   },
   {
+    "title": "Corporate",
+    "name" : "corporate",
+    "icon": RiBox1Fill,
+    "path": "/back-office/corporate",
+    // "group": ["corporate"],
+    // "children": [
+    //   {
+    //     "title": "Corporate",
+    //     "name" : "corporate",
+    //     "path": "/back-office/booking/package",
+    //   },
+    // ]
+  },
+  {
     "title": "Account",
     "name" : "user",
     "icon": RiAccountPinBoxFill,
@@ -109,6 +138,36 @@ export const menus = [
       },
     ]
   },
+
+  {
+    "title": "Master",
+    "name" : "master",
+    "icon": RiFolder4Fill,
+    "group": ["studio", "galery", "faq", "location"],
+    "children": [
+      {
+        "title": "Studio",
+        "name" : "studio",
+        "path": "/back-office/studio",
+      },
+      {
+        "title": "Gallery",
+        "name" : "gallery",
+        "path": "/back-office/galery",
+      },
+      {
+        "title": "FAQ",
+        "name" : "faq",
+        "path": "/back-office/faq",
+      },
+      {
+        "title": "Locations",
+        "name" : "location",
+        "path": "/back-office/location",
+      }
+    ]
+  },
+
   {
     "title": "Setting",
     "name" : "setting",
@@ -147,24 +206,24 @@ export const menus = [
       },
     ]
   },
-  {
-    "title": "Studio",
-    "name" : "studio",
-    "path": "/back-office/studio",
-    "icon": RiSquareFill
-  },
-  {
-    "title": "Gallery",
-    "name" : "gallery",
-    "path": "/back-office/galery",
-    "icon": RiImage2Fill
-  },
-  {
-    "title": "Faq",
-    "name" : "faq",
-    "path": "/back-office/faq",
-    "icon": RiQuestionnaireFill
-  },
+  // {
+  //   "title": "Studio",
+  //   "name" : "studio",
+  //   "path": "/back-office/studio",
+  //   "icon": RiSquareFill
+  // },
+  // {
+  //   "title": "Gallery",
+  //   "name" : "gallery",
+  //   "path": "/back-office/galery",
+  //   "icon": RiImage2Fill
+  // },
+  // {
+  //   "title": "Faq",
+  //   "name" : "faq",
+  //   "path": "/back-office/faq",
+  //   "icon": RiQuestionnaireFill
+  // },
   {
     "title": "Profile",
     "name" : "profile",
