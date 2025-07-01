@@ -14,12 +14,12 @@ const PackageCard = ({selected, select, data, hiddenSelect=false}: PaclageCardPr
 
   return (
     <>
-      <div className={`${selected ? 'border-2 border-gray-200' : ''} py-4 px-3 bg-gray-50 hover:bg-accent/50 rounded-lg transition-all duration-300`}>
-        <div className='text-center pb-4 mb-3 border-b-2 border-gray-200'>
+      <div className={`${selected ? 'border-2 border-gray-200' : ''} py-4 px-3 dark:bg-gray-800 bg-gray-50 hover:bg-accent/50 rounded-lg transition-all duration-300`}>
+        <div className='text-center pb-4 mb-3 border-b-2 border-gray-200 dark:border-gray-600'>
           <h2 className='font-noto_serif font-bold text-lg'>{data?.name}</h2>
           <p className='text-gray-600 font-semibold text-primary'>{numberToIdr(data?.price)}</p>
         </div>
-        <div>
+        <div className='dark:text-gray-100'>
           <div className='flex items-center gap-2 mb-3'>
             <RiCalendarScheduleLine className='text-primary' size={26}/>
             <p className='text-gray-600'>{data?.duration?.name}</p>

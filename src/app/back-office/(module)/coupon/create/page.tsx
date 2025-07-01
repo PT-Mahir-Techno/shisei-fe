@@ -20,12 +20,17 @@ import { Calendar } from '@/components/ui/calendar'
 import { useCorporate } from '@/store/use-corporate'
 import { baseUrl } from '@/lib/variable'
 import { AuthContex } from '@/providers/auth-provider'
+import { useCoupon } from '@/store/use-coupon'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
+import LoadingIcons from 'react-loading-icons'
 
 const CreateCouponPage = () => {
   const {authState} = useContext(AuthContex)
   const {_prefix:prefix, _permision:permision, _avaibility:role}   = authState
 
-
+  const router = useRouter()
+  const {createCoupon, loading, getAllCoupon} = useCoupon()
   const {getAllCorporateNoPaginate, corporates} = useCorporate()
 
   useEffect(() => {
@@ -63,8 +68,25 @@ const CreateCouponPage = () => {
       const eday = end_date.getDate()
       const formatedEdndDate = `${eyear}-${emonth < 10 ? `0${emonth}` : emonth}-${eday < 10 ? `0${eday}` : eday}`
 
-    } catch (error) {
-      
+      const payload = {
+        name : data?.name,
+        code : data?.code,
+        type_discount : data?.type_discount,
+        discount : data?.discount,
+        start_date : formatedStartDate,
+        end_date : formatedEdndDate,
+        limit_per_member : data?.limit_per_member,
+        kuota : data?.kuota,
+        type : data?.type,
+        corporate_id : data?.corporate_id,
+      }
+
+      const res = await createCoupon(`${prefix}/coupon`, payload)
+      await getAllCoupon(`${prefix}/coupon`)
+      toast.success('Coupon created successfully')
+      router.push('/back-office/coupon')
+    } catch (error:any) {
+      toast.error(error?.data?.message)
     }
   }
 
@@ -337,11 +359,11 @@ const CreateCouponPage = () => {
                 
               <div>
                 <Button className="" size={"lg"}
-                  disabled={false}
+                  disabled={loading}
                 >
-                  {/* {
+                  {
                     loading && <LoadingIcons.Oval strokeWidth={4} className="w-4 h-4 mr-2 animate-spin" />
-                  } */}
+                  } 
                   Save
                 </Button>
               </div>

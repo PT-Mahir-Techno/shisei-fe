@@ -3,7 +3,7 @@
 import React, { useContext, useEffect } from 'react'
 import PackageCard from './_parts/package-card'
 import { Button } from '@/components/ui/button'
-import { RiErrorWarningFill, RiLockUnlockFill, RiVerifiedBadgeFill } from 'react-icons/ri'
+import { RiClapperboardFill, RiClipboardFill, RiErrorWarningFill, RiLockUnlockFill, RiVerifiedBadgeFill } from 'react-icons/ri'
 import CustomModal from '@/components/ui/custoom-dialog'
 import Link from 'next/link'
 import { usePackagePage } from '@/store/use-package-page'
@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Image from 'next/image'
 import { PaymentMethos } from '@/lib/variable'
+import { Input } from '@/components/ui/input'
 
 
 
@@ -72,41 +73,68 @@ const BookingPackagePage = () => {
   return (
     <>
       <div className='container pt-20 pb-10 mt-20 flex flex-col lg:flex-row gap-7'>
-        <div className='p-5 border border-gray-200 rounded-lg w-12/12 lg:w-9/12'>
-          <div className='mb-3 pb-3 border-b border-gray-200'>
-            <h2 className='font-noto_serif font-bold text-2xl text-gray-700 dark:text-gray-100'>Choose Your Packages</h2>
+
+        <div className='w-12/12 lg:w-9/12'>
+          <div className='py-4'>
+            <div className='font-noto_serif mb-4'>Available promo and coupon</div>
+            <div className='w-full overflow-x-auto overflow-y-hidden flex gap-4'>
+              
+              {
+                Array.from({ length: 20 }, (_, index) => (
+                  <div key={index} className='relative bg-primary rounded-lg px-4 py-3 h-[85px] w-[220px] flex flex-col gap-1 justify-center cursor-pointer'>
+                      <div className='bg-white dark:bg-gray-900 w-[20px] h-[20px] rounded-full absolute top-[-10px] left-[20px]'></div>
+                      <div className='bg-white dark:bg-gray-900 w-[20px] h-[20px] rounded-full absolute bottom-[-10px] left-[20px]'></div>
+                      <div className='flex justify-between items-center'>
+                        <div className='text-white font-bold'> JUNISEHATEVERYDAY</div>
+                        {/* <RiClipboardFill className='text-white' /> */}
+                      </div>
+                      <div className='text-white flex justify-between'>
+                          <p>20% off</p>
+                          <div className='text-xs cursor-pointer hover:text-gray-400'><i>Details</i></div>
+                      </div>
+                  </div>
+                ))
+              }
+            </div>
           </div>
-          <p className='text-gray-600 mb-8 dark:text-gray-200'>With our class packages, you have the freedom to purchase as many or as few sessions as you need and use them at your convenience. Please note that class packs come with an expiration date, so be sure to make the most of them! </p>
+          
+          <div className='p-5 border border-gray-200 rounded-lg'>
+            <div className='mb-3 pb-3 border-b border-gray-200'>
+              <h2 className='font-noto_serif font-bold text-2xl text-gray-700 dark:text-gray-100'>Choose Your Packages</h2>
+            </div>
+            <p className='text-gray-600 mb-8 dark:text-gray-200'>With our class packages, you have the freedom to purchase as many or as few sessions as you need and use them at your convenience. Please note that class packs come with an expiration date, so be sure to make the most of them! </p>
 
-          {
-            loading
-            ? (
-              <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3'>
-                {
-                  Array(6).fill(0).map((_, index) => (
-                    <div key={index}>
-                      <Skeleton className="w-1/2 h-5 mb-2" />
-                      <Skeleton className="w-1/4 h-3 mb-2" />
-                      <Skeleton className="w-full h-4 mb-2" />
-                      <Skeleton className="w-full h-4 mb-2" />
-                      <Skeleton className="w-full h-4 mb-2" />
-                      <Skeleton className="w-full h-4 mb-2" />
-                      <Skeleton className="w-full h-8 mb-2" />
-                    </div>
-                  ))
-                }
-              </div>
-            )
-            : <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3'>
-                {
-                  packages?.map((item: any, index) => (
-                    <PackageCard select={() => handleSelect(item)} selected={selectedPackage != null && selectedPackage?.id === item.id} key={index} data={item} hiddenSelect={false} />
-                  ))
-                }
-              </div>
-          }
+            {
+              loading
+              ? (
+                <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3'>
+                  {
+                    Array(6).fill(0).map((_, index) => (
+                      <div key={index}>
+                        <Skeleton className="w-1/2 h-5 mb-2" />
+                        <Skeleton className="w-1/4 h-3 mb-2" />
+                        <Skeleton className="w-full h-4 mb-2" />
+                        <Skeleton className="w-full h-4 mb-2" />
+                        <Skeleton className="w-full h-4 mb-2" />
+                        <Skeleton className="w-full h-4 mb-2" />
+                        <Skeleton className="w-full h-8 mb-2" />
+                      </div>
+                    ))
+                  }
+                </div>
+              )
+              : <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3'>
+                  {
+                    packages?.map((item: any, index) => (
+                      <PackageCard select={() => handleSelect(item)} selected={selectedPackage != null && selectedPackage?.id === item.id} key={index} data={item} hiddenSelect={false} />
+                    ))
+                  }
+                </div>
+            }
 
+          </div>
         </div>
+
         <div className='w-12/12 lg:w-4/12 '>
             <div className='p-5 border border-gray-200 rounded-lg sticky top-32 transition-all duration-300'>
               {
@@ -123,6 +151,13 @@ const BookingPackagePage = () => {
                   </div>
               }
               
+              {
+                selectedPackage &&
+                <div className='mb-4 flex items-center'>
+                  <Input className='rouded-e-none' type="text" placeholder="Promo Code" />
+                  <Button className='rounded-s-none'>Apply</Button>
+                </div>
+              }
               
               <div className='pb-4 mb-5 border-b-2 border-gray-200'>
                 <h2 className='font-noto_serif font-bold text-gray-700 dark:text-gray-200'>Payment Method</h2>
@@ -166,6 +201,7 @@ const BookingPackagePage = () => {
               </div>
             </div>
         </div>
+
       </div>
 
       {/* <CustomModal open={showModalTransaction} onOpenChange={() => setShowModalTransaction(false)}>
