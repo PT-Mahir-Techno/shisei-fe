@@ -15,8 +15,9 @@ import LoadingIcons from 'react-loading-icons'
 import { useRouter } from 'next/navigation'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Image from 'next/image'
-import { PaymentMethos } from '@/lib/variable'
+import { baseUrl, PaymentMethos } from '@/lib/variable'
 import { Input } from '@/components/ui/input'
+import api from '@/lib/api'
 
 
 
@@ -28,14 +29,28 @@ const BookingPackagePage = () => {
   const [showModalTransaction, setShowModalTransaction] = React.useState(false)
   const [showModalUnAuthenticated, setShowModalUnAuthenticated] = React.useState(false)
   const [selectedPayment, setSelectedPayment] = React.useState<any>(null)
+  const [coupons, setCoupons] = React.useState<any>([])
+  const [discountCode, setDiscountCode] = React.useState<any>(null)
+  const [discountRes, setDiscountRes] = React.useState<any>(null)
+
   const router = useRouter()
 
   useEffect(() => {
     getPackage("/package")
+    handleGetCoupons()
   }, [])
 
   const handleSelect = (data: any) => {
     setSelectedPackage(data)
+  }
+
+  const handleGetCoupons = async () => {
+    try {
+      const res = await api.get(`${baseUrl}/coupon`)
+      setCoupons(res.data)
+    } catch (error:any) {
+      toast.error(error.data.message)
+    }
   }
 
   const handleTransaction = () => {
@@ -49,8 +64,12 @@ const BookingPackagePage = () => {
   const procesedTransaction = async () => {
     try {
       if (selectedPackage !== null && selectedPayment !== null) {
-        const payload = {
+        const payload: any = {
           payment_method : selectedPayment,
+
+        }
+        if (discountCode && discountRes?.status == 'success') {
+          payload.coupon_code = discountCode?.data?.code
         }
         const res = await procesedPackage(`/payment/${selectedPackage.id}`, payload)
 
@@ -70,6 +89,19 @@ const BookingPackagePage = () => {
     }
   }
 
+  const checkDiscount = async (package_id:any, code:any) => {
+    try {
+      const payload = {
+        membership_id : package_id,
+        code : code
+      }
+      const res = await api.post(`${baseUrl}/coupon`, payload)
+      setDiscountRes(res)
+    } catch (error:any) {
+      setDiscountRes(error?.data)
+    }
+  }
+
   return (
     <>
       <div className='container pt-20 pb-10 mt-20 flex flex-col lg:flex-row gap-7'>
@@ -80,20 +112,28 @@ const BookingPackagePage = () => {
             <div className='w-full overflow-x-auto overflow-y-hidden flex gap-4'>
               
               {
-                Array.from({ length: 20 }, (_, index) => (
-                  <div key={index} className='relative bg-primary rounded-lg px-4 py-3 h-[85px] w-[220px] flex flex-col gap-1 justify-center cursor-pointer'>
-                      <div className='bg-white dark:bg-gray-900 w-[20px] h-[20px] rounded-full absolute top-[-10px] left-[20px]'></div>
-                      <div className='bg-white dark:bg-gray-900 w-[20px] h-[20px] rounded-full absolute bottom-[-10px] left-[20px]'></div>
-                      <div className='flex justify-between items-center'>
-                        <div className='text-white font-bold'> JUNISEHATEVERYDAY</div>
-                        {/* <RiClipboardFill className='text-white' /> */}
-                      </div>
-                      <div className='text-white flex justify-between'>
-                          <p>20% off</p>
-                          <div className='text-xs cursor-pointer hover:text-gray-400'><i>Details</i></div>
-                      </div>
-                  </div>
-                ))
+                coupons && coupons.length > 0
+                ? (
+                  coupons.map((item: any, index: number) => (
+                    <div key={index} className='relative bg-primary rounded-lg px-4 py-3 h-[85px] w-[220px] flex flex-col gap-1 justify-center cursor-pointer'>
+                        <div className='bg-white dark:bg-gray-900 w-[20px] h-[20px] rounded-full absolute top-[-10px] left-[20px]'></div>
+                        <div className='bg-white dark:bg-gray-900 w-[20px] h-[20px] rounded-full absolute bottom-[-10px] left-[20px]'></div>
+                        <div className='flex justify-between items-center'>
+                          <div className='text-white font-bold'>{item.code}</div>
+                          {/* <RiClipboardFill className='text-white' /> */}
+                        </div>
+                        <div className='text-white flex justify-between'>
+                            {
+                              item?.type_discount == 'percent' ?
+                              <p>{item?.discount}% off</p>
+                              :
+                              <p>{numberToIdr(item?.discount)}</p>
+                            }
+                            <div className='text-xs cursor-pointer hover:text-gray-400'><i>Details</i></div>
+                        </div>
+                    </div>
+                  ))
+                ) : <div></div>
               }
             </div>
           </div>
@@ -146,16 +186,38 @@ const BookingPackagePage = () => {
                     <h2 className='font-noto_serif font-bold text-lg text-gray-700 mb-2'>{selectedPackage?.name}</h2>
                     <div className='flex justify-between items-center font-noto_serif font-bold text-xl text-gray-700'>
                       <span>Total :</span>
-                      <span>{numberToIdr(selectedPackage?.price)}</span>
+                      {
+                        discountRes && discountRes?.status == 'success'
+                        ? <span>
+                            <span>{numberToIdr(discountRes?.data?.price_after_discount)}</span>
+                            <s className='text-xs ml-2 text-red-600'>{numberToIdr(selectedPackage?.price)}</s>
+                          </span>
+                        : <span>{numberToIdr(selectedPackage?.price)}</span>
+                      }
+                      {/* <span>{numberToIdr(selectedPackage?.price)}</span> */}
                     </div>
                   </div>
               }
               
               {
                 selectedPackage &&
-                <div className='mb-4 flex items-center'>
-                  <Input className='rouded-e-none' type="text" placeholder="Promo Code" />
-                  <Button className='rounded-s-none'>Apply</Button>
+                <div className='mb-4'>
+                  <div className=' flex items-center'>
+                    <Input onChange={(e) => setDiscountCode(e.target.value)} className='rouded-e-none' type="text" placeholder="Promo Code" />
+                    <Button onClick={() => checkDiscount(selectedPackage?.id, discountCode)} className='rounded-s-none'>Apply</Button>
+                  </div>
+                  {/* {JSON.stringify(discountRes)} */}
+                  {
+                    discountRes && (
+                      discountRes?.status == 'success' ?
+                        <div className='pt-2 text-green-500'>
+                          Yay, your discount <b>{discountRes?.data?.discount_type	== 'percent' ? discountRes?.data?.discount + '%' : numberToIdr(discountRes?.data?.discount)}</b> has been applied successfully
+                        </div>
+                      : <div>
+                          <div className='pt-2 text-red-400 text-sm'><b><i>{discountRes?.message}</i></b></div>
+                        </div>
+                    )
+                  }
                 </div>
               }
               

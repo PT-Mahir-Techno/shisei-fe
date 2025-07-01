@@ -26,7 +26,9 @@ export const formSchema = z.object({
   total_credit: z.number().min(1, {message: "Minimum 1 character"}).max(999999999999, {message: "Maximum 100 characters"}),
   location_id: z.optional(z.string()),
   is_private: z.string().min(1, {message: "Minimum 1 character"}).max(255, {message: "Maximum 255 characters"}),
+  is_shared: z.string().min(1, {message: "Minimum 1 character"}).max(255, {message: "Maximum 255 characters"}),
   category_id: z.string().min(1, {message: "Category is required"}),
+  shared_type: z.string().min(1, {message: "Minimum 1 character"}).max(255, {message: "Maximum 255 characters"}),
 })
 
 const PackageForm = () => {
@@ -61,6 +63,8 @@ const PackageForm = () => {
       location_id: "",
       is_private: "",
       category_id: "",
+      is_shared: "",
+      shared_type: "",
     },
   })
 
@@ -240,6 +244,55 @@ const PackageForm = () => {
                       </SelectContent>
                     </Select>
                   </FormItem>
+
+                  <div className='flex gap-2'>
+                    <FormField
+                      control={form.control}
+                      name="is_shared"
+                      render={({ field }) => (
+                        <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                          <FormItem>
+                            <Label htmlFor="valid_days">Make It Sharedly</Label>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="--select one --" />
+                                  </SelectTrigger>
+                                </FormControl>
+                              <SelectContent>
+                                <SelectItem value='1'>YES</SelectItem>
+                                <SelectItem value='0'>NO</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormItem>
+                        </div>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="shared_type"
+                      render={({ field }) => (
+                        <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                          <FormItem>
+                            <Label htmlFor="valid_days">Make It Sharedly</Label>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="--select one --" />
+                                  </SelectTrigger>
+                                </FormControl>
+                              <SelectContent>
+                                <SelectItem value='family'>Family</SelectItem>
+                                <SelectItem value='couple'>Couple</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormItem>
+                        </div>
+                      )}
+                    />
+                  </div>
+
                 </div>
               )}
             />
