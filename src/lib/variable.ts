@@ -69,12 +69,22 @@ export const menus = [
     "title": "Coupon",
     "name" : "coupon",
     "icon": RiCoupon3Fill,
-    "group": ["coupon"],
+    "group": ["coupon", "redemtion", "couponstats"],
     "children": [
       {
         "title": "Coupon",
         "name" : "coupon",
         "path": "/back-office/coupon",
+      },
+      {
+        "title": "Redemtion",
+        "name" : "redemtion",
+        "path": "/back-office/coupon/redemtion",
+      },
+      {
+        "title": "Statistic",
+        "name" : "couponstats",
+        "path": "/back-office/coupon/statistic",
       },
     ]
   },

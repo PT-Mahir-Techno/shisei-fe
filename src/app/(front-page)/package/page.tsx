@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import PackageCard from './_parts/package-card'
 import { Button } from '@/components/ui/button'
 import { RiClapperboardFill, RiClipboardFill, RiErrorWarningFill, RiLockUnlockFill, RiVerifiedBadgeFill } from 'react-icons/ri'
@@ -33,6 +33,9 @@ const BookingPackagePage = () => {
   const [discountCode, setDiscountCode] = React.useState<any>(null)
   const [discountRes, setDiscountRes] = React.useState<any>(null)
 
+  const [emails, setEmails] = useState(["", "", ""]);
+  const [validStatus, setValidStatus] = useState<(null | "valid" | "invalid" | "loading")[]>([null, null, null]);
+
   const router = useRouter()
 
   useEffect(() => {
@@ -40,8 +43,44 @@ const BookingPackagePage = () => {
     handleGetCoupons()
   }, [])
 
+
+  const handleChange = async (i: number, value: string) => {
+    // update email
+    setEmails((prev) => {
+      const copy = [...prev];
+      copy[i] = value;
+      return copy;
+    });
+
+    // jika email tidak valid format, langsung tandai invalid
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      updateStatus(i, "invalid");
+      return;
+    }
+
+    // tandai loading
+    updateStatus(i, "loading");
+
+    try {
+      const res:any = await api.get(`${baseUrl}/check-user/${value}`);
+      console.log(res?.status)
+      updateStatus(i, res?.status == 'success' ? "valid" : "invalid");
+    } catch {
+      updateStatus(i, "invalid");
+    }
+  };
+
+  const updateStatus = (i: number, status: "valid" | "invalid" | "loading" | null) => {
+    setValidStatus((prev) => {
+      const copy = [...prev];
+      copy[i] = status;
+      return copy;
+    });
+  };
+
   const handleSelect = (data: any) => {
     setSelectedPackage(data)
+    setDiscountRes(null)
   }
 
   const handleGetCoupons = async () => {
@@ -63,6 +102,19 @@ const BookingPackagePage = () => {
 
   const procesedTransaction = async () => {
     try {
+
+      // check valid email
+      if (selectedPackage?.is_shared == 1) {
+        const hasInvalid = emails.some((email, i) =>
+          email.trim() !== "" && validStatus[i] !== "valid"
+        );
+        if (hasInvalid) {
+          toast.error("Ada email tidak valid");
+          return;
+        }
+      }
+      
+
       if (selectedPackage !== null && selectedPayment !== null) {
         const payload: any = {
           payment_method : selectedPayment,
@@ -74,7 +126,7 @@ const BookingPackagePage = () => {
         const res = await procesedPackage(`/payment/${selectedPackage.id}`, payload)
 
         // redirect to res.url 
-        // console.log(res)
+        console.log(res)
         window.location.href = res?.url
         
       }else{
@@ -102,6 +154,21 @@ const BookingPackagePage = () => {
     }
   }
 
+  const renderInput = (i: number, placeholder: string) => (
+    <div className="mb-1">
+      <Input
+        className="h-8 text-sm py-2 rounded-sm mb-2"
+        type="email"
+        placeholder={placeholder}
+        value={emails[i]}
+        onChange={(e) => handleChange(i, e.target.value)}
+      />
+      {validStatus[i] === "loading" && <p className="text-xs text-gray-500">Checking...</p>}
+      {validStatus[i] === "valid" && <p className="text-xs text-green-500">Email valid</p>}
+      {validStatus[i] === "invalid" && <p className="text-xs text-red-500">Email tidak valid</p>}
+    </div>
+  );
+
   return (
     <>
       <div className='container pt-20 pb-10 mt-20 flex flex-col lg:flex-row gap-7'>
@@ -115,7 +182,7 @@ const BookingPackagePage = () => {
                 coupons && coupons.length > 0
                 ? (
                   coupons.map((item: any, index: number) => (
-                    <div key={index} className='relative bg-primary rounded-lg px-4 py-3 h-[85px] w-[220px] flex flex-col gap-1 justify-center cursor-pointer'>
+                    <div key={index} className='relative bg-primary rounded-lg px-4 py-3 h-[85px] min-w-[220px] flex flex-col gap-1 justify-center cursor-pointer'>
                         <div className='bg-white dark:bg-gray-900 w-[20px] h-[20px] rounded-full absolute top-[-10px] left-[20px]'></div>
                         <div className='bg-white dark:bg-gray-900 w-[20px] h-[20px] rounded-full absolute bottom-[-10px] left-[20px]'></div>
                         <div className='flex justify-between items-center'>
@@ -220,6 +287,23 @@ const BookingPackagePage = () => {
                   }
                 </div>
               }
+
+              {selectedPackage && selectedPackage?.is_shared == 1 && (
+                <div className="mb-4">
+                  <div className="text-sm mb-2">
+                    {selectedPackage?.shared_type} shared, Fill the email to share the credits
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {renderInput(0, "Email 1")}
+                    {selectedPackage?.shared_type === "family" && (
+                      <div>
+                        {renderInput(1, "Email 2")}
+                        {renderInput(2, "Email 3")}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
               
               <div className='pb-4 mb-5 border-b-2 border-gray-200'>
                 <h2 className='font-noto_serif font-bold text-gray-700 dark:text-gray-200'>Payment Method</h2>
@@ -256,7 +340,7 @@ const BookingPackagePage = () => {
               </p>
               <div>
                 <Button onClick={() => handleTransaction()} size={"lg"} className='w-full'
-                  disabled={selectedPackage === null}  
+                  disabled={selectedPackage === null }  
                 >
                   Pay Now
                 </Button>

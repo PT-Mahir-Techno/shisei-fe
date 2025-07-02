@@ -34,7 +34,8 @@ const CorporateCreateForm = () => {
     resolver: zodResolver(corporateSchema),
     defaultValues: {
       name: '',
-      whitelist_email: ''
+      whitelist_email: '',
+      pic_email: ''
     },
   })
 
@@ -83,6 +84,22 @@ const CorporateCreateForm = () => {
                         <Label htmlFor="name" className="mb-1 text-gray-600">Corporate Name</Label>
                         <FormControl>
                           <Input {...field} placeholder="corporate name" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                />
+              </div>
+
+              <div className="grid w-full items-center gap-1.5 mb-5">
+                <FormField
+                    control={form.control}
+                    name="pic_email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Label htmlFor="pic_email" className="mb-1 text-gray-600">PIC Email</Label>
+                        <FormControl>
+                          <Input {...field} placeholder="pic@abc.com" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

@@ -10,13 +10,15 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import LoadingIcons from "react-loading-icons"
 import { z } from "zod"
 import { AuthContex } from "@/providers/auth-provider"
 import { useProfile } from "@/store/use-profile"
+import api from "@/lib/api"
+import Cookies from 'js-cookie';
 
 const formSchema = z.object({
   email: z.string().min(3, { message: 'Email or phone is too short' }).max(255, { message: 'Email or phone is too long' }),
@@ -29,6 +31,7 @@ const LoginPage = () => {
   const router = useRouter()
   const {loading, login} = useAuth() 
   const {getPorfile} = useProfile()
+  const [profile, setProfile] = useState(null)
   
   useEffect(() => {
     if (authState._auth && authState._is_auth && authState._avaibility) {
@@ -37,11 +40,29 @@ const LoginPage = () => {
     }
 
     if (authState._auth && !authState._is_auth && !authState._avaibility) {
+      handleGetProfile()
+
+      // if (resProfile?.user?.otp)
       router.replace('/otp-verification')
       toast.success("You must verify otp first")
     }
   }
   , [])
+
+  const handleGetProfile = async () => {
+    const res = await api.get('/dashboard/profile')
+    if (res?.data?.user?.otp){
+      await Cookies.set('_is_auth', 'true')
+      await Cookies.set('_avaibility', 'customer')
+
+      await setAuthState({
+        _auth: Cookies.get('_auth'),
+        _is_auth: Cookies.get('_is_auth'),
+        _avaibility: Cookies.get('_avaibility')
+      })
+    }
+    router.replace('/otp-verification')
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,10 +83,17 @@ const LoginPage = () => {
         _is_auth: 'true',
         _avaibility: res.data.role
       })
-      await getPorfile('/dashboard/profile')
+
+      const profile = await getPorfile('/dashboard/profile')
+
+      if (profile && profile?.corporate_pic){
+        setAuthState((prev:any) => ({...prev, _is_pic: true}))
+        Cookies.set('_is_pic', 'true')
+      }
       router.replace('/customer/dashboard')
       toast.success("Login success")
     } catch (error:any) {
+      console.log(error)
       if (error && error.data) {
         toast.error(error.data.message)
       }else{

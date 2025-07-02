@@ -22,6 +22,7 @@ export const useAuth = () => {
       await Cookies.remove('_auth')
       await Cookies.remove('_is_auth')
       await Cookies.remove('_avaibility')
+      await Cookies.remove('_is_pic')
 
       toast.success("Logout success")
       setLoading(false)

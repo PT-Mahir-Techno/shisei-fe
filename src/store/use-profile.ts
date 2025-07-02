@@ -39,6 +39,8 @@ export const useProfile = create<ProfileState>((set, get) => ({
     try {
       const res = await api.get(`${baseUrl}${url}`)
 
+      console.log('res================', res.data)
+
       let role: any;
       let permission: any;
 
