@@ -20,6 +20,7 @@ import { RiFilter2Line } from 'react-icons/ri';
 import { AuthContex } from '@/providers/auth-provider';
 import { CheckAvaibilityAction } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 
 const renderEventContent = (eventInfo:any) => {
@@ -147,7 +148,10 @@ const SchedulePage = () => {
         {
           CheckAvaibilityAction(permision, 'create', 'schedule', role) && prefix &&
           <div className='mb-6'>
-            <Button onClick={() => setIsOpen(true)} className='w-full'>Add Schedule</Button>
+            {/* <Button onClick={() => setIsOpen(true)} className='w-full'>Add Schedule</Button> */}
+            <Link href="/back-office/calendar/schedule/create">
+              <Button className='w-full'>Add Schedule</Button>
+            </Link>
           </div>
         }
 
