@@ -21,6 +21,7 @@ import { AuthContex } from '@/providers/auth-provider';
 import { CheckAvaibilityAction } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 
 const renderEventContent = (eventInfo:any) => {
@@ -51,6 +52,8 @@ const SchedulePage = () => {
   const {getScheduleConverted, loading, convertedSchedule} = useSchedule()
   const {staffs ,getAllStaffNoPaginate} = useStaff()
   const [staffId, setStaffId] = useState<string | undefined>('')
+  
+  const router = useRouter()
 
   useEffect(() => {
     if (prefix || staffId){
@@ -125,10 +128,13 @@ const SchedulePage = () => {
 
   const handleOpenSheet = (param: Date) => {
     const allowed = CheckAvaibilityAction(permision, 'create', 'schedule', role);
-    if (allowed){
-      setIsOpen(true)
-      setSelectedDate(param)
-    }
+
+    router.push(`/back-office/calendar/schedule/create?date=${param.toISOString().split('T')[0]}`)
+    // console.log(param)
+    // if (allowed){
+    //   setIsOpen(true)
+    //   setSelectedDate(param)
+    // }
   }
 
   const handleShowDetail = (id:string) => {

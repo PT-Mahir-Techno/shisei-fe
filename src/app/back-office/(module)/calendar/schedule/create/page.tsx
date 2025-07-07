@@ -14,7 +14,7 @@ import { scheduleFormScheme } from '@/types/schedule-type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Editor from 'react-simple-wysiwyg';
 import { z } from 'zod'
@@ -28,6 +28,8 @@ import { AuthContex } from '@/providers/auth-provider'
 import { usePackageCategory } from '@/store/use-package-category'
 import Link from 'next/link'
 import { RiArrowGoBackFill } from 'react-icons/ri'
+import { useSearchParams } from 'next/navigation'
+import DateSelector from '../_parts/list-date'
 
 const CreateSchedulePage = () => {
     const {authState} = useContext(AuthContex)
@@ -37,8 +39,32 @@ const CreateSchedulePage = () => {
     const {packageCategorys, getAllPackageCategoryNoPaginate} = usePackageCategory()
     const {staffs, getAllStaffNoPaginate, loading:loadingStaff} = useStaff()
     const {createSchedule, loading, getScheduleConverted, getSingleSchedule, updateSchedule} = useSchedule()
-    const [data, setData] = React.useState(new Date())
+    const [data, setData] = useState( new Date() )
+    const [isClient, setIsClient] = useState(false)
     const {modelId} = useSheet()
+
+    const searchParams:any = useSearchParams()
+
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
+
+    useEffect(() => {
+        if (!isClient) return
+
+        const dateString = searchParams.get('date')
+        if (dateString) {
+            const parsedDate = new Date(dateString)
+            if (!isNaN(parsedDate.getTime())) {
+                // console.log('Date param:',  new Date())
+                // console.log('Parsed date:', parsedDate)
+                setData(parsedDate)
+                // form.setValue('date', parsedDate)
+                // console.log('Data:', data)
+            }
+        }
+
+    }, [searchParams, isClient])
 
     useEffect(() => {
         getAllLocationNoPaginate(`${baseUrl}${prefix}/location?type=nopaginate`)
@@ -78,7 +104,7 @@ const CreateSchedulePage = () => {
         resolver: zodResolver(scheduleFormScheme),
         defaultValues: {
         name: '',
-        date: data ?? '',
+        // date: data ?? '',
         time: '',
         duration: '',
         location_id: '',
@@ -96,13 +122,14 @@ const CreateSchedulePage = () => {
         const formData = new FormData()
 
         // convert date to 2024-09-19 format mont and date 2 digit
-        const date = new Date(data.date)
-        const year = date.getFullYear()
-        const month = date.getMonth() + 1
-        const day = date.getDate()
-        const formatedDate = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`
+        // const date = new Date(data.date)
+        // const year = date.getFullYear()
+        // const month = date.getMonth() + 1
+        // const day = date.getDate()
+        // const formatedDate = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`
 
-        formData.append('date', formatedDate)
+        // formData.append('date', formatedDate)
+
         formData.append('name', data.name)
         formData.append('time', data.time)
         formData.append('duration', data.duration)
@@ -136,6 +163,8 @@ const CreateSchedulePage = () => {
         toast.error(error.message)
         }
     }
+
+    if (!isClient) return null 
 
     return (
         <div>
@@ -239,11 +268,11 @@ const CreateSchedulePage = () => {
                     </div>
 
                     <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-                        <FormField
+                        {/* <FormField
                         control={form.control}
                         name="date"
                         render={({ field }) => (
-                            <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                            <div className="grid w-full items-center gap-1.5 mb-4">
                             <FormItem>
                                 <div>
                                 <Label htmlFor="name">Date</Label>
@@ -285,7 +314,8 @@ const CreateSchedulePage = () => {
                             </FormItem>
                             </div>
                         )}
-                        />
+                        /> */}
+
                         <FormField
                         control={form.control}
                         name="time"
@@ -319,7 +349,7 @@ const CreateSchedulePage = () => {
                         control={form.control}
                         name="staff_id"
                         render={({ field }) => (
-                            <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                            <div className="grid w-full items-center gap-1.5 mb-4">
                             <FormItem>
                                 <Label htmlFor="valid_days">Staff/ Instructor</Label>
                                 <Select onValueChange={field.onChange} value={field.value}>
@@ -344,7 +374,7 @@ const CreateSchedulePage = () => {
                         control={form.control}
                         name="location_id"
                         render={({ field }) => (
-                            <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+                            <div className="grid w-full items-center gap-1.5 mb-4">
                             <FormItem>
                                 <Label htmlFor="valid_days">Location</Label>
                                 <Select onValueChange={field.onChange} value={field.value}>
@@ -396,6 +426,75 @@ const CreateSchedulePage = () => {
                         )}
                         />
                     </div>
+                        
+
+                        {/* bulk schedule */}
+                        <div className='mb-4'>
+
+                            <div>
+                                <FormItem>
+                                    <Label htmlFor="valid_days">Chose date and bulk type</Label>
+                                    <Select onValueChange={() => false} value={''}>
+                                        <FormControl>
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="--select one --" />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="date">date</SelectItem>
+                                        <SelectItem value="weekly">weekly</SelectItem>
+                                        <SelectItem value="monthly">monthly</SelectItem>
+                                    </SelectContent>
+                                    </Select>
+                                </FormItem>
+                            </div>
+                            
+                            <div>
+                                <DateSelector monthIndex={1} year={2025} />
+                            </div>
+
+                            {/* <FormItem>
+                                <div>
+                                <Label htmlFor="name">Date</Label>
+                                </div>
+                                <FormControl>
+                                <Popover modal={true}>
+                                    <PopoverTrigger asChild>
+                                    <FormControl>
+                                        <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                            "w-full pl-3 text-left font-normal",
+                                            !field.value && "text-muted-foreground"
+                                        )}
+                                        >
+                                        {field.value ? (
+                                            format(field.value, "PPP")
+                                        ) : (
+                                            <span>Pick a date</span>
+                                        )}
+                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                    </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        // selected={}
+                                        // onSelect={field.onChange}
+                                        disabled={(date) =>
+                                        date < new Date("1900-01-01")
+                                        }
+                                        initialFocus
+                                    />
+                                    </PopoverContent>
+                                </Popover>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem> */}
+                        
+                        </div>
+                        {/* end bulk schedule */}
                     
                         <div className='flex justify-end'>
                         {/* <Button type='button' variant={"outline"} size={"lg"} className="mx-2" onClick={close}>Cancel</Button> */}
@@ -410,6 +509,7 @@ const CreateSchedulePage = () => {
                         </Button>
                         </div>
                     </form>
+                    
                 </Form>
             }
             </div>
