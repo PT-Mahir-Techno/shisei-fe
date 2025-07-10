@@ -55,8 +55,8 @@ const EventDetail = ({id, close}: {id:String|undefined, close: () => void}) => {
   const handleDelete = async () => {
     try {
       let scheduleUrl = role == 'admin'
-      ? `${baseUrl}${prefix}/schedule`
-      : `${baseUrl}${prefix}/my-schedule`
+      ? `${baseUrl}${prefix}/schedule?type=nopaginate`
+      : `${baseUrl}${prefix}/my-schedule?type=nopaginate`
 
       await deleteSchedule(`${baseUrl}${prefix}/schedule/${id}`)
       await getScheduleConverted(scheduleUrl)
@@ -66,6 +66,7 @@ const EventDetail = ({id, close}: {id:String|undefined, close: () => void}) => {
     } catch (error:any) {
       setShowDeleteModal(false)
       toast.error(error.message)
+      console.log(error)
     }
   }
 

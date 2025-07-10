@@ -15,7 +15,7 @@ import toast from "react-hot-toast"
 import { useCustomer } from "@/store/use-customer"
 import { CheckAvaibilityAction } from "@/lib/utils"
 
-function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', isCanVerify=false, isDelete=true, actionFor=null, isGenerate=false} : any) {
+function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', isCanVerify=false, isDelete=true, actionFor=null, isGenerate=false, showLink=''} : any) {
   const {authState} = useContext(AuthContex)
   const {_prefix:prefix, _permision:permision, _avaibility:role} = authState
 
@@ -129,6 +129,16 @@ function ActionButton({model, isDay, isEdit=true, originalLink='', editLink='', 
                   </Link>
                 }
               </div>
+            }
+
+            {
+              showLink &&
+              <Link href={showLink}>
+                <DropdownMenuItem  className="cursor-pointer">
+                  <RiEyeFill size={16} className="mr-2 text-primary" />
+                  Show
+                </DropdownMenuItem>
+              </Link>
             }
 
             {

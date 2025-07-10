@@ -21,10 +21,10 @@ const ActivePackageCard = ({data}:{data:any}) => {
               <RiCalendarScheduleLine className='text-primary' size={26} />
               <p className='text-foreground font-semibold text-md'>Valid for {data?.duration} days</p>
             </div>
-            <div className='flex gap-2 items-center'>
+            {/* <div className='flex gap-2 items-center'>
               <RiHourglass2Fill className='text-primary' size={26} />
               <p className='text-foreground font-semibold text-md'>Remainig {data?.validity_period} days</p>
-            </div>
+            </div> */}
             <div className='flex gap-2 items-center'>
               <RiRefundLine className='text-primary' size={26} />
               <p className='text-foreground font-semibold text-md'>{data?.total_credit} Credit</p>
@@ -35,7 +35,7 @@ const ActivePackageCard = ({data}:{data:any}) => {
             </div>
             <div className='flex gap-2 items-center'> 
               <RiUserSharedFill className='text-primary' size={26} />
-              <p className='text-foreground font-semibold text-md'>{data?.member_count + 1} Member</p>
+              <p className='text-foreground font-semibold text-md'>{data?.member_count} Member</p>
             </div>
             <div className='flex gap-2 items-center'>
               <RiMapPin2Line className='text-primary' size={26} />

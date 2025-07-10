@@ -54,6 +54,11 @@ export const menus = [
         "path": "/back-office/booking/extend-day",
       },
       {
+        "title": "Shared Credit",
+        "name" : "sharedcredit",
+        "path": "/back-office/booking/shared-credit",
+      },
+      {
         "title": "Validity Period",
         "name" : "validityperoid",
         "path": "/back-office/booking/validity-period",
@@ -80,12 +85,7 @@ export const menus = [
         "title": "Redemtion",
         "name" : "redemtion",
         "path": "/back-office/coupon/redemtion",
-      },
-      {
-        "title": "Statistic",
-        "name" : "couponstats",
-        "path": "/back-office/coupon/statistic",
-      },
+      }
     ]
   },
   {

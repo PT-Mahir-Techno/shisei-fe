@@ -2,75 +2,100 @@
 
 import { useEffect, useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Button } from '@/components/ui/button'
+
+const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const monthNames = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+]
 
 interface Props {
-  monthIndex?: number // 0 = January
+  monthIndex?: number
   year?: number
+  onSelectChange?: (selected: { id: string; label: string }[]) => void
+  selected?: any
 }
 
-interface DateItem {
-  id: string
-  label: string
-}
-
-export default function DateSelector({ monthIndex = 0, year }: Props) {
-  const [dates, setDates] = useState<DateItem[]>([])
+export default function HariPerBulan({ monthIndex = 0, year, onSelectChange , selected }: Props) {
+  const [dates, setDates] = useState<{ label: string; id: string }[]>([])
   const [selectedDates, setSelectedDates] = useState<string[]>([])
 
   useEffect(() => {
     const currentYear = year || new Date().getFullYear()
-    const month = monthIndex
-    const totalDays = new Date(currentYear, month + 1, 0).getDate()
+    const dateList: { label: string; id: string }[] = []
 
-    const generatedDates: DateItem[] = []
+    const lastDay = new Date(currentYear, monthIndex + 1, 0).getDate()
 
-    for (let day = 1; day <= totalDays; day++) {
-      const date = new Date(currentYear, month, day)
-      const formatted = date.toLocaleDateString('en-GB', {
-        weekday: 'long',
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      })
-      generatedDates.push({ id: date.toISOString(), label: formatted })
+    for (let i = 1; i <= lastDay; i++) {
+      const date = new Date(currentYear, monthIndex, i)
+      const label = `${dayNames[date.getDay()]}, ${i.toString().padStart(2, '0')} ${monthNames[monthIndex]} ${currentYear}`
+      const id = date.toISOString()
+      dateList.push({ label, id })
     }
 
-    setDates(generatedDates)
+    setDates(dateList)
+    setSelectedDates([])
   }, [monthIndex, year])
 
-  const handleToggle = (id: string) => {
+  useEffect(() => {
+    if (onSelectChange) {
+      const selected = dates.filter((d) => selectedDates.includes(d.id))
+      onSelectChange(selected)
+    }
+  }, [selectedDates, dates, onSelectChange])
+
+  const toggleSelect = (id: string) => {
     setSelectedDates((prev) =>
-      prev.includes(id)
-        ? prev.filter((d) => d !== id)
-        : [...prev, id]
+      prev.includes(id) ? prev.filter((d) => d !== id) : [...prev, id]
     )
   }
 
-  return (
-    <div className="p-4 space-y-4">
-        <h1 className="text-xl font-bold">Select Dates</h1>
-        <div className="grid grid-cols-4 gap-2">
-            {dates.map((date) => (
-            <div key={date.id} className="flex items-center gap-2">
-                <Checkbox
-                id={date.id}
-                checked={selectedDates.includes(date.id)}
-                onCheckedChange={() => handleToggle(date.id)}
-                />
-                <label htmlFor={date.id} className="text-sm">{date.label}</label>
-            </div>
-            ))}
-        </div>
+  const handleSelectAll = () => {
+    if (selectedDates.length === dates.length) {
+      setSelectedDates([])
+    } else {
+      setSelectedDates(dates.map((d) => d.id))
+    }
+  }
 
-        <div className="pt-6">
-            <h2 className="font-semibold">Selected Dates:</h2>
-            <ul className="text-sm list-disc pl-4 mt-2">
-            {selectedDates.map((id) => {
-                const item = dates.find(d => d.id === id)
-                return item ? <li key={id}>{item.label}</li> : null
-            })}
-            </ul>
-        </div>
+  const isAllSelected = selectedDates.length === dates.length
+
+  return (
+    <div className='space-y-4 py-4'>
+
+      <div className='flex justify-end'>
+        <Button variant="outline" size="sm" onClick={handleSelectAll} type='button'>
+          {isAllSelected ? 'Deselect All' : 'Select All'}
+        </Button>
+      </div>
+
+      <div className="space-y-2 grid grid-cols-7">
+        {dates.map((date) => (
+          <div key={date.id} className="flex items-center gap-2 text-sm">
+            <div className='overflow-hidden'>
+                <input
+                  id={date.id}
+                  type="checkbox"
+                  checked={selectedDates.includes(date.id)}
+                  onChange={() => toggleSelect(date.id)}
+                  className='w-4 h-4 rounded border-gray-300 bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800'
+                />
+            </div>
+            <label htmlFor={date.id}>{date.label}</label>
+          </div>
+        ))}
+      </div>
+
+      <div className="pt-6">
+        <h2 className="font-semibold">Selected Dates:</h2>
+        <ul className="text-sm list-none pl-4 mt-2 flex flex-wrap gap-3">
+          {selectedDates.map((id) => {
+            const item = dates.find(d => d.id === id)
+            return item ? <li className='text-sm font-semibold ' key={id}>{item.label}, </li> : null
+          })}
+        </ul>
+      </div>
     </div>
   )
 }

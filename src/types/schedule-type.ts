@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { date, z } from "zod";
 
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
@@ -6,7 +6,7 @@ export const scheduleFormScheme = z.object({
   name: z.string()
     .min(1, {message: "Minimum 1 character"})
     .max(255, {message: "Maximum 255 characters"}),
-  // date: z.any(),
+  date: z.any().optional(),
   time: z.string()
     .min(1, {message: "Minimum 1 character"})
     .max(255, {message: "Maximum 255 characters"}),
@@ -61,7 +61,7 @@ export type ScheduleType = {
   description: string;
   time:        string;
   duration:    string;
-  // date:        string;
+  date?:        string;
   image:       string;
   max_order:   string;
   color:       string;

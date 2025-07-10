@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import React, { useEffect } from 'react'
-import { RiArrowDropDownLine, RiBox1Fill, RiCheckDoubleFill, RiCoupon2Fill, RiCoupon3Fill, RiDeleteBin2Fill, RiHourglassFill, RiShoppingBag2Fill, RiStackFill, RiUser3Fill } from 'react-icons/ri'
+import { RiArrowDropDownLine, RiBox1Fill, RiCheckDoubleFill, RiCoupon2Fill, RiCoupon3Fill, RiDeleteBin2Fill, RiHourglassFill, RiLockPasswordLine, RiShoppingBag2Fill, RiStackFill, RiUser3Fill } from 'react-icons/ri'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu'
@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { formatDate2, formatedDate, numberToIdr } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
 import { get } from 'http'
+import Image from 'next/image'
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
 
@@ -43,7 +44,10 @@ const CorporatePage = () => {
       const corporate_id = profile?.corporate_pic?.id
 
       const resCorporate = await api.get(`${baseUrl}/dashboard/corporate/${corporate_id}`)
-      setCorporate(resCorporate)
+      setCorporate(resCorporate?.data)
+
+
+      console.log(resCorporate?.data)
 
       setActivePackages(profile?.corporate_pic)
       setLoading(false)
@@ -52,6 +56,43 @@ const CorporatePage = () => {
       toast.error(error.data.message)
     }
   } 
+
+  const handleApprove = async (corporate_id:any, id:any) => {
+    try {
+      setLoading(true)
+      const payload = {
+        "corporate_id" : corporate_id,
+        "user_id"      : [id]
+      }
+
+      const res = await api.post(`${baseUrl}/dashboard/corporate/approve-member`, payload)
+      await initState()
+      console.log(res)
+      toast.success('Corporate approved successfully')
+      setLoading(false)
+    } catch (error:any) {
+      setLoading(false)
+      toast.error(error.message)
+      console.log(error?.message)
+    }
+  }
+
+  const handleRemoveMember = async (corporate_id:any, id:any) => {
+    try {
+      setLoading(true)
+      const res = await api.post(`${baseUrl}/dashboard/corporate/remove-member/${corporate_id}`, {
+        "user_id" : id
+      })
+      await initState()
+      console.log(res)
+      toast.success('Member deleted successfully')
+      setLoading(false)
+    } catch (error:any) {
+      setLoading(false)
+      toast.error(error.message)
+      console.log(error?.message)
+    }
+  }
 
 
   return (
@@ -102,52 +143,59 @@ const CorporatePage = () => {
           </div>
         </div>
 
-        {/* {
+        {
           loading ? <LoadingSkeleton /> : (
-            corporate && corporate?.member ? (
-              <div className=''>
-               
-              </div>
-            ): (
-              <div className='flex flex-col gap-4 text-center'>
-                <p className='text-gray-400'>No member   available</p>
-              </div>
+            (
+              corporate?.member?.length > 0 && corporate?.member?.map((member:any, index:number) => (
+                <div key={index} className='mb-8'>
+                  <div className='grid grid-cols-7 pb-2 mb-2 border-b-2 border-gray-400'>
+                      <div className='mr-0'>
+                        <Image alt="photo" src={member?.user?.photo_url ?? "/img/img_placeholder.png"} width={60} height={60} className="rounded-full object-cover object-center h-14 w-14"/>
+                      </div>
+                      <div>
+                        <div className='text-gray-500'> Name</div>
+                        <div>{member?.user?.name}</div>
+                      </div>
+                      <div>
+                        <div className='text-gray-500'>Email</div>
+                        <div>{member?.user?.email}</div>
+                      </div>
+                      <div>
+                        <div className='text-gray-500'>Phone Number</div>
+                        <div>{member?.user?.phone}</div>
+                      </div>
+                      <div>
+                        <div className='text-gray-500'>Gender</div>
+                        <div>{member?.user?.gender}</div>
+                      </div>
+                      <div className='flex gap-2 items-center'>
+                        <div>
+                          <RiLockPasswordLine className='text-primary' size={26} />
+                        </div>
+                        <p className='bg-sky-600 text-white px-2 py-1 rounded-md font-semibold text-md'>{member?.status}</p>
+                      </div>
+                      <div>
+                        <div className='text-gray-500'>Action</div>
+                        <div className='flex gap-2'>
+                          {
+                            corporate?.pic_email != member?.user?.email ?
+                            (
+                              <>
+                                <Button onClick={() => handleApprove(corporate?.id, member?.user?.id)} size='sm'  className='bg-primary text-white hover:bg-primary/80'> <RiCheckDoubleFill size={20} /> Approve</Button>
+                                <Button onClick={() => handleRemoveMember(corporate?.id, member?.user?.id)}  size='sm'  className='bg-gray-800 text-white hover:bg-primary/80'> <RiDeleteBin2Fill size={18}  className='mr-2'/> Remove</Button>
+                              </>
+                            ) : <div className='text-gray-500 text-sm'>No action needed for PIC</div>
+                          }
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              ))
             )
           )
-        } */}
+        }
 
-        <div>
-          <div className='flex gap-20 pb-2 mb-2 border-b-2 border-gray-400'>
-              <div>
-                <div className='text-gray-500'> Name</div>
-                <div>John doe</div>
-              </div>
-              <div>
-                <div className='text-gray-500'>Email</div>
-                <div>Koloran @mail.com</div>
-              </div>
-              <div>
-                <div className='text-gray-500'>Phone Number</div>
-                <div>09128387213</div>
-              </div>
-              <div>
-                <div className='text-gray-500'>Gender</div>
-                <div>Laki Laki</div>
-              </div>
-              <div>
-                <div className='text-gray-500'>Joinde At</div>
-                <div>12-Jan-2025</div>
-              </div>
-              <div>
-                <div className='text-gray-500'>Action</div>
-                <div className='flex gap-2'>
-                  <Button size='sm'  className='bg-primary text-white hover:bg-primary/80'> <RiCheckDoubleFill size={20} /> Approve</Button>
-                  <Button size='sm'  className='bg-gray-800 text-white hover:bg-primary/80'> <RiDeleteBin2Fill size={18}  className='mr-2'/> Remove</Button>
-                </div>
-              </div>
-          </div>
-        </div>
-        
+
       </section>
     </>
   )

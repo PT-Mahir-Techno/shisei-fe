@@ -118,11 +118,18 @@ const BookingPackagePage = () => {
       if (selectedPackage !== null && selectedPayment !== null) {
         const payload: any = {
           payment_method : selectedPayment,
+        }
 
-        }
         if (discountCode && discountRes?.status == 'success') {
-          payload.coupon_code = discountCode?.data?.code
+          payload.coupon_code = discountCode
         }
+
+        if (selectedPackage?.is_shared == 1) {
+          payload.user_email  = emails.filter((email) => email.trim() !== "")
+          payload.is_shared   = true
+          payload.shared_type = selectedPackage?.shared_type
+        }
+
         const res = await procesedPackage(`/payment/${selectedPackage.id}`, payload)
 
         // redirect to res.url 
@@ -251,12 +258,12 @@ const BookingPackagePage = () => {
                   </div>
                 : <div className='pb-4 mb-6 border-dashed border-b-2 border-primary/40'>
                     <h2 className='font-noto_serif font-bold text-lg text-gray-700 mb-2'>{selectedPackage?.name}</h2>
-                    <div className='flex justify-between items-center font-noto_serif font-bold text-xl text-gray-700'>
+                    <div className='flex justify-between items-start font-noto_serif font-bold text-xl text-gray-700'>
                       <span>Total :</span>
                       {
                         discountRes && discountRes?.status == 'success'
                         ? <span>
-                            <span>{numberToIdr(discountRes?.data?.price_after_discount)}</span>
+                            <span>{numberToIdr(discountRes?.data?.price_after_discount)}</span> <br className='my-0 py-0' />
                             <s className='text-xs ml-2 text-red-600'>{numberToIdr(selectedPackage?.price)}</s>
                           </span>
                         : <span>{numberToIdr(selectedPackage?.price)}</span>

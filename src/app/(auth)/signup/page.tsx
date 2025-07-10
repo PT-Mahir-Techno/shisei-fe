@@ -79,10 +79,11 @@ const SignUpPage = () => {
       toast.success("Register Success")
       router.replace('/otp-verification')
     } catch (error:any) {
-      if (error.response){
-        toast.error(error.response.message)
+      if (error?.response){
+        toast.error(error?.response?.message)
       }else{
-        toast.error(error.message)
+        console.log(error)
+        toast.error(error?.data?.message)
       }
     }
   }
