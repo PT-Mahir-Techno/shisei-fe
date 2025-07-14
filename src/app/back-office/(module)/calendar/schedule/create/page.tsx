@@ -424,7 +424,7 @@ const CreateSchedulePage = () => {
                         <div className='mb-4'>
 
                             <div className='mb-4 text-sm'>
-                                Select month and year to select schedule (default current month and year) !
+                                Please select month and year to select schedule (default current month and year) !
                             </div>
                             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                                 <div>
