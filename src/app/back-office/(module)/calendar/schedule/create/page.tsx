@@ -57,8 +57,8 @@ const CreateSchedulePage = () => {
     ];
 
     const router           = useRouter() 
-    const param            = useSearchParams()
-    const dateString       = param.get('date')
+    // const param            = useSearchParams()
+    // const dateString       = param.get('date')
 
     // useEffect(() => {
     //     if (!isClient) return
